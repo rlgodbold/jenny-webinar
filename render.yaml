@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: jenny-webinar
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /api/webinar
+    disk:
+      name: registrations
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: NODE_VERSION
+        value: "20"
+      - key: PUBLIC_BASE_URL
+        value: https://jennyvoiceagent.com
+      - key: COMPANY_NAME
+        value: Junk Removal Authority
+      # Set these in the Render dashboard (Environment tab) — do NOT commit secrets:
+      #   RESEND_API_KEY            -> reuse the same Resend key as the Jenny product
+      #   NOTIFICATION_FROM_EMAIL   -> "Lee Godbold <leegodbold@mailer.junkra.com>"
+      #   ADMIN_TOKEN               -> long random string; gates admin + CSV export
+      #   UNSUBSCRIBE_SECRET        -> long random string; signs unsubscribe links
+      #   COMPANY_POSTAL_ADDRESS    -> physical mailing address (REQUIRED to send marketing email)
+      - key: RESEND_API_KEY
+        sync: false
+      - key: NOTIFICATION_FROM_EMAIL
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: UNSUBSCRIBE_SECRET
+        sync: false
+      - key: COMPANY_POSTAL_ADDRESS
+        sync: false

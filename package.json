@@ -1,0 +1,19 @@
+{
+  "name": "jenny-webinar",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Registration landing page for the Jenny AI Voice Agent Masterclass",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "export": "node scripts/export-csv.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
