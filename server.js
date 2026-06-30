@@ -232,6 +232,10 @@ app.post("/api/admin/broadcast", async (req, res) => {
   res.json({ ok: true, recipients: recipients.length, sent, failed });
 });
 
+app.get("/admin", (_req, res) =>
+  res.sendFile(path.join(__dirname, "public", "admin.html"))
+);
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, () => {
