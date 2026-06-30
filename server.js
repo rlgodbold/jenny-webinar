@@ -7,9 +7,11 @@ import {
   sendConfirmationEmail,
   sendMarketingEmail,
   sendReminderEmail,
+  sendAttendeeNotification,
   hasPostalAddress,
 } from "./email.js";
 import { startReminderScheduler } from "./reminders.js";
+import { getSubscriber } from "./store.js";
 import {
   upsertSubscriber,
   unsubscribe,
@@ -32,6 +34,14 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 const REG_FILE = path.join(DATA_DIR, "registrations.ndjson");
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "";
+// Read-only token for the attendee list (safe to share with the team / put in emails).
+const ATTENDEES_TOKEN = process.env.ATTENDEES_TOKEN || "";
+const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || `http://localhost:${PORT}`).replace(/\/$/, "");
+// Who gets pinged on each new signup.
+const NOTIFY_EMAILS = (process.env.ATTENDEE_NOTIFY_EMAILS || "lee@junkra.com,shane@junkra.com")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+const attendeesUrl = () =>
+  `${PUBLIC_BASE_URL}/attendees${ATTENDEES_TOKEN ? "?token=" + encodeURIComponent(ATTENDEES_TOKEN) : ""}`;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -63,6 +73,7 @@ app.post("/api/register", async (req, res) => {
     ip,
   };
 
+  const isNew = !getSubscriber(email);
   try {
     fs.appendFileSync(REG_FILE, JSON.stringify(record) + "\n");
     upsertSubscriber({ email, name, source, ip, sessionISO: webinar.startsAtISO }); // consent + list state
@@ -74,6 +85,17 @@ app.post("/api/register", async (req, res) => {
   sendConfirmationEmail({ name, email }).catch((e) =>
     console.error("[register] email error:", e?.message)
   );
+
+  // Notify the team on each genuinely-new attendee (not on a re-submit).
+  if (isNew && NOTIFY_EMAILS.length) {
+    sendAttendeeNotification({
+      name,
+      email,
+      count: stats().total,
+      recipients: NOTIFY_EMAILS,
+      attendeesUrl: attendeesUrl(),
+    }).catch((e) => console.error("[register] notify error:", e?.message));
+  }
 
   return res.json({
     ok: true,
@@ -250,6 +272,78 @@ app.post("/api/admin/test-email", async (req, res) => {
     return res.status(400).json({ error: "kind must be confirmation, 24h, or 1h." });
   }
   res.json({ ok: result?.ok !== false, kind, sentTo: email, result });
+});
+
+// Read-only access for the attendee list (separate token, safe to share/email).
+function checkReadToken(req, res) {
+  const token = req.query.token || req.headers["x-admin-token"];
+  if (token && (token === ATTENDEES_TOKEN || token === ADMIN_TOKEN)) return true;
+  res.status(401).send("Unauthorized — invalid or missing token.");
+  return false;
+}
+
+app.get("/api/attendees.csv", (req, res) => {
+  if (!checkReadToken(req, res)) return;
+  const rows = listSubscribers();
+  const cols = ["name", "email", "status", "subscribedAt", "unsubscribedAt", "source"];
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => q(r[c])).join(","))].join("\n");
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", 'attachment; filename="attendees.csv"');
+  res.send(csv);
+});
+
+app.get("/attendees", (req, res) => {
+  if (!checkReadToken(req, res)) return;
+  const rows = listSubscribers().sort((a, b) =>
+    String(a.createdAt || "").localeCompare(String(b.createdAt || ""))
+  );
+  const active = rows.filter((r) => r.status === "subscribed").length;
+  const fmt = (iso) => {
+    if (!iso) return "—";
+    try {
+      return new Intl.DateTimeFormat("en-US", {
+        month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
+        timeZone: "America/New_York",
+      }).format(new Date(iso));
+    } catch { return iso; }
+  };
+  const body = rows.length
+    ? rows.map((r, i) => `<tr>
+        <td class="n">${i + 1}</td>
+        <td>${esc(r.name) || "—"}</td>
+        <td>${esc(r.email)}</td>
+        <td>${fmt(r.createdAt || r.subscribedAt)}</td>
+        <td>${r.status === "subscribed"
+          ? '<span class="pill ok">subscribed</span>'
+          : '<span class="pill no">unsubscribed</span>'}</td>
+      </tr>`).join("")
+    : `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px">No registrations yet.</td></tr>`;
+  const tok = encodeURIComponent(req.query.token || "");
+  res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Webinar attendees</title>
+  <style>
+    body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f1f5f9;color:#0f172a;margin:0;padding:28px 18px}
+    .wrap{max-width:840px;margin:0 auto}
+    .head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+    h1{font-size:22px;margin:0}
+    .sub{color:#64748b;font-size:14px;margin-top:2px}
+    .dl{background:#2563eb;color:#fff;text-decoration:none;padding:10px 16px;border-radius:9px;font-size:14px;font-weight:600}
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.08)}
+    th,td{text-align:left;padding:11px 14px;font-size:14px;border-bottom:1px solid #e2e8f0}
+    th{background:#f8fafc;color:#475569;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+    td.n{color:#94a3b8;width:36px}
+    tr:last-child td{border-bottom:none}
+    .pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+    .pill.ok{background:#dcfce7;color:#166534}.pill.no{background:#fee2e2;color:#991b1b}
+  </style></head><body><div class="wrap">
+    <div class="head">
+      <div><h1>Webinar attendees</h1><div class="sub">${rows.length} registered · ${active} currently subscribed · ${esc(formatWebinarWhen().full)}</div></div>
+      <a class="dl" href="/api/attendees.csv?token=${tok}">Download CSV ↓</a>
+    </div>
+    <table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Registered (ET)</th><th>Status</th></tr></thead>
+    <tbody>${body}</tbody></table>
+  </div></body></html>`);
 });
 
 app.get("/admin", (_req, res) =>

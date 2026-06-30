@@ -55,7 +55,7 @@ async function send({ to, subject, html, headers }) {
       },
       body: JSON.stringify({
         from: FROM_EMAIL,
-        to: [to],
+        to: Array.isArray(to) ? to : [to],
         reply_to: webinar.contactEmail,
         subject,
         html,
@@ -162,6 +162,23 @@ export async function sendReminderEmail({ name, email, kind }) {
     </div>`;
   }
   return send({ to: email, subject, html, headers: listUnsubHeaders(email) });
+}
+
+// ── Internal: new-attendee notification to the team ─────────────────────────
+export async function sendAttendeeNotification({ name, email, count, recipients, attendeesUrl }) {
+  const subject = `New webinar signup: ${name || email}${count ? ` (#${count})` : ""}`;
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:520px;margin:0 auto;color:#0f172a;font-size:15px;line-height:1.6">
+    <p style="margin:0 0 14px">New registration for the <strong>AI Voice Agent Masterclass</strong>:</p>
+    <table style="font-size:15px;margin:0 0 16px">
+      <tr><td style="color:#64748b;padding:2px 16px 2px 0">Name</td><td><strong>${name || "—"}</strong></td></tr>
+      <tr><td style="color:#64748b;padding:2px 16px 2px 0">Email</td><td>${email}</td></tr>
+    </table>
+    <p style="margin:0 0 18px"><strong>${count}</strong> registered so far.</p>
+    <p style="margin:0"><a href="${attendeesUrl}" style="background:#2563eb;color:#fff;text-decoration:none;padding:11px 20px;border-radius:9px;display:inline-block;font-weight:600">View all attendees →</a></p>
+  </div>`;
+  // Internal ops email (no marketing footer / no unsubscribe — not a marketing send).
+  return send({ to: recipients, subject, html });
 }
 
 export const hasPostalAddress = () => Boolean(COMPANY_POSTAL_ADDRESS);
