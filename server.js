@@ -6,8 +6,10 @@ import { webinar, formatWebinarWhen } from "./config.js";
 import {
   sendConfirmationEmail,
   sendMarketingEmail,
+  sendReminderEmail,
   hasPostalAddress,
 } from "./email.js";
+import { startReminderScheduler } from "./reminders.js";
 import {
   upsertSubscriber,
   unsubscribe,
@@ -63,7 +65,7 @@ app.post("/api/register", async (req, res) => {
 
   try {
     fs.appendFileSync(REG_FILE, JSON.stringify(record) + "\n");
-    upsertSubscriber({ email, name, source, ip }); // consent + list state
+    upsertSubscriber({ email, name, source, ip, sessionISO: webinar.startsAtISO }); // consent + list state
   } catch (err) {
     console.error("[register] write failed:", err.message);
     return res.status(500).json({ error: "Something went wrong. Try again." });
@@ -232,6 +234,24 @@ app.post("/api/admin/broadcast", async (req, res) => {
   res.json({ ok: true, recipients: recipients.length, sent, failed });
 });
 
+// Send a one-off test of any email template to a single address (for previewing).
+app.post("/api/admin/test-email", async (req, res) => {
+  if (!checkAdmin(req, res)) return;
+  const email = normalizeEmail(req.body?.email);
+  const kind = String(req.body?.kind || "confirmation");
+  if (!EMAIL_RE.test(email))
+    return res.status(400).json({ error: "A valid email is required." });
+  let result;
+  if (kind === "confirmation") {
+    result = await sendConfirmationEmail({ name: req.body?.name || "there", email });
+  } else if (kind === "24h" || kind === "1h") {
+    result = await sendReminderEmail({ name: req.body?.name || "there", email, kind });
+  } else {
+    return res.status(400).json({ error: "kind must be confirmation, 24h, or 1h." });
+  }
+  res.json({ ok: result?.ok !== false, kind, sentTo: email, result });
+});
+
 app.get("/admin", (_req, res) =>
   res.sendFile(path.join(__dirname, "public", "admin.html"))
 );
@@ -241,4 +261,5 @@ app.use(express.static(path.join(__dirname, "public")));
 app.listen(PORT, () => {
   console.log(`Jenny webinar site on http://localhost:${PORT}`);
   console.log(`Data dir: ${DATA_DIR}`);
+  startReminderScheduler();
 });

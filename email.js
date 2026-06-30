@@ -115,4 +115,53 @@ export async function sendMarketingEmail({ name, email, subject, bodyHtml }) {
   return send({ to: email, subject, html, headers: listUnsubHeaders(email) });
 }
 
+// ── Reminders (24h + 1h before the webinar) ─────────────────────────────────
+export async function sendReminderEmail({ name, email, kind }) {
+  const when = formatWebinarWhen();
+  const firstName = (name || "").trim().split(/\s+/)[0] || "there";
+  const join = webinar.zoomJoinUrl;
+  const button = (label) =>
+    join
+      ? `<p style="margin:18px 0"><a href="${join}" style="background:#2563eb;color:#fff;text-decoration:none;padding:13px 24px;border-radius:10px;display:inline-block;font-weight:600">${label}</a></p>`
+      : "";
+
+  let subject, html;
+  if (kind === "1h") {
+    subject = `We're live in 1 hour 🔴`;
+    html = `
+    <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
+      <p style="margin:0 0 16px">Hi ${firstName},</p>
+      <p style="margin:0 0 16px">We go live in about an hour — the <strong>AI Voice Agent Masterclass</strong> starts at <strong>${when.timeStr} ET</strong> today.</p>
+      ${button("Join the webinar →")}
+      <p style="margin:16px 0">Grab a coffee and a notepad. You'll hear Jenny handle real calls — quotes, specialty items, and the everyday questions junk removal owners get — see the dashboard live, and get the limited discounted offer at the end.</p>
+      <p style="margin:0 0 4px">See you soon,</p>
+      <p style="margin:0 0 8px"><strong>Lee Godbold</strong><br>Founder, Junk Removal Authority</p>
+      ${marketingFooter(email)}
+    </div>`;
+  } else {
+    subject = `Tomorrow at ${when.timeStr} ET — your seat's saved 🎟️`;
+    html = `
+    <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
+      <p style="margin:0 0 16px">Hi ${firstName},</p>
+      <p style="margin:0 0 14px">Quick reminder — the <strong>AI Voice Agent Masterclass for junk removal owners</strong> is <strong>tomorrow</strong>:</p>
+      <p style="margin:0 0 4px"><strong>📅 ${when.full}</strong></p>
+      <p style="margin:0 0 4px">📍 Live on Zoom</p>
+      ${button("Join the webinar →")}
+      <p style="margin:14px 0 8px">Here's what we'll get into:</p>
+      <ul style="padding-left:20px;margin:0 0 16px">
+        <li style="margin-bottom:7px"><strong>Real call recordings</strong> — hear Jenny handle the calls you field every day: price quotes, hot tubs, hazmat, bed bugs, and the questions owners get asked most</li>
+        <li style="margin-bottom:7px">The features that make an AI voice agent actually work for the trades</li>
+        <li style="margin-bottom:7px">How it plugs into your CRM / field service software (Workiz, Housecall Pro, and more)</li>
+        <li style="margin-bottom:7px">A look at the <strong>live dashboard</strong> and the stats you'll get</li>
+        <li style="margin-bottom:7px">A <strong>limited, discounted offer</strong> to set Jenny up in your own business — live attendees only</li>
+      </ul>
+      <p style="margin:0 0 16px">Block off the hour, and bring the calls you handle day to day — I'll show you how Jenny works through them.</p>
+      <p style="margin:0 0 4px">See you tomorrow,</p>
+      <p style="margin:0 0 8px"><strong>Lee Godbold</strong><br>Founder, Junk Removal Authority</p>
+      ${marketingFooter(email)}
+    </div>`;
+  }
+  return send({ to: email, subject, html, headers: listUnsubHeaders(email) });
+}
+
 export const hasPostalAddress = () => Boolean(COMPANY_POSTAL_ADDRESS);

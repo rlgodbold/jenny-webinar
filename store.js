@@ -53,7 +53,7 @@ export function normalizeEmail(e) {
   return String(e || "").trim().toLowerCase();
 }
 
-export function upsertSubscriber({ email, name, source, ip }) {
+export function upsertSubscriber({ email, name, source, ip, sessionISO }) {
   email = normalizeEmail(email);
   const now = new Date().toISOString();
   let s = subscribers.get(email);
@@ -68,6 +68,9 @@ export function upsertSubscriber({ email, name, source, ip }) {
       unsubscribedAt: null,
       source: source || "",
       consentIp: ip || "",
+      sessionISO: sessionISO || null,
+      r24: false, // 24h reminder sent for this session
+      r1: false, // 1h reminder sent for this session
     };
     subscribers.set(email, s);
     logEvent({ type: "subscribe", email, source, ip });
@@ -80,10 +83,33 @@ export function upsertSubscriber({ email, name, source, ip }) {
       s.unsubscribedAt = null;
       logEvent({ type: "resubscribe", email, source, ip, via: "register" });
     }
+    // Registering for a different session resets the reminder flags.
+    if (sessionISO && s.sessionISO !== sessionISO) {
+      s.sessionISO = sessionISO;
+      s.r24 = false;
+      s.r1 = false;
+    }
     s.updatedAt = now;
   }
   persist();
   return s;
+}
+
+// Active subscribers who registered for a specific session (for reminders).
+export function activeForSession(sessionISO) {
+  return [...subscribers.values()].filter(
+    (s) => s.status === "subscribed" && s.sessionISO === sessionISO
+  );
+}
+
+export function markReminderSent(email, which) {
+  const s = subscribers.get(normalizeEmail(email));
+  if (!s) return false;
+  if (which === "r24") s.r24 = true;
+  else if (which === "r1") s.r1 = true;
+  s.updatedAt = new Date().toISOString();
+  persist();
+  return true;
 }
 
 export function getSubscriber(email) {
