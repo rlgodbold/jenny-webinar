@@ -91,6 +91,21 @@
   .feat h3{font-size:18.5px;font-weight:700;color:var(--ink);margin-bottom:8px;letter-spacing:-.01em}
   .feat p{color:var(--body);font-size:14.5px}
 
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+  .cmp{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+  .cmp.jenny{border:2px solid var(--blue)}
+  .cmp .tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:18px}
+  .cmp .tag.gray{background:var(--soft);color:var(--muted)}
+  .cmp .tag.blue{background:var(--blue-tint);color:var(--blue-deep)}
+  .cmp ul{list-style:none;display:grid;gap:13px}
+  .cmp li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--ink);line-height:1.45}
+  .cmp.muted li{color:var(--muted)}
+  .cmp li svg{flex:0 0 auto;width:19px;height:19px;margin-top:1px}
+  .callout{max-width:900px;margin:24px auto 0;background:var(--tint);border:1px solid var(--blue-tint);border-radius:var(--radius);padding:22px 24px;display:flex;gap:15px;align-items:flex-start}
+  .callout svg{flex:0 0 auto;width:26px;height:26px;color:var(--blue);margin-top:1px}
+  .callout p{color:var(--body);font-size:15px;margin:0}
+  .callout b{color:var(--ink)}
+
   .reframe{background:linear-gradient(180deg,#eff6ff,#ffffff)}
   .reframe .inner{max-width:760px;margin:0 auto;text-align:center}
   .reframe .quote{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.2;color:var(--ink)}
@@ -131,6 +146,7 @@
     .hero{padding:12px 0 44px}
     .hero-grid{grid-template-columns:1fr;gap:30px}
     .cards3{grid-template-columns:1fr}
+    .compare{grid-template-columns:1fr}
     .learn-grid{grid-template-columns:1fr}
     .stats{grid-template-columns:1fr}
     .host{grid-template-columns:1fr;text-align:center}
@@ -240,16 +256,51 @@
   </div>
 </section>
 
+<section class="block">
+  <div class="wrap">
+    <div class="kicker">What makes Jenny different</div>
+    <h2 class="section-title">Most AI voice agents just take a message. Jenny does the job.</h2>
+    <p class="section-sub">Most voice agents qualify a lead and hand it to a human, or set a basic appointment. Jenny handles the whole call — like a seasoned office manager who knows the trade.</p>
+    <div class="compare">
+      <div class="cmp muted">
+        <span class="tag gray">Most AI voice agents</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Take a message and pass the lead to a human</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Basic appointment-setting only</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Can't give a real price — "someone will call you back"</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Fumble specialty questions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Just another lead form</li>
+        </ul>
+      </div>
+      <div class="cmp jenny">
+        <span class="tag blue">Jenny</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Quotes real prices and ranges, like your best rep</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Handles specialty calls — hot tubs, hazmat &amp; disposal, bed bugs, labor-only jobs</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Answers the tricky questions, not just the easy ones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Books the job straight into your CRM</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Backs up your team when call volume spikes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <p><b>Already have office staff? Even better.</b> Jenny covers the overflow during the high-volume crunches that make scheduling a nightmare — plus after-hours, lunch rushes, and sick days — filling every gap without the cost, training, and turnover of another hire.</p>
+    </div>
+  </div>
+</section>
+
 <section class="block alt">
   <div class="wrap">
-    <div class="kicker">On this live class</div>
-    <h2 class="section-title">What you'll walk away with</h2>
-    <p class="section-sub">Practical and specific — built for junk removal owners, not a generic "AI is the future" talk.</p>
+    <div class="kicker">Inside the masterclass</div>
+    <h2 class="section-title">What we'll cover — live</h2>
+    <p class="section-sub">Real calls, real features, and a look under the hood. Built for junk removal owners, not a generic "AI is the future" talk.</p>
     <div class="learn-grid">
-      <div class="learn-item"><div class="num">1</div><div><h3>The real cost of a missed call</h3><p>The simple math on what after-hours and overflow calls are costing your junk removal business every month.</p></div></div>
-      <div class="learn-item"><div class="num">2</div><div><h3>What an AI voice agent really does</h3><p>Hear it answer, quote a job, and handle a real caller live — what it does well, and where a human still wins.</p></div></div>
-      <div class="learn-item"><div class="num">3</div><div><h3>Protect your ad ROI &amp; LSA ranking</h3><p>How answering every call books straight into your CRM and keeps your Google ranking and ad spend working for you.</p></div></div>
-      <div class="learn-item"><div class="num">4</div><div><h3>Get off the phone for good</h3><p>How owners are covering every hour without hiring — and winning back their nights and weekends.</p></div></div>
+      <div class="learn-item"><div class="num">1</div><div><h3>Real call scenarios — hear Jenny live</h3><p>Listen to actual recordings of Jenny handling real calls: price quotes, specialty items, and the curveballs.</p></div></div>
+      <div class="learn-item"><div class="num">2</div><div><h3>The anatomy of an advanced AI voice agent</h3><p>The features that actually matter for the trades — and the ones that don't — so you know what to look for.</p></div></div>
+      <div class="learn-item"><div class="num">3</div><div><h3>Integrations that fit your stack</h3><p>How Jenny connects to popular Field Service Management software and CRMs like Workiz and Housecall Pro.</p></div></div>
+      <div class="learn-item"><div class="num">4</div><div><h3>A look at the live dashboard</h3><p>See exactly what gets tracked and reported — calls, bookings, revenue, and the stats that matter.</p></div></div>
+      <div class="learn-item"><div class="num">5</div><div><h3>A limited, discounted offer</h3><p>Like what you see? Live attendees get a limited-quantity discount to set Jenny up in their own business.</p></div></div>
     </div>
   </div>
 </section>
@@ -290,7 +341,7 @@
       <div>
         <h3>Lee Godbold</h3>
         <div class="role">Founder, Junk Removal Authority</div>
-        <p>Lee has helped thousands of junk removal owners build and scale their businesses. He's now building Jenny — the AI voice agent answering real calls for real junk removal companies — and in this class he'll show you exactly how it works and what it means for your business.</p>
+        <p>Lee has helped hundreds of junk removal owners build and scale their businesses. He's now building Jenny — the AI voice agent answering real calls for real junk removal companies — and in this class he'll show you exactly how it works and what it means for your business.</p>
       </div>
     </div>
   </div>
@@ -303,7 +354,7 @@
       <span id="finalWhen">—</span>
     </div>
     <h2 class="section-title">Save your seat — it's free.</h2>
-    <p class="section-sub">Seats are limited and the replay isn't guaranteed. Lock in your spot now.</p>
+    <p class="section-sub">Seats are limited and the replay isn't guaranteed — and live attendees get a limited, discounted offer to set up Jenny. Lock in your spot now.</p>
     <button class="btn" onclick="document.getElementById('name').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('name').focus(),400)">Reserve my free seat →</button>
   </div>
 </section>
