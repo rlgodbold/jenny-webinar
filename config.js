@@ -12,8 +12,8 @@ export const webinar = {
   // ── The next session ──────────────────────────────────────────────────────
   // Set the START time in ISO 8601 WITH the timezone offset.
   // Eastern is -04:00 during daylight saving (Mar–Nov), -05:00 in winter.
-  // July 2, 2026 @ 2:30 PM ET (EDT) -> -04:00
-  startsAtISO: "2026-07-02T14:30:00-04:00",
+  // July 7, 2026 (Tue) @ 2:30 PM ET (EDT) -> -04:00  [time tentative — may push back; notify registrants if so]
+  startsAtISO: "2026-07-07T14:30:00-04:00",
   durationMinutes: 60,
   timezoneLabel: "ET", // shown to the user next to the time
 
