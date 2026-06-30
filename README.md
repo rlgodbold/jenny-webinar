@@ -35,7 +35,7 @@ then in the Environment tab set:
 - `NOTIFICATION_FROM_EMAIL` — e.g. `Jenny <jenny@mailer.junkra.com>` (verified Resend domain)
 - `ADMIN_TOKEN` — random string for the CSV export
 
-Point `jennyvoiceagent.com` at the Render service (custom domain) once it's live.
+Point `jennycallagent.com` at the Render service (custom domain) once it's live.
 
 ## Zoom
 v1 delivers the same `zoomJoinUrl` to everyone (in the success screen + email). If you move to

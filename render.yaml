@@ -17,7 +17,7 @@ services:
       - key: NODE_VERSION
         value: "20"
       - key: PUBLIC_BASE_URL
-        value: https://jennyvoiceagent.com
+        value: https://jennycallagent.com
       - key: COMPANY_NAME
         value: Junk Removal Authority
       # Set these in the Render dashboard (Environment tab) — do NOT commit secrets:

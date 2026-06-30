@@ -1,4 +1,4 @@
-# Deploy handoff — jennyvoiceagent.com (Jenny webinar signup)
+# Deploy handoff — jennycallagent.com (Jenny webinar signup)
 
 A small Node/Express app. It serves one landing page, captures **name + email**,
 stores each signup, and sends three emails per registrant: an instant confirmation,
@@ -30,7 +30,7 @@ Any Node host works (Railway, Fly, a VPS with pm2) — the only requirement is *
 | `ADMIN_TOKEN` | 🔑 (generate a long random string) | gates the `/admin` dashboard + CSV export + broadcasts |
 | `UNSUBSCRIBE_SECRET` | 🔑 (generate a long random string) | signs unsubscribe links so they can't be forged |
 | `COMPANY_POSTAL_ADDRESS` | 🔑 (Lee provides) | physical mailing address — **required by law to send marketing email; broadcasts are blocked until this is set** |
-| `PUBLIC_BASE_URL` | `https://jennyvoiceagent.com` | used in email + unsubscribe links |
+| `PUBLIC_BASE_URL` | `https://jennycallagent.com` | used in email + unsubscribe links |
 | `COMPANY_NAME` | `Junk Removal Authority` | shown in email footer |
 
 Email goes through **Resend** (HTTP API, no SMTP). Without `RESEND_API_KEY` the app still
@@ -42,10 +42,10 @@ and sends any due 24h / 1h reminder emails (idempotent — each registrant gets 
 once; state is tracked on the disk). **Nothing to configure beyond the env vars above and the
 persistent disk.** Just keep the service always-on (Render Starter plan or higher — not free/sleep tier).
 
-## 5. Domain — point jennyvoiceagent.com at the service
-1. In Render → the service → **Settings → Custom Domains**, add `jennyvoiceagent.com` and `www.jennyvoiceagent.com`. Render shows the exact DNS records.
+## 5. Domain — point jennycallagent.com at the service
+1. In Render → the service → **Settings → Custom Domains**, add `jennycallagent.com` and `www.jennycallagent.com`. Render shows the exact DNS records.
 2. At the domain registrar's DNS:
-   - Apex `jennyvoiceagent.com` → the **A record** (or ALIAS/ANAME) Render gives you.
+   - Apex `jennycallagent.com` → the **A record** (or ALIAS/ANAME) Render gives you.
    - `www` → **CNAME** to the `…onrender.com` hostname.
 3. TLS is automatic once DNS resolves (Render issues Let's Encrypt). Allow up to an hour for propagation.
 
@@ -63,7 +63,7 @@ Edit **`config.js`** only:
 Commit + deploy. Headline date, countdown, confirmation, and both reminders all read from it.
 
 ## 8. Admin dashboard + email list
-- **`https://jennyvoiceagent.com/admin`** — paste `ADMIN_TOKEN` to see subscriber/unsubscribe/signup counts, download a CSV, and send an email broadcast to the list (with a "send test to me" first).
+- **`https://jennycallagent.com/admin`** — paste `ADMIN_TOKEN` to see subscriber/unsubscribe/signup counts, download a CSV, and send an email broadcast to the list (with a "send test to me" first).
 - CSV direct: `GET /api/admin/export.csv?token=ADMIN_TOKEN`
 - All admin routes are dead until `ADMIN_TOKEN` is set.
 
