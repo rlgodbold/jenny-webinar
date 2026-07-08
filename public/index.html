@@ -61,6 +61,8 @@
   .field input{width:100%;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px 15px;color:var(--ink);font-size:16px;font-family:inherit;transition:border-color .15s,box-shadow .15s}
   .field input::placeholder{color:#94a3b8}
   .field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15);background:#fff}
+  .field select{width:100%;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:13px 15px;color:var(--ink);font-size:16px;font-family:inherit;transition:border-color .15s,box-shadow .15s;cursor:pointer}
+  .field select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15);background:#fff}
   .btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:16px;font-size:16.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s,transform .08s;box-shadow:0 8px 20px -8px rgba(37,99,235,.6)}
   .btn:hover{background:var(--blue-deep)}
   .btn:active{transform:translateY(1px)}
@@ -197,6 +199,10 @@
         <h2>Save your seat</h2>
         <p class="lead">Reserve your spot for the live class. Seats are limited and the replay isn't guaranteed.</p>
         <form id="regForm" novalidate>
+          <div class="field" id="sessionField" style="display:none">
+            <label for="session">Pick your date</label>
+            <select id="session" name="session"></select>
+          </div>
           <div class="field">
             <label for="name">Your name</label>
             <input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Smith" required />
@@ -367,23 +373,51 @@
 </footer>
 
 <script>
-let WEBINAR = null;
+let WEBINAR=null, SESSIONS=[], cdTarget=null;
+const $=(id)=>document.getElementById(id);
+
+function applySession(sess){
+  if(!sess){
+    $('topPill').textContent='Free live class · new dates coming soon';
+    $('dateMeta').textContent='New dates coming soon';
+    $('timeMeta').textContent='—';
+    $('finalWhen').textContent='New dates coming soon';
+    cdTarget=null;
+    return;
+  }
+  const w=sess.when;
+  $('topPill').textContent='Free live class · '+w.full;
+  $('dateMeta').textContent=w.dateStr;
+  $('timeMeta').textContent=w.timeStr+' '+WEBINAR.timezoneLabel;
+  $('finalWhen').textContent=w.full;
+  cdTarget=new Date(sess.startsAtISO).getTime();
+}
+
 async function loadWebinar(){
   try{
-    const r = await fetch('/api/webinar');
-    WEBINAR = await r.json();
-    const w = WEBINAR.when;
-    document.getElementById('topPill').textContent = 'Free live class · ' + w.full;
-    document.getElementById('dateMeta').textContent = w.dateStr;
-    document.getElementById('timeMeta').textContent = w.timeStr + ' ' + WEBINAR.timezoneLabel;
-    document.getElementById('finalWhen').textContent = w.full;
-    startCountdown(new Date(WEBINAR.startsAtISO).getTime());
+    const r=await fetch('/api/webinar');
+    WEBINAR=await r.json();
+    SESSIONS=WEBINAR.sessions||[];
+    const sel=$('session');
+    if(SESSIONS.length){
+      sel.innerHTML=SESSIONS.map((s)=>'<option value="'+s.id+'">'+s.when.full+'</option>').join('');
+      sel.value=(WEBINAR.current&&WEBINAR.current.id)||SESSIONS[0].id;
+      // Only show the picker when there's more than one date to choose from.
+      $('sessionField').style.display=SESSIONS.length>1?'block':'none';
+      applySession(SESSIONS.find((s)=>s.id===sel.value)||SESSIONS[0]);
+      sel.addEventListener('change',()=>applySession(SESSIONS.find((s)=>s.id===sel.value)));
+    }else{
+      $('sessionField').style.display='none';
+      applySession(null);
+    }
   }catch(e){}
 }
-function startCountdown(target){
-  const D=document.getElementById('cdD'),H=document.getElementById('cdH'),M=document.getElementById('cdM'),S=document.getElementById('cdS');
+
+function startCountdown(){
+  const D=$('cdD'),H=$('cdH'),M=$('cdM'),S=$('cdS');
   function tick(){
-    let diff=Math.max(0,target-Date.now());
+    if(!cdTarget){D.textContent='--';H.textContent='--';M.textContent='--';S.textContent='--';return;}
+    let diff=Math.max(0,cdTarget-Date.now());
     const d=Math.floor(diff/86400000);diff-=d*86400000;
     const h=Math.floor(diff/3600000);diff-=h*3600000;
     const m=Math.floor(diff/60000);diff-=m*60000;
@@ -393,29 +427,31 @@ function startCountdown(target){
   }
   tick();setInterval(tick,1000);
 }
-const form=document.getElementById('regForm'),errEl=document.getElementById('formErr'),btn=document.getElementById('submitBtn');
+
+const form=$('regForm'),errEl=$('formErr'),btn=$('submitBtn');
 form.addEventListener('submit',async(e)=>{
   e.preventDefault();errEl.style.display='none';
-  const name=document.getElementById('name').value.trim();
-  const email=document.getElementById('email').value.trim();
+  const name=$('name').value.trim();
+  const email=$('email').value.trim();
+  const sessionId=($('session')&&$('session').value)||'';
   if(!name){showErr('Please enter your name.');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('Please enter a valid email.');return;}
   btn.disabled=true;btn.textContent='Reserving your seat…';
   try{
     const params=new URLSearchParams(window.location.search);
-    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,source:params.get('utm_source')||''})});
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,sessionId,source:params.get('utm_source')||''})});
     const data=await res.json();
     if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent='Reserve my free seat →';return;}
-    document.getElementById('formState').style.display='none';
-    const ss=document.getElementById('successState');ss.style.display='block';
-    if(data.when)document.getElementById('successWhen').textContent="You're all set for "+data.when+". Check your email for the confirmation.";
-    if(data.zoomJoinUrl){const jb=document.getElementById('joinBtn');jb.href=data.zoomJoinUrl;jb.style.display='inline-block';}
+    $('formState').style.display='none';
+    const ss=$('successState');ss.style.display='block';
+    if(data.when)$('successWhen').textContent="You're all set for "+data.when+". Check your email for the confirmation.";
+    if(data.zoomJoinUrl){const jb=$('joinBtn');jb.href=data.zoomJoinUrl;jb.style.display='inline-block';}
     ss.scrollIntoView({behavior:'smooth',block:'center'});
   }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent='Reserve my free seat →';}
 });
 function showErr(m){errEl.textContent=m;errEl.style.display='block';}
-document.getElementById('yr').textContent=new Date().getFullYear();
-loadWebinar();
+$('yr').textContent=new Date().getFullYear();
+loadWebinar();startCountdown();
 </script>
 </body>
 </html>

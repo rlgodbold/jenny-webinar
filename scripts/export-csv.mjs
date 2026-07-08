@@ -17,7 +17,7 @@ const rows = fs
   .filter(Boolean)
   .map((l) => JSON.parse(l));
 
-const cols = ["name", "email", "registeredAt", "sessionISO", "source"];
+const cols = ["name", "email", "registeredAt", "sessionId", "sessionISO", "source"];
 const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 const csv = [
   cols.join(","),

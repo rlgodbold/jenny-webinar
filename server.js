@@ -2,7 +2,8 @@ import express from "express";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { webinar, formatWebinarWhen } from "./config.js";
+import { webinar } from "./config.js";
+import { currentSession, upcomingSessions, getSession, formatWhen } from "./sessions.js";
 import {
   sendConfirmationEmail,
   sendMarketingEmail,
@@ -20,6 +21,7 @@ import {
   activeSubscribers,
   listSubscribers,
   stats,
+  countsBySession,
   logCampaign,
   normalizeEmail,
 } from "./store.js";
@@ -64,10 +66,18 @@ app.post("/api/register", async (req, res) => {
   const ip = (req.headers["x-forwarded-for"] || req.ip || "").toString().split(",")[0].trim();
   const source = String(req.body?.source || "").slice(0, 80);
 
+  // Which session are they registering for? A valid, still-open session id from
+  // the form wins; otherwise default to the next upcoming session.
+  const requestedId = String(req.body?.sessionId || "").slice(0, 20);
+  const openIds = new Set(upcomingSessions().map((s) => s.id));
+  const session =
+    (requestedId && openIds.has(requestedId) && getSession(requestedId)) || currentSession();
+
   const record = {
     name,
     email,
-    sessionISO: webinar.startsAtISO,
+    sessionId: session?.id || null,
+    sessionISO: session?.startsAtISO || null,
     registeredAt: new Date().toISOString(),
     source,
     ip,
@@ -76,13 +86,13 @@ app.post("/api/register", async (req, res) => {
   const isNew = !getSubscriber(email);
   try {
     fs.appendFileSync(REG_FILE, JSON.stringify(record) + "\n");
-    upsertSubscriber({ email, name, source, ip, sessionISO: webinar.startsAtISO }); // consent + list state
+    upsertSubscriber({ email, name, source, ip, sessionId: session?.id || null }); // consent + list state
   } catch (err) {
     console.error("[register] write failed:", err.message);
     return res.status(500).json({ error: "Something went wrong. Try again." });
   }
 
-  sendConfirmationEmail({ name, email }).catch((e) =>
+  sendConfirmationEmail({ name, email, session }).catch((e) =>
     console.error("[register] email error:", e?.message)
   );
 
@@ -94,26 +104,36 @@ app.post("/api/register", async (req, res) => {
       count: stats().total,
       recipients: NOTIFY_EMAILS,
       attendeesUrl: attendeesUrl(),
+      when: session ? formatWhen(session).full : "",
     }).catch((e) => console.error("[register] notify error:", e?.message));
   }
 
   return res.json({
     ok: true,
-    zoomJoinUrl: webinar.zoomJoinUrl || null,
-    when: formatWebinarWhen().full,
+    zoomJoinUrl: session?.zoomJoinUrl || webinar.zoomJoinUrl || null,
+    when: session ? formatWhen(session).full : null,
+    sessionId: session?.id || null,
   });
 });
 
 app.get("/api/webinar", (_req, res) => {
+  const cur = currentSession();
+  const upcoming = upcomingSessions().map((s) => ({
+    id: s.id,
+    startsAtISO: s.startsAtISO,
+    when: formatWhen(s),
+  }));
   res.json({
     title: webinar.title,
     promise: webinar.promise,
-    startsAtISO: webinar.startsAtISO,
-    when: formatWebinarWhen(),
     timezoneLabel: webinar.timezoneLabel,
     brandName: webinar.brandName,
     hostName: webinar.hostName,
     hostTitle: webinar.hostTitle,
+    zoomJoinUrl: webinar.zoomJoinUrl || null,
+    // The featured (next) session + the full list of still-open sessions for the picker.
+    current: cur ? { id: cur.id, startsAtISO: cur.startsAtISO, when: formatWhen(cur) } : null,
+    sessions: upcoming,
   });
 });
 
@@ -205,7 +225,25 @@ function readRegistrations() {
 
 app.get("/api/admin/stats", (req, res) => {
   if (!checkAdmin(req, res)) return;
-  res.json({ ...stats(), registrations: readRegistrations().length, canSend: hasPostalAddress() });
+  const counts = countsBySession();
+  // Registrant count per session, newest sessions first, with a friendly label.
+  const bySession = Object.keys(counts)
+    .sort((a, b) => b.localeCompare(a))
+    .map((id) => {
+      const s = getSession(id);
+      return {
+        id,
+        count: counts[id],
+        label: s ? formatWhen(s).full : `${id} (archived)`,
+        upcoming: Boolean(s),
+      };
+    });
+  res.json({
+    ...stats(),
+    registrations: readRegistrations().length,
+    canSend: hasPostalAddress(),
+    bySession,
+  });
 });
 
 app.get("/api/admin/subscribers", (req, res) => {
@@ -213,15 +251,22 @@ app.get("/api/admin/subscribers", (req, res) => {
   res.json({ subscribers: listSubscribers() });
 });
 
+// Build a subscriber CSV, optionally filtered to one session id (?session=YYYY-MM-DD).
+function subscribersCsv(sessionId) {
+  let rows = listSubscribers();
+  if (sessionId) rows = rows.filter((r) => (r.sessions || []).includes(sessionId));
+  const cols = ["name", "email", "status", "subscribedAt", "unsubscribedAt", "source", "sessions"];
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const cell = (r, c) => (c === "sessions" ? (r.sessions || []).join(" | ") : r[c]);
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => q(cell(r, c))).join(","))].join("\n");
+}
+
 app.get("/api/admin/export.csv", (req, res) => {
   if (!checkAdmin(req, res)) return;
-  const rows = listSubscribers();
-  const cols = ["name", "email", "status", "subscribedAt", "unsubscribedAt", "source"];
-  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => q(r[c])).join(","))].join("\n");
+  const session = String(req.query.session || "").slice(0, 20) || null;
   res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", 'attachment; filename="subscribers.csv"');
-  res.send(csv);
+  res.setHeader("Content-Disposition", `attachment; filename="subscribers${session ? "-" + session : ""}.csv"`);
+  res.send(subscribersCsv(session));
 });
 
 // Broadcast to the active (subscribed) list. Refuses without a postal address.
@@ -263,11 +308,12 @@ app.post("/api/admin/test-email", async (req, res) => {
   const kind = String(req.body?.kind || "confirmation");
   if (!EMAIL_RE.test(email))
     return res.status(400).json({ error: "A valid email is required." });
+  const session = currentSession() || null;
   let result;
   if (kind === "confirmation") {
-    result = await sendConfirmationEmail({ name: req.body?.name || "there", email });
+    result = await sendConfirmationEmail({ name: req.body?.name || "there", email, session });
   } else if (kind === "24h" || kind === "1h") {
-    result = await sendReminderEmail({ name: req.body?.name || "there", email, kind });
+    result = await sendReminderEmail({ name: req.body?.name || "there", email, kind, session });
   } else {
     return res.status(400).json({ error: "kind must be confirmation, 24h, or 1h." });
   }
@@ -284,21 +330,42 @@ function checkReadToken(req, res) {
 
 app.get("/api/attendees.csv", (req, res) => {
   if (!checkReadToken(req, res)) return;
-  const rows = listSubscribers();
-  const cols = ["name", "email", "status", "subscribedAt", "unsubscribedAt", "source"];
-  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => q(r[c])).join(","))].join("\n");
+  const session = String(req.query.session || "").slice(0, 20) || null;
   res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", 'attachment; filename="attendees.csv"');
-  res.send(csv);
+  res.setHeader("Content-Disposition", `attachment; filename="attendees${session ? "-" + session : ""}.csv"`);
+  res.send(subscribersCsv(session));
 });
 
 app.get("/attendees", (req, res) => {
   if (!checkReadToken(req, res)) return;
-  const rows = listSubscribers().sort((a, b) =>
+  const filterId = String(req.query.session || "").slice(0, 20) || null;
+  let rows = listSubscribers().sort((a, b) =>
     String(a.createdAt || "").localeCompare(String(b.createdAt || ""))
   );
+  if (filterId) rows = rows.filter((r) => (r.sessions || []).includes(filterId));
   const active = rows.filter((r) => r.status === "subscribed").length;
+  // Per-session breakdown (every session anyone has registered for), as filter pills.
+  const counts = countsBySession();
+  const tokEnc = req.query.token ? encodeURIComponent(req.query.token) : "";
+  const tokQ = tokEnc ? "&token=" + tokEnc : "";
+  const pill = (href, label, on) =>
+    `<a href="${href}" style="display:inline-block;margin:0 8px 8px 0;padding:6px 11px;border-radius:20px;font-size:12px;text-decoration:none;border:1px solid ${on ? "#2563eb" : "#cbd5e1"};background:${on ? "#2563eb" : "#fff"};color:${on ? "#fff" : "#475569"}">${label}</a>`;
+  const allHref = "/attendees" + (tokEnc ? "?token=" + tokEnc : "");
+  const sessionPills =
+    pill(allHref, `All · ${listSubscribers().length}`, !filterId) +
+    Object.keys(counts)
+      .sort((a, b) => b.localeCompare(a))
+      .map((id) => {
+        const s = getSession(id);
+        const label = s ? formatWhen(s).full : `${id} · past`;
+        return pill(`/attendees?session=${id}${tokQ}`, `${esc(label)} · ${counts[id]}`, filterId === id);
+      })
+      .join("");
+  const cur = currentSession();
+  const headWhen = filterId
+    ? (getSession(filterId) ? formatWhen(getSession(filterId)).full : `${filterId} · past session`)
+    : (cur ? `Next: ${formatWhen(cur).full}` : "Series complete");
+  const csvHref = `/api/attendees.csv?token=${tokEnc}${filterId ? "&session=" + filterId : ""}`;
   const fmt = (iso) => {
     if (!iso) return "—";
     try {
@@ -319,7 +386,6 @@ app.get("/attendees", (req, res) => {
           : '<span class="pill no">unsubscribed</span>'}</td>
       </tr>`).join("")
     : `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px">No registrations yet.</td></tr>`;
-  const tok = encodeURIComponent(req.query.token || "");
   res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1"><title>Webinar attendees</title>
   <style>
@@ -338,9 +404,10 @@ app.get("/attendees", (req, res) => {
     .pill.ok{background:#dcfce7;color:#166534}.pill.no{background:#fee2e2;color:#991b1b}
   </style></head><body><div class="wrap">
     <div class="head">
-      <div><h1>Webinar attendees</h1><div class="sub">${rows.length} registered · ${active} currently subscribed · ${esc(formatWebinarWhen().full)}</div></div>
-      <a class="dl" href="/api/attendees.csv?token=${tok}">Download CSV ↓</a>
+      <div><h1>Webinar attendees</h1><div class="sub">${rows.length} ${filterId ? "for this session" : "registered"} · ${active} currently subscribed · ${esc(headWhen)}</div></div>
+      <a class="dl" href="${csvHref}">Download CSV ↓</a>
     </div>
+    <div style="margin:0 0 16px">${sessionPills}</div>
     <table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Registered (ET)</th><th>Status</th></tr></thead>
     <tbody>${body}</tbody></table>
   </div></body></html>`);

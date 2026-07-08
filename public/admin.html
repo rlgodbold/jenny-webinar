@@ -49,6 +49,12 @@
 
     <div class="warn" id="addrWarn">⚠ No physical mailing address set (COMPANY_POSTAL_ADDRESS). Broadcasts are blocked until your dev sets it — it's legally required in marketing email.</div>
 
+    <div class="card" id="sessionsCard" style="display:none">
+      <strong>Registrations by session</strong>
+      <div class="note" style="margin-top:4px">Upcoming sessions and past (archived) ones. Each links to its attendee list.</div>
+      <div id="sessionsList" style="margin-top:12px"></div>
+    </div>
+
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:14px">
         <strong>Send a broadcast</strong>
@@ -95,9 +101,29 @@ async function connect() {
     $("sReg").textContent = s.registrations;
     $("csv").href = "/api/admin/export.csv?token=" + encodeURIComponent(TOKEN);
     if (!s.canSend) $("addrWarn").style.display = "block";
+    renderSessions(s.bySession || []);
   } catch (e) {
     $("authErr").textContent = "Couldn't connect — check the token.";
   }
+}
+
+function renderSessions(list) {
+  const card = $("sessionsCard");
+  if (!list.length) { card.style.display = "none"; return; }
+  card.style.display = "block";
+  const t = encodeURIComponent(TOKEN);
+  $("sessionsList").innerHTML = list.map((x) => {
+    const badge = x.upcoming
+      ? '<span style="font-size:11px;font-weight:700;color:#22c55e">UPCOMING</span>'
+      : '<span style="font-size:11px;font-weight:700;color:#94a3b8">ARCHIVED</span>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)">'
+      + '<div><div style="font-size:14px;color:var(--ink)">' + x.label + ' &nbsp; ' + badge + '</div></div>'
+      + '<div style="display:flex;align-items:center;gap:12px">'
+      + '<span style="font-weight:800">' + x.count + '</span>'
+      + '<a href="/attendees?session=' + x.id + '&token=' + t + '" target="_blank">List ↗</a>'
+      + '<a href="/api/admin/export.csv?session=' + x.id + '&token=' + t + '">CSV ↓</a>'
+      + '</div></div>';
+  }).join("");
 }
 
 async function sendBroadcast(isTest) {

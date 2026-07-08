@@ -25,11 +25,26 @@ function load() {
   try {
     if (fs.existsSync(SUBS_FILE)) {
       const arr = JSON.parse(fs.readFileSync(SUBS_FILE, "utf8"));
-      subscribers = new Map(arr.map((s) => [s.email, s]));
+      subscribers = new Map(arr.map((s) => [s.email, migrate(s)]));
     }
   } catch (e) {
     console.error("[store] load failed:", e.message);
   }
+}
+
+// Bring legacy single-session records up to the recurring-series shape:
+//   sessionISO + r24/r1  ->  sessions[] + reminded{ [sessionId]: {r24,r1} }
+// The legacy webinar's date becomes an (archived) session id. Idempotent.
+function migrate(s) {
+  if (!Array.isArray(s.sessions)) {
+    const legacyId = s.sessionISO ? String(s.sessionISO).slice(0, 10) : null;
+    s.sessions = legacyId ? [legacyId] : [];
+    if (!s.reminded) {
+      s.reminded = legacyId ? { [legacyId]: { r24: !!s.r24, r1: !!s.r1 } } : {};
+    }
+  }
+  if (!s.reminded) s.reminded = {};
+  return s;
 }
 
 function persist() {
@@ -53,7 +68,7 @@ export function normalizeEmail(e) {
   return String(e || "").trim().toLowerCase();
 }
 
-export function upsertSubscriber({ email, name, source, ip, sessionISO }) {
+export function upsertSubscriber({ email, name, source, ip, sessionId }) {
   email = normalizeEmail(email);
   const now = new Date().toISOString();
   let s = subscribers.get(email);
@@ -68,14 +83,15 @@ export function upsertSubscriber({ email, name, source, ip, sessionISO }) {
       unsubscribedAt: null,
       source: source || "",
       consentIp: ip || "",
-      sessionISO: sessionISO || null,
-      r24: false, // 24h reminder sent for this session
-      r1: false, // 1h reminder sent for this session
+      sessions: sessionId ? [sessionId] : [], // every session this person registered for
+      reminded: {}, // { [sessionId]: { r24:bool, r1:bool } }
     };
     subscribers.set(email, s);
-    logEvent({ type: "subscribe", email, source, ip });
+    logEvent({ type: "subscribe", email, source, ip, sessionId });
   } else {
     if (name && !s.name) s.name = name;
+    if (!Array.isArray(s.sessions)) s.sessions = [];
+    if (!s.reminded) s.reminded = {};
     // An explicit re-registration counts as fresh consent → re-subscribe.
     if (s.status === "unsubscribed") {
       s.status = "subscribed";
@@ -83,11 +99,10 @@ export function upsertSubscriber({ email, name, source, ip, sessionISO }) {
       s.unsubscribedAt = null;
       logEvent({ type: "resubscribe", email, source, ip, via: "register" });
     }
-    // Registering for a different session resets the reminder flags.
-    if (sessionISO && s.sessionISO !== sessionISO) {
-      s.sessionISO = sessionISO;
-      s.r24 = false;
-      s.r1 = false;
+    // Track this session (a person can be registered for several future dates).
+    if (sessionId && !s.sessions.includes(sessionId)) {
+      s.sessions.push(sessionId);
+      logEvent({ type: "register_session", email, sessionId });
     }
     s.updatedAt = now;
   }
@@ -95,21 +110,36 @@ export function upsertSubscriber({ email, name, source, ip, sessionISO }) {
   return s;
 }
 
-// Active subscribers who registered for a specific session (for reminders).
-export function activeForSession(sessionISO) {
+// Active subscribers registered for a specific session (for reminders).
+export function activeForSession(sessionId) {
   return [...subscribers.values()].filter(
-    (s) => s.status === "subscribed" && s.sessionISO === sessionISO
+    (s) => s.status === "subscribed" && Array.isArray(s.sessions) && s.sessions.includes(sessionId)
   );
 }
 
-export function markReminderSent(email, which) {
+export function reminderSent(sessionId, email, which) {
+  const s = subscribers.get(normalizeEmail(email));
+  return Boolean(s?.reminded?.[sessionId]?.[which]);
+}
+
+export function markReminderSent(sessionId, email, which) {
   const s = subscribers.get(normalizeEmail(email));
   if (!s) return false;
-  if (which === "r24") s.r24 = true;
-  else if (which === "r1") s.r1 = true;
+  if (!s.reminded) s.reminded = {};
+  if (!s.reminded[sessionId]) s.reminded[sessionId] = { r24: false, r1: false };
+  s.reminded[sessionId][which] = true;
   s.updatedAt = new Date().toISOString();
   persist();
   return true;
+}
+
+// Registration counts per session id, across the whole list.
+export function countsBySession() {
+  const out = {};
+  for (const s of subscribers.values()) {
+    for (const id of s.sessions || []) out[id] = (out[id] || 0) + 1;
+  }
+  return out;
 }
 
 export function getSubscriber(email) {

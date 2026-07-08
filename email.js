@@ -6,8 +6,12 @@
 //     physical postal address + a working unsubscribe link (CAN-SPAM).
 // No-op (logs only) if RESEND_API_KEY isn't set, so local dev works without creds.
 
-import { webinar, formatWebinarWhen } from "./config.js";
+import { webinar } from "./config.js";
+import { formatWhen, currentSession } from "./sessions.js";
 import { unsubToken } from "./store.js";
+
+// First name for a friendly greeting; never generic if we have a name.
+const firstNameOf = (name) => (String(name || "").trim().split(/\s+/)[0] || "there");
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 const FROM_EMAIL =
@@ -75,12 +79,14 @@ async function send({ to, subject, html, headers }) {
 }
 
 // ── Transactional: registration confirmation ────────────────────────────────
-export async function sendConfirmationEmail({ name, email }) {
-  const when = formatWebinarWhen();
-  const firstName = (name || "").trim().split(/\s+/)[0] || "there";
-  const joinLine = webinar.zoomJoinUrl
-    ? `<p style="margin:0 0 16px"><a href="${webinar.zoomJoinUrl}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;display:inline-block;font-weight:600">Join the webinar</a></p>
-       <p style="margin:0 0 16px;color:#475569;font-size:14px">Or use this link: <a href="${webinar.zoomJoinUrl}">${webinar.zoomJoinUrl}</a></p>`
+export async function sendConfirmationEmail({ name, email, session }) {
+  session = session || currentSession();
+  const when = formatWhen(session);
+  const firstName = firstNameOf(name);
+  const joinUrl = session?.zoomJoinUrl || webinar.zoomJoinUrl;
+  const joinLine = joinUrl
+    ? `<p style="margin:0 0 16px"><a href="${joinUrl}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;display:inline-block;font-weight:600">Join the webinar</a></p>
+       <p style="margin:0 0 16px;color:#475569;font-size:14px">Or use this link: <a href="${joinUrl}">${joinUrl}</a></p>`
     : `<p style="margin:0 0 16px;color:#475569">You'll get the Zoom join link by email before we go live.</p>`;
 
   const html = `
@@ -105,7 +111,7 @@ export async function sendConfirmationEmail({ name, email }) {
 
 // ── Marketing: a broadcast to one recipient (caller iterates the list) ───────
 export async function sendMarketingEmail({ name, email, subject, bodyHtml }) {
-  const firstName = (name || "").trim().split(/\s+/)[0] || "there";
+  const firstName = firstNameOf(name);
   const html = `
   <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
     <p style="margin:0 0 16px">Hi ${firstName},</p>
@@ -116,10 +122,11 @@ export async function sendMarketingEmail({ name, email, subject, bodyHtml }) {
 }
 
 // ── Reminders (24h + 1h before the webinar) ─────────────────────────────────
-export async function sendReminderEmail({ name, email, kind }) {
-  const when = formatWebinarWhen();
-  const firstName = (name || "").trim().split(/\s+/)[0] || "there";
-  const join = webinar.zoomJoinUrl;
+export async function sendReminderEmail({ name, email, kind, session }) {
+  session = session || currentSession();
+  const when = formatWhen(session);
+  const firstName = firstNameOf(name);
+  const join = session?.zoomJoinUrl || webinar.zoomJoinUrl;
   const button = (label) =>
     join
       ? `<p style="margin:18px 0"><a href="${join}" style="background:#2563eb;color:#fff;text-decoration:none;padding:13px 24px;border-radius:10px;display:inline-block;font-weight:600">${label}</a></p>`
@@ -165,7 +172,7 @@ export async function sendReminderEmail({ name, email, kind }) {
 }
 
 // ── Internal: new-attendee notification to the team ─────────────────────────
-export async function sendAttendeeNotification({ name, email, count, recipients, attendeesUrl }) {
+export async function sendAttendeeNotification({ name, email, count, recipients, attendeesUrl, when }) {
   const subject = `New webinar signup: ${name || email}${count ? ` (#${count})` : ""}`;
   const html = `
   <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:520px;margin:0 auto;color:#0f172a;font-size:15px;line-height:1.6">
@@ -173,6 +180,7 @@ export async function sendAttendeeNotification({ name, email, count, recipients,
     <table style="font-size:15px;margin:0 0 16px">
       <tr><td style="color:#64748b;padding:2px 16px 2px 0">Name</td><td><strong>${name || "—"}</strong></td></tr>
       <tr><td style="color:#64748b;padding:2px 16px 2px 0">Email</td><td>${email}</td></tr>
+      ${when ? `<tr><td style="color:#64748b;padding:2px 16px 2px 0">Session</td><td><strong>${when}</strong></td></tr>` : ""}
     </table>
     <p style="margin:0 0 18px"><strong>${count}</strong> registered so far.</p>
     <p style="margin:0"><a href="${attendeesUrl}" style="background:#2563eb;color:#fff;text-decoration:none;padding:11px 20px;border-radius:9px;display:inline-block;font-weight:600">View all attendees →</a></p>
