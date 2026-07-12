@@ -16,10 +16,11 @@ const AT = "T14:30:00"; // 2:30 PM local (Eastern)
 const EDT = "-04:00"; // daylight time, through Nov 1 2026
 const EST = "-05:00"; // standard time, Nov 2 2026 onward
 
-// [date, offset]. Every Tuesday — no 7/21, and skipping the holiday weeks
-// (11/24 Thanksgiving, 12/22 + 12/29 Christmas/New Year).
+// [date, offset]. Thursday 7/16 kickoff, then every Tuesday from 7/21 — skipping
+// the holiday weeks (11/24 Thanksgiving, 12/22 + 12/29 Christmas/New Year).
 const DATES = [
-  ["2026-07-14", EDT], // series kickoff (Tuesday)
+  ["2026-07-16", EDT], // kickoff (Thursday)
+  ["2026-07-21", EDT], // every Tuesday from here
   ["2026-07-28", EDT],
   ["2026-08-04", EDT], ["2026-08-11", EDT], ["2026-08-18", EDT], ["2026-08-25", EDT],
   ["2026-09-01", EDT], ["2026-09-08", EDT], ["2026-09-15", EDT], ["2026-09-22", EDT], ["2026-09-29", EDT],
