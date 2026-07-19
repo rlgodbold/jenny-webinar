@@ -16,17 +16,17 @@ const AT = "T14:30:00"; // 2:30 PM local (Eastern)
 const EDT = "-04:00"; // daylight time, through Nov 1 2026
 const EST = "-05:00"; // standard time, Nov 2 2026 onward
 
-// [date, offset]. Thursday 7/16 kickoff, then every Tuesday from 7/21 — skipping
-// the holiday weeks (11/24 Thanksgiving, 12/22 + 12/29 Christmas/New Year).
+// [date, offset]. Weekly on THURSDAYS at 2:30 ET. 7/16 this week, next 7/30
+// (7/23 skipped), then every Thursday. Skips holiday weeks: 11/26 Thanksgiving,
+// 12/24 + 12/31 Christmas/New Year.
 const DATES = [
-  ["2026-07-16", EDT], // kickoff (Thursday)
-  ["2026-07-21", EDT], // every Tuesday from here
-  ["2026-07-28", EDT],
-  ["2026-08-04", EDT], ["2026-08-11", EDT], ["2026-08-18", EDT], ["2026-08-25", EDT],
-  ["2026-09-01", EDT], ["2026-09-08", EDT], ["2026-09-15", EDT], ["2026-09-22", EDT], ["2026-09-29", EDT],
-  ["2026-10-06", EDT], ["2026-10-13", EDT], ["2026-10-20", EDT], ["2026-10-27", EDT],
-  ["2026-11-03", EST], ["2026-11-10", EST], ["2026-11-17", EST],
-  ["2026-12-01", EST], ["2026-12-08", EST], ["2026-12-15", EST],
+  ["2026-07-16", EDT], // this week (Thursday)
+  ["2026-07-30", EDT], // then weekly Thursdays (7/23 skipped)
+  ["2026-08-06", EDT], ["2026-08-13", EDT], ["2026-08-20", EDT], ["2026-08-27", EDT],
+  ["2026-09-03", EDT], ["2026-09-10", EDT], ["2026-09-17", EDT], ["2026-09-24", EDT],
+  ["2026-10-01", EDT], ["2026-10-08", EDT], ["2026-10-15", EDT], ["2026-10-22", EDT], ["2026-10-29", EDT],
+  ["2026-11-05", EST], ["2026-11-12", EST], ["2026-11-19", EST], // skip 11/26 Thanksgiving
+  ["2026-12-03", EST], ["2026-12-10", EST], ["2026-12-17", EST], // skip 12/24 + 12/31
 ];
 
 export const sessions = DATES.map(([date, off]) => ({
