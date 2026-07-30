@@ -16,13 +16,13 @@ const AT = "T14:30:00"; // 2:30 PM local (Eastern)
 const EDT = "-04:00"; // daylight time, through Nov 1 2026
 const EST = "-05:00"; // standard time, Nov 2 2026 onward
 
-// [date, offset]. Weekly on THURSDAYS at 2:30 ET. 7/16 this week, next 7/30
-// (7/23 skipped), then every Thursday. Skips holiday weeks: 11/26 Thanksgiving,
-// 12/24 + 12/31 Christmas/New Year.
+// [date, offset]. Weekly on THURSDAYS at 2:30 ET. 7/30 was pushed to 8/6 to
+// present the newest Jenny release, then every Thursday. Skips holiday weeks:
+// 11/26 Thanksgiving, 12/24 + 12/31 Christmas/New Year.
 const DATES = [
-  ["2026-07-16", EDT], // this week (Thursday)
-  ["2026-07-30", EDT], // then weekly Thursdays (7/23 skipped)
-  ["2026-08-06", EDT], ["2026-08-13", EDT], ["2026-08-20", EDT], ["2026-08-27", EDT],
+  ["2026-07-16", EDT], // ran
+  ["2026-08-06", EDT], // next (7/30 moved here — big Jenny update)
+  ["2026-08-13", EDT], ["2026-08-20", EDT], ["2026-08-27", EDT],
   ["2026-09-03", EDT], ["2026-09-10", EDT], ["2026-09-17", EDT], ["2026-09-24", EDT],
   ["2026-10-01", EDT], ["2026-10-08", EDT], ["2026-10-15", EDT], ["2026-10-22", EDT], ["2026-10-29", EDT],
   ["2026-11-05", EST], ["2026-11-12", EST], ["2026-11-19", EST], // skip 11/26 Thanksgiving
