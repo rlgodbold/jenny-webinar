@@ -190,3 +190,33 @@ export async function sendAttendeeNotification({ name, email, count, recipients,
 }
 
 export const hasPostalAddress = () => Boolean(COMPANY_POSTAL_ADDRESS);
+
+
+/**
+ * THE DEMO INTEREST LEAD — sent to Lee when someone who tested Caroline wants her for real.
+ * Deliberately plain: it is a work item, not a marketing email, and it carries everything Lee
+ * needs to make the call without opening anything else. The FSM answer sits near the top
+ * because it is the one thing that can disqualify an otherwise perfect lead.
+ */
+export async function sendDemoInterestLead(lead = {}) {
+  const rows = [
+    ["Name", lead.name],
+    ["Company", lead.company],
+    ["Phone", lead.cell],
+    ["Email", lead.email],
+    ["Field service software", lead.fsm || "(not answered)"],
+    ["Plan they picked", lead.plan || "(not answered)"],
+  ];
+  const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.7;color:#0f172a">
+    <h2 style="margin:0 0 12px;font-size:18px">Demo lead — wants Caroline for real</h2>
+    <table style="border-collapse:collapse">${rows
+      .map(([k, v]) => `<tr><td style="padding:4px 14px 4px 0;color:#64748b">${k}</td><td><b>${String(v || "—")}</b></td></tr>`)
+      .join("")}</table>
+    <p style="margin-top:16px;color:#64748b;font-size:13px">They tested the demo line and came back through /demo/start.</p>
+  </div>`;
+  return send({
+    to: process.env.DEMO_LEAD_EMAIL || "lee@junkra.com",
+    subject: `Demo lead: ${lead.company || lead.name || "someone"} wants Caroline`,
+    html,
+  });
+}

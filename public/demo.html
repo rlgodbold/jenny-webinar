@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hear Caroline answer for YOUR company — in about 5 minutes</title>
+<meta name="description" content="Register, and our AI receptionist interviews you about your pricing. Two minutes later, call back and hear her answering your phone as your company — with your prices and your towns." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#ffffff; --soft:#f1f5f9; --tint:#eff6ff; --card:#ffffff;
+    --line:#e2e8f0; --ink:#0f172a; --body:#475569; --muted:#64748b;
+    --blue:#2563eb; --blue-deep:#1d4ed8; --blue-tint:#dbeafe; --green:#16a34a;
+    --amber:#d97706; --radius:16px; --maxw:1140px;
+    --shadow:0 1px 2px rgba(15,23,42,.04), 0 12px 30px -16px rgba(15,23,42,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  a{color:inherit}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--blue)}
+
+  .hero{padding:44px 0 24px;text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--blue-tint);color:var(--blue-deep);
+    font-weight:700;font-size:13px;padding:7px 14px;border-radius:999px;margin-bottom:20px}
+  h1{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.03em;color:var(--ink);font-weight:900;margin-bottom:16px}
+  h1 em{font-style:normal;color:var(--blue)}
+  .sub{font-size:clamp(16px,2vw,19px);max-width:640px;margin:0 auto 8px}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:34px 0 8px}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:left}
+  .step b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+  .step span{font-size:14px;color:var(--muted)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+    background:var(--blue);color:#fff;font-weight:800;font-size:13px;margin-bottom:10px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:28px;max-width:520px;margin:32px auto 0}
+  .panel h2{font-size:20px;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;font-weight:800}
+  .panel p.lede{font-size:14px;color:var(--muted);margin-bottom:18px}
+  label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 6px}
+  input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:15px;color:var(--ink);background:#fff}
+  input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-tint)}
+  .row{display:grid;grid-template-columns:1fr 110px;gap:12px}
+  button{width:100%;margin-top:20px;padding:14px 20px;background:var(--blue);color:#fff;border:0;border-radius:10px;
+    font:inherit;font-weight:700;font-size:16px;cursor:pointer;transition:background .15s}
+  button:hover{background:var(--blue-deep)}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  .consent{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5}
+  .err{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:14px;padding:11px 13px;border-radius:9px;margin-top:14px;display:none}
+
+  .reveal{display:none}
+  .bignum{font-size:clamp(28px,6vw,40px);font-weight:900;letter-spacing:-.02em;color:var(--ink);text-align:center;margin:6px 0 2px}
+  .bignum a{text-decoration:none;color:var(--blue)}
+  .pin{text-align:center;font-size:13px;color:var(--muted);margin-bottom:18px}
+  .try{background:var(--tint);border:1px solid var(--blue-tint);border-radius:12px;padding:18px 20px;margin:18px 0}
+  .try b{color:var(--ink);font-size:14px;display:block;margin-bottom:10px}
+  .try ul{margin:0;padding-left:20px}
+  .try li{font-size:14px;margin-bottom:6px;color:var(--body)}
+  .warn{border-left:3px solid var(--amber);background:#fffbeb;padding:14px 16px;border-radius:10px;font-size:14px;line-height:1.6;color:#78350f}
+
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brand" href="/"><span class="dot"></span> Jenny</a>
+    <a href="/" style="font-size:14px;color:var(--muted);text-decoration:none">← Back to the masterclass</a>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">🔴 Live demo · about 5 minutes</div>
+    <h1>Hear Caroline answer for <em>your</em> company</h1>
+    <p class="sub">Not a recording, and not a generic demo. She'll interview you about your pricing for ninety seconds — then answer your phone as your company, with your prices and your towns.</p>
+  </section>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><b>Register</b><span>Four fields and a text code, so we know it's you.</span></div>
+    <div class="step"><div class="num">2</div><b>She interviews you</b><span>Ninety seconds on your pricing. Stay longer and she gets sharper.</span></div>
+    <div class="step"><div class="num">3</div><b>Call back and try to break her</b><span>She answers as your company. Be difficult — real callers are.</span></div>
+  </div>
+
+  <!-- STEP 1 — the form -->
+  <div class="panel" id="formPanel">
+    <h2>Start your demo</h2>
+    <p class="lede">One demo per phone number. Takes about five minutes end to end.</p>
+    <form id="regForm">
+      <label for="name">Your name</label>
+      <input id="name" name="name" required autocomplete="name" />
+      <label for="company">Company name</label>
+      <input id="company" name="company" required placeholder="What she'll answer the phone as" />
+      <div class="row">
+        <div>
+          <label for="city">City</label>
+          <input id="city" name="city" required placeholder="Your home market" />
+        </div>
+        <div>
+          <label for="state">State</label>
+          <input id="state" name="state" maxlength="2" placeholder="NC" />
+        </div>
+      </div>
+      <label for="cell">Cell phone</label>
+      <input id="cell" name="cell" required type="tel" autocomplete="tel" placeholder="We text a code, then she rings this for the transfer" />
+      <label for="email">Email</label>
+      <input id="email" name="email" required type="email" autocomplete="email" placeholder="Where we send the recording" />
+      <button type="submit" id="regBtn">Text me a code</button>
+      <div class="err" id="regErr"></div>
+      <p class="consent">Calls with Caroline are recorded so we can send you the tape. We'll text a verification code to the number above — that's also the phone she'll ring if you try the transfer, so it has to be one you can answer.</p>
+    </form>
+  </div>
+
+  <!-- STEP 2 — the code -->
+  <div class="panel" id="codePanel" style="display:none">
+    <h2>Check your texts</h2>
+    <p class="lede">Enter the 6-digit code we just sent.</p>
+    <form id="codeForm">
+      <label for="code">Verification code</label>
+      <input id="code" inputmode="numeric" maxlength="6" required placeholder="••••••" style="letter-spacing:.4em;text-align:center;font-size:22px" />
+      <button type="submit" id="codeBtn">Verify</button>
+      <div class="err" id="codeErr"></div>
+    </form>
+  </div>
+
+  <!-- STEP 3 — the reveal -->
+  <div class="panel reveal" id="revealPanel">
+    <h2 style="text-align:center">She's expecting you</h2>
+    <p class="lede" style="text-align:center">Call now and she'll open with your name.</p>
+    <div class="bignum"><a id="demoNumber" href="#">—</a></div>
+    <div class="pin">Calling from a different phone? Your PIN is <b id="pin">—</b></div>
+
+    <div class="try">
+      <b>Once she's set up as your company, try to trip her up:</b>
+      <ul>
+        <li>Describe a load of junk and ask what it costs</li>
+        <li>Name your suburb, not your city — see if she knows it</li>
+        <li>Interrupt her mid-sentence and change your mind about the day</li>
+        <li>Give a fake name and make her spell it</li>
+        <li>Ask for a human — she'll ring the cell you just verified</li>
+        <li>Be difficult. Real callers are.</li>
+      </ul>
+    </div>
+
+    <div class="warn">
+      <b>Fair warning:</b> the Caroline you're about to test is the worst she'll ever be. Like anyone on their first day, she'll occasionally stumble — it's rare, and every single call makes her better. What she'll never do is miss a call, call in sick, or get short with a customer at 8pm on a Saturday.
+    </div>
+    <p class="consent" style="text-align:center">Your demo line is live for 24 hours. Have fun with it.</p>
+  </div>
+
+  <footer>Junk Removal Authority · <a href="/">The AI Voice Agent Masterclass</a></footer>
+</div>
+
+<script>
+  // The demo API lives on its own service (isolated from everything that serves live
+  // tenants), so these are cross-origin calls; that origin allowlists this site.
+  var API = "https://jra-voice-agents-demo.onrender.com";
+  var registrationId = null;
+
+  function show(el, on) { document.getElementById(el).style.display = on ? "block" : "none"; }
+  function fail(id, msg) { var e = document.getElementById(id); e.textContent = msg; e.style.display = "block"; }
+  function prettyPhone(v) {
+    var d = String(v || "").replace(/\D/g, "").slice(-10);
+    return d.length === 10 ? "(" + d.slice(0,3) + ") " + d.slice(3,6) + "-" + d.slice(6) : v;
+  }
+
+  document.getElementById("regForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById("regBtn");
+    document.getElementById("regErr").style.display = "none";
+    btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      var body = {
+        name: document.getElementById("name").value.trim(),
+        company: document.getElementById("company").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        state: document.getElementById("state").value.trim(),
+        cell: document.getElementById("cell").value.trim(),
+        email: document.getElementById("email").value.trim()
+      };
+      var res = await fetch(API + "/api/demo/register", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+      });
+      var json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Something went wrong — try again in a moment.");
+      registrationId = json.registrationId;
+      show("formPanel", false); show("codePanel", true);
+      document.getElementById("code").focus();
+    } catch (err) {
+      fail("regErr", err.message);
+      btn.disabled = false; btn.textContent = "Text me a code";
+    }
+  });
+
+  document.getElementById("codeForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById("codeBtn");
+    document.getElementById("codeErr").style.display = "none";
+    btn.disabled = true; btn.textContent = "Verifying…";
+    try {
+      var res = await fetch(API + "/api/demo/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrationId: registrationId, code: document.getElementById("code").value.trim() })
+      });
+      var json = await res.json();
+      if (!res.ok) throw new Error(json.error || "That code didn't work.");
+      var num = document.getElementById("demoNumber");
+      num.textContent = prettyPhone(json.demoNumber);
+      num.href = "tel:" + String(json.demoNumber || "").replace(/[^\d+]/g, "");
+      document.getElementById("pin").textContent = json.pin || "—";
+      show("codePanel", false);
+      document.getElementById("revealPanel").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      fail("codeErr", err.message);
+      btn.disabled = false; btn.textContent = "Verify";
+    }
+  });
+</script>
+</body>
+</html>

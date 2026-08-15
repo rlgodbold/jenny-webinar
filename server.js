@@ -10,6 +10,7 @@ import {
   sendReminderEmail,
   sendAttendeeNotification,
   hasPostalAddress,
+  sendDemoInterestLead,
 } from "./email.js";
 import { startReminderScheduler } from "./reminders.js";
 import { getSubscriber } from "./store.js";
@@ -416,6 +417,28 @@ app.get("/attendees", (req, res) => {
 app.get("/admin", (_req, res) =>
   res.sendFile(path.join(__dirname, "public", "admin.html"))
 );
+
+// ── THE CAROLINE DEMO ──────────────────────────────────────────────────────────
+// Additive and self-contained: two static pages plus one lead endpoint. Nothing here
+// touches the webinar registration flow, sessions.js, or the reminder scheduler.
+// The demo itself runs on its own service (jra-voice-agents-demo); /demo just talks to it.
+app.get("/demo", (_req, res) => res.sendFile(path.join(__dirname, "public", "demo.html")));
+app.get("/demo/start", (_req, res) => res.sendFile(path.join(__dirname, "public", "demo-start.html")));
+
+app.post("/api/demo-lead", async (req, res) => {
+  const lead = req.body || {};
+  if (!String(lead.name || "").trim() || !String(lead.email || "").trim()) {
+    return res.status(400).json({ error: "name and email are required" });
+  }
+  try {
+    await sendDemoInterestLead(lead);
+  } catch (error) {
+    // A lead is too valuable to lose to a mail hiccup: log it loudly and still thank them,
+    // because the alternative is a warm prospect staring at an error they cannot fix.
+    console.error("[demo-lead] email failed — LEAD DETAILS:", JSON.stringify(lead), error?.message);
+  }
+  res.json({ ok: true });
+});
 
 app.use(express.static(path.join(__dirname, "public")));
 
