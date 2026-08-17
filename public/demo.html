@@ -126,13 +126,18 @@
       <input id="code" inputmode="numeric" maxlength="6" required placeholder="••••••" style="letter-spacing:.4em;text-align:center;font-size:22px" />
       <button type="submit" id="codeBtn">Verify</button>
       <div class="err" id="codeErr"></div>
+      <p style="text-align:center;margin-top:14px">
+        <a href="#" id="resendLink" style="display:none;font-size:14px">Didn't get it? Resend the code</a>
+        <span id="resendNote" style="display:none;font-size:14px;opacity:.7"></span>
+      </p>
     </form>
   </div>
 
   <!-- STEP 3 — the reveal -->
   <div class="panel reveal" id="revealPanel">
     <h2 style="text-align:center">She's expecting you</h2>
-    <p class="lede" style="text-align:center">Call now and she'll open with your name.</p>
+    <p class="lede" style="text-align:center">Call now and she'll open with your name. First call is the interview —
+    about ninety seconds on your pricing. She's not answering as your company <em>yet</em>; that's your second call.</p>
     <div class="bignum"><a id="demoNumber" href="#">—</a></div>
     <div class="pin">Calling from a different phone? Your PIN is <b id="pin">—</b></div>
 
@@ -192,10 +197,32 @@
       registrationId = json.registrationId;
       show("formPanel", false); show("codePanel", true);
       document.getElementById("code").focus();
+      // One lost text should never be a dead prospect: offer a resend after 20 seconds.
+      setTimeout(function () { document.getElementById("resendLink").style.display = "inline"; }, 20000);
     } catch (err) {
       fail("regErr", err.message);
       btn.disabled = false; btn.textContent = "Text me a code";
     }
+  });
+
+  document.getElementById("resendLink").addEventListener("click", async function (e) {
+    e.preventDefault();
+    var link = document.getElementById("resendLink");
+    var note = document.getElementById("resendNote");
+    link.style.display = "none";
+    try {
+      var res = await fetch(API + "/api/demo/resend", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrationId: registrationId })
+      });
+      var json = await res.json();
+      note.textContent = res.ok ? "Sent — same code, give it a few seconds." : (json.error || "Couldn't resend — try registering again.");
+    } catch (err) {
+      note.textContent = "Couldn't resend — try registering again.";
+    }
+    note.style.display = "inline";
+    // The server enforces the real cap (two, thirty seconds apart); the link just paces itself.
+    setTimeout(function () { note.style.display = "none"; link.style.display = "inline"; }, 35000);
   });
 
   document.getElementById("codeForm").addEventListener("submit", async function (e) {
