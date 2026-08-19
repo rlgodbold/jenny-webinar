@@ -421,9 +421,48 @@ app.get("/admin", (_req, res) =>
 // ── THE CAROLINE DEMO ──────────────────────────────────────────────────────────
 // Additive and self-contained: two static pages plus one lead endpoint. Nothing here
 // touches the webinar registration flow, sessions.js, or the reminder scheduler.
+// ── Demo visibility gate ────────────────────────────────────────────────────
+// The demo is finished but not ear-tested, and a real prospect signing up before
+// Lee has heard it is the one outcome worth preventing. Fails CLOSED: with no env
+// set, nobody reaches /demo, not even us.
+//   DEMO_PUBLIC="true"     -> open to everyone, and the homepage link comes back
+//   DEMO_PREVIEW_KEY="..." -> /demo?key=... previews it while it stays hidden
+// Going live later is an env change on Render, not a code change.
+const DEMO_PUBLIC = process.env.DEMO_PUBLIC === "true";
+const DEMO_PREVIEW_KEY = process.env.DEMO_PREVIEW_KEY || "";
+
+function hasPreviewCookie(req) {
+  const raw = req.headers.cookie || "";
+  return raw.split(";").some((c) => c.trim() === `demo_preview=${DEMO_PREVIEW_KEY}`);
+}
+
+function demoGate(req, res, next) {
+  if (DEMO_PUBLIC) return next();
+  if (DEMO_PREVIEW_KEY && req.query.key === DEMO_PREVIEW_KEY) {
+    // Remember it so the rest of the flow (and /demo/start) works without the key.
+    res.cookie("demo_preview", DEMO_PREVIEW_KEY, {
+      httpOnly: true, sameSite: "lax", secure: true, maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return next();
+  }
+  if (DEMO_PREVIEW_KEY && hasPreviewCookie(req)) return next();
+  return res.redirect(302, "/");   // no dead end: send them back to the class page
+}
+
+// Homepage: strip the demo link unless the demo is public, so nothing advertises a
+// page that redirects. Must sit ahead of express.static, which also serves index.html.
+app.get("/", (_req, res, next) => {
+  const file = path.join(__dirname, "public", "index.html");
+  fs.readFile(file, "utf8", (err, html) => {
+    if (err) return next();
+    if (!DEMO_PUBLIC) html = html.replace(/<!--DEMO_LINK_START-->[\s\S]*?<!--DEMO_LINK_END-->/g, "");
+    res.type("html").send(html);
+  });
+});
+
 // The demo itself runs on its own service (jra-voice-agents-demo); /demo just talks to it.
-app.get("/demo", (_req, res) => res.sendFile(path.join(__dirname, "public", "demo.html")));
-app.get("/demo/start", (_req, res) => res.sendFile(path.join(__dirname, "public", "demo-start.html")));
+app.get("/demo", demoGate, (_req, res) => res.sendFile(path.join(__dirname, "public", "demo.html")));
+app.get("/demo/start", demoGate, (_req, res) => res.sendFile(path.join(__dirname, "public", "demo-start.html")));
 
 app.post("/api/demo-lead", async (req, res) => {
   const lead = req.body || {};
