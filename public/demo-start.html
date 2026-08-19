@@ -51,14 +51,10 @@
   <h1>Want her back for real?</h1>
   <p class="sub">Same Caroline you just tested — on your actual phone line, booking into your actual schedule.</p>
 
-  <div class="tiers">
-    <div class="tier">
-      <div class="price">$195<span class="per">/month</span></div>
-      <div class="what">A true backup receptionist — good for <b>25 actual qualified calls</b> a month.</div>
-    </div>
+  <div class="tiers" style="grid-template-columns:1fr">
     <div class="tier">
       <div class="price">$750<span class="per">/month</span></div>
-      <div class="what">Higher volume — up to <b>500 qualified calls</b>.</div>
+      <div class="what">Every call answered, qualified, and booked into your schedule. Month to month. <b>Cancel any time in the first 30 days and get your money back.</b></div>
     </div>
   </div>
 
@@ -78,8 +74,6 @@
       <input id="email" required type="email" autocomplete="email" />
       <label for="fsm">What field service software do you use?</label>
       <input id="fsm" placeholder="Workiz, Jobber, Housecall Pro, ServiceTitan…" />
-      <label for="plan">Which sounds right?</label>
-      <input id="plan" placeholder="$195 or $750 — or not sure yet" />
       <button type="submit" id="btn">Send it to Lee</button>
       <div class="err" id="err"></div>
     </form>
@@ -107,8 +101,7 @@
           company: document.getElementById("company").value.trim(),
           cell: document.getElementById("cell").value.trim(),
           email: document.getElementById("email").value.trim(),
-          fsm: document.getElementById("fsm").value.trim(),
-          plan: document.getElementById("plan").value.trim()
+          fsm: document.getElementById("fsm").value.trim()
         })
       });
       if (!res.ok) throw new Error("Something went wrong — email lee@junkra.com and we'll sort it.");

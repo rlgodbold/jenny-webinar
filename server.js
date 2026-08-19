@@ -449,16 +449,28 @@ function demoGate(req, res, next) {
   return res.redirect(302, "/");   // no dead end: send them back to the class page
 }
 
-// Homepage: strip the demo link unless the demo is public, so nothing advertises a
-// page that redirects. Must sit ahead of express.static, which also serves index.html.
-app.get("/", (_req, res, next) => {
-  const file = path.join(__dirname, "public", "index.html");
+// Pages that mention the demo are served through this helper: while the demo is
+// hidden, DEMO_LINK blocks are stripped (nothing advertises a page that redirects)
+// and DEMO_FALLBACK blocks show instead; once DEMO_PUBLIC flips, the reverse.
+// Must sit ahead of express.static, which also serves index.html.
+function sendDemoAwareHtml(res, next, filename) {
+  const file = path.join(__dirname, "public", filename);
   fs.readFile(file, "utf8", (err, html) => {
     if (err) return next();
-    if (!DEMO_PUBLIC) html = html.replace(/<!--DEMO_LINK_START-->[\s\S]*?<!--DEMO_LINK_END-->/g, "");
+    if (!DEMO_PUBLIC) {
+      html = html.replace(/<!--DEMO_LINK_START-->[\s\S]*?<!--DEMO_LINK_END-->/g, "");
+    } else {
+      html = html.replace(/<!--DEMO_FALLBACK_START-->[\s\S]*?<!--DEMO_FALLBACK_END-->/g, "");
+    }
     res.type("html").send(html);
   });
-});
+}
+
+app.get("/", (_req, res, next) => sendDemoAwareHtml(res, next, "index.html"));
+
+// The on-demand recording funnel. Unlinked until the edited cut is in (set the
+// iframe src in watch.html), then it becomes the front door for ads and the site.
+app.get("/watch", (_req, res, next) => sendDemoAwareHtml(res, next, "watch.html"));
 
 // The demo itself runs on its own service (jra-voice-agents-demo); /demo just talks to it.
 app.get("/demo", demoGate, (_req, res) => res.sendFile(path.join(__dirname, "public", "demo.html")));
