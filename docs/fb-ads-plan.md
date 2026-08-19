@@ -36,7 +36,7 @@ Ad link format: `https://jennycallagent.com/watch?utm_source=fb&utm_campaign=<na
 ## Creative concepts (Lee on camera; raw beats polished in this niche)
 
 **A. The missed call** (problem-first)
-Phone rings on a dump trailer, nobody can grab it. Cut to Lee: "That was a $400
+Phone rings on a dump trailer, nobody can grab it. Cut to Lee: "That was a $500
 job. It just booked with the guy who answered. If you own a junk removal company,
 I built the fix, and you can hear it working on real calls, free." -> /watch
 
