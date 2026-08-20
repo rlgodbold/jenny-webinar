@@ -22,7 +22,10 @@ const EST = "-05:00"; // standard time, Nov 2 2026 onward
 const DATES = [
   ["2026-07-16", EDT], // ran
   ["2026-08-06", EDT], // next (7/30 moved here — big Jenny update)
-  ["2026-08-13", EDT], ["2026-08-20", EDT], ["2026-08-27", EDT],
+  ["2026-08-13", EDT], ["2026-08-27", EDT],
+  // 8/20 cancelled: Lee recording an episode of The Future of Junk (Greg Workman, Load Up).
+  // Removing it stops further 1-hour reminders and stops the site advertising a class
+  // that is not happening; registrants keep their place on the list for 8/27.
   ["2026-09-03", EDT], ["2026-09-10", EDT], ["2026-09-17", EDT], ["2026-09-24", EDT],
   ["2026-10-01", EDT], ["2026-10-08", EDT], ["2026-10-15", EDT], ["2026-10-22", EDT], ["2026-10-29", EDT],
   ["2026-11-05", EST], ["2026-11-12", EST], ["2026-11-19", EST], // skip 11/26 Thanksgiving
