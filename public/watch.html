@@ -137,7 +137,7 @@
         <input id="email" type="email" autocomplete="email" placeholder="you@yourcompany.com" required />
         <button type="submit" id="watchBtn">Watch the masterclass</button>
         <div class="err" id="watchErr"></div>
-        <p class="fine">This also saves you a seat at the next live class. Unsubscribe any time.</p>
+        <p class="fine">We'll email you when there's something worth your time. Unsubscribe any time.</p>
       </form>
     </div>
 
@@ -152,7 +152,6 @@
         <!-- WATCH_VIDEO: set the src when the edited cut is uploaded (unlisted YouTube embed URL). -->
         <iframe id="classVideo" src="" title="The AI Voice Agent Masterclass" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
-      <div class="nextup" id="nextUp" style="display:none"><b>You're also on the list for the next live class.</b> <span id="nextWhen"></span></div>
 
       <div class="offer">
         <h3>Jenny, answering your phone</h3>
@@ -204,7 +203,6 @@ form.addEventListener('submit',async(e)=>{
     // validation failures and network errors as conversions and teach Meta to buy
     // people who fail to sign up. No-op when no pixel ID is configured.
     if(window.jpx)window.jpx('track','Lead');
-    if(data.when){$('nextWhen').textContent=data.when+'.';$('nextUp').style.display='block';}
     $('formPanel').style.display='none';
     $('pointsRow').style.display='none';
     $('videoSection').style.display='block';
