@@ -65,3 +65,46 @@ One operational precondition, Alston's to verify: recording has to actually be O
 for the demo server. If it is off, the email still sends but the tape link silently
 drops, and the prospect gets an email promising a recording with no recording in it.
 That would turn a kept promise into a broken one at the worst possible moment.
+
+---
+
+# ADDENDUM 2026-08-26: the consent line, rewritten
+
+Once the demo stops performing transfer, demo.html's SMS consent line is not merely
+stale, it is the stated REASON we ask for a number the prospect can answer. Leave it
+and the page argues with itself four lines apart: you need a reachable phone because
+she will ring it, and also she will not ring it, she will take a message.
+
+It cannot be deleted either, because the verification code has to go somewhere and
+the number still has to be real. So the new reason has to carry the same weight the
+transfer promise was carrying. It does, and it is true: **the verified cell is the
+phone she recognizes when you call in.** No good number, no demo.
+
+## The cell field placeholder
+
+CURRENT
+    We text a code, then she rings this for the transfer
+
+REPLACEMENT
+    We text a verification code to this number
+
+## The consent line
+
+CURRENT
+    Calls with Caroline are recorded so we can send you the tape. We'll text a
+    verification code to the number above. That's also the phone she'll ring if you
+    try the transfer, so it has to be one you can answer.
+
+REPLACEMENT
+    We record this demo call so we can email you the tape. We'll text a verification
+    code to the number above, and it's the phone she'll recognize when you call in,
+    so use the one you'll be calling from.
+
+Three things this does at once. It scopes the recording to **this demo call**, so
+nobody infers their own customers get recorded on a page whose framing is "this, but
+for your company." It keeps a real reason the number must be right. And it ends on an
+instruction rather than a condition, which is easier to comply with than "it has to be
+one you can answer."
+
+The PIN fallback for calling from a different phone is already surfaced further down
+the page, so this line does not need to carry it.
