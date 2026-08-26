@@ -12,13 +12,26 @@ Companion to docs/fb-ads-plan.md (8/19), which holds the funnel and account plan
 
 ### What we can say
 
-She answers every call. She quotes your prices. She books the job into your own
-Workiz. She emails you every time she books.
+**Three verbs, not four.** She answers every call. She quotes your prices. She books
+the job into your own Workiz.
+
+**THE EMAIL VERB IS ON HOLD (2026-08-25).** "She emails you every time she books" is
+NOT automatically true for a new tenant. Booking emails default to the JRA team, not
+the owner. The owner only receives them if onboarding seeds them as a recipient with
+their real address, notifications run live, and Resend is configured. Alston is
+verifying whether onboarding reliably does that. Until she clears it, the email verb
+does not appear in any ad, on any page, or in any script. If onboarding does not
+reliably seed the owner, we either fix onboarding or soften the verb. We do not
+soften it quietly in the copy and hope.
 
 ### What we cannot say, and must not imply
 
 - Live transfer to a human. Do not write "she'll get you on the phone."
-- Any texting, to owners or to customers. The alert is EMAIL.
+  VERIFIED behavior today: she takes the caller's name and best callback number,
+  says someone will call them right back, and fires a manager alert. She is
+  explicitly instructed never to say she can connect them. Ads must match that.
+- The owner email alert. See the hold above.
+- Any texting, to owners or to customers.
 - Call recording as a feature the tenant receives.
 - Anything about the voice sounding human, or a caller not knowing.
   Jenny never claims to be human. That is a product law, not a preference.
@@ -76,13 +89,12 @@ Script (Lee, 45 to 60 seconds):
     months later.
 
     I built the version that shows up ready. She answers every call, quotes your
-    prices, books the job straight into your Workiz, and emails you every time she
-    books one. No interviewing. No payroll. No training her on your price list at
-    ten at night.
+    prices, and books the job straight into your Workiz. No interviewing. No
+    payroll. No training her on your price list at ten at night.
 
     Go hear her work. Link is right there.
 
-Primary text: the trap, restated in two short paragraphs, ending on the four verbs.
+Primary text: the trap, restated in two short paragraphs, ending on the verbs.
 Headline: The hire that shows up ready.
 
 ## CONCEPT 2: THE 6PM CALL (emotional, top of funnel)
@@ -106,28 +118,30 @@ Script (Lee, 30 to 40 seconds):
     I am not going to tell you to ignore it. I am telling you somebody capable can
     answer it so you do not have to choose. Go hear how she handles a real call.
 
-## CONCEPT 3: THE FOUR VERBS (product clarity, mid funnel)
+## CONCEPT 3: WHAT SHE ACTUALLY DOES (product clarity, mid funnel)
 
 Angle: skeptics do not know what "AI receptionist" actually means, and vagueness
 reads as vapor. Say the four things plainly and let the specificity do the work.
 
 Hook variants:
-- A. "Here is exactly what she does. Four things, no hand waving."
+- A. "Here is exactly what she does. Three things, no hand waving."
 - B. "People ask me what the AI actually does on the call. This is it."
 - C. "If you own a junk removal company, this is the whole product in 30 seconds."
 
 Script (Lee, 30 seconds, on screen text mirrors each verb):
 
-    Four things.
+    Three things.
 
     One, she answers. Every call, every time, including the ones coming in while
     you are in the back of a truck.
     Two, she quotes. Your prices, your items, your minimums. Not a guess.
     Three, she books it. Into your own Workiz, on your calendar, like your office
     person would.
-    Four, she emails you the second she books one, so you always know.
 
     That is it. That is the product. Go hear it.
+
+A fourth line drops in cleanly if and when the email verb clears. Shoot the script
+as three. Do not shoot a fourth line on spec, because footage that exists gets used.
 
 ## CONCEPT 4: THE COST OF THE CALLS YOU ALREADY MISS (rational, mid funnel)
 
@@ -176,8 +190,18 @@ when a vendor volunteers the ceiling, and it inoculates against the objection
 landing later, when it costs us the deal instead of earning it.
 
 NEEDS LEE'S DECISION. It publicly discloses limitations. My read is that it wins
-more deals than it costs, but it is his brand and his call, and it cannot be
-written at all until the verified answer on the human request path arrives.
+more deals than it costs, but it is his brand and his call.
+
+The verified human request behavior is now known and it is genuinely good material:
+she takes their name and best callback number, tells them someone will call right
+back, and alerts a manager. Framed honestly that is a strength, because the
+alternative most owners live with is voicemail and a lost caller. The honest line is
+"she takes their info and gets someone calling them back," never "she'll connect you."
+
+One operational caveat that belongs in the sales conversation, not the ad: that
+promise is only kept if a human actually calls back. We are putting a promise in the
+owner's mouth. Worth Lee naming it on the call so it lands as a workflow the owner
+owns rather than a claim we made for him.
 
 ---
 

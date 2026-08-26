@@ -17,12 +17,21 @@ and propagates. Build a price block that is easy to drop in later, and leave it 
 for now. Do not put a placeholder number in, not even commented out, where it could
 get uncommented by accident.
 
-**ONLY THESE FOUR CLAIMS.** She answers every call. She quotes your prices. She books
-the job into your own Workiz. She emails you every time she books.
+**ONLY THESE THREE CLAIMS.** She answers every call. She quotes your prices. She
+books the job into your own Workiz.
+
+**The email verb is ON HOLD as of 2026-08-25** and must not appear on the page.
+"She emails you every time she books" is not automatically true for a new tenant.
+Booking emails default to the JRA team, not the owner, unless onboarding seeds the
+owner as a recipient with notifications live. Alston is verifying. Build the block
+so a fourth line drops in without a rewrite, but do not ship a fourth line and do
+not leave one commented out.
 
 **DO NOT SAY OR IMPLY, anywhere on the page:**
 - Live transfer to a human. No "she'll get you on the phone with your team."
-- Any texting, to owners or to customers. The alert is EMAIL. Say email.
+  Verified behavior: she takes a name and callback number and alerts a manager.
+- The owner email alert. On hold, see above.
+- Any texting, to owners or to customers.
 - Call recording as something the client gets.
 - That a caller would not know it is AI. Jenny never claims to be human. This is a
   product law. Do not write clever copy that winks at it.
@@ -48,8 +57,8 @@ the page.** The only exits are the CTA and the back button.
 2. **One paragraph** of the Hiring Trap, short. The day you finally admit you cannot
    answer the phone anymore is the worst possible day to hire and train somebody.
 3. **The CTA, high.** Above the fold on a phone. Not at the bottom.
-4. **The four verbs**, as four short lines with plain labels. This is the whole
-   product description. Resist adding a fifth thing.
+4. **The verbs**, as three short lines with plain labels. This is the whole product
+   description. Resist adding a fourth thing until Alston clears the email verb.
 5. **Proof slot.** Empty for now. Real call audio goes here once Lee clears a client
    in writing and the two party consent check is done. Build the slot, leave it out.
 6. **Who is behind it.** Lee, JRA. Photo. One or two sentences. This audience buys
@@ -176,13 +185,15 @@ pages, so the pixel data stays pooled and there is one page to maintain.
 
     No credit card. Takes about a minute.
 
-**The four verbs** (label in bold, sentence after it)
+**The verbs** (label in bold, sentence after it). THREE, not four.
 
     She answers.     Every call, every time, including the ones that come in
                      while you are in the back of a truck.
     She quotes.      Your prices, your items, your minimums.
     She books it.    Into your own Workiz, on your calendar.
-    She emails you.  Every time she books one, so you always know what happened.
+
+The "She emails you" line is REMOVED as of 2026-08-25 and must not ship. See Part 1.
+Build the block so a fourth line drops in later without a layout rewrite.
 
 **Who is behind it** (with Lee's photo, lee.jpg already in public/)
 
