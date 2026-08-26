@@ -136,3 +136,61 @@ five figures if it is for sale at all. That is normal and it is not a reason to 
 a good name. It is a reason to check before falling in love.
 
 Say the word and I will run the searches and come back with what is actually free.
+
+---
+
+# SEARCH RESULTS 2026-08-26
+
+Ran DNS registration checks on 46 candidate domains and web searches on the leading
+names. **I ran searches. I did not clear anything. A knockout search by a lawyer is
+still required before any name gets used.**
+
+## Domains: the plain word strategy hits a wall
+
+Of 46 domains checked across all five candidates and their common variants, **two were
+unregistered**: standbylabs.com and standbyagents.com. Everything else is taken,
+including every bare .com, every get/try/join/use prefix, and .ai, .io, .co, .team and
+.work for standby.
+
+That is not a fact about our candidates, it is a fact about 2026. Any plain English
+word anyone would want has been registered for years.
+
+**Registered does not mean unavailable.** A large share of these are parked and for
+sale, so for most of them the real question is price, not availability. standby.com is
+registered but does not serve a website at all, which matters: it is not an active
+company with a brand, it is somebody holding an asset.
+
+**And we do not need the exact match .com to decide.** The company name is not
+customer facing yet. It matters for partnerships, the affiliate program, contracts,
+and future products. So the sequence is: pick the right name, use a compound domain to
+start, and negotiate for the short one later if it ever matters. Choosing a worse name
+because a better one costs money would be the tail wagging the dog.
+
+## Trademark: one real neighbour on Standby
+
+**STANDBY VIRTUAL DESKTOP** is a registered SaaS mark in **International Class 042**,
+owned by TetherView LLC, filed 2018, covering software as a service for archiving,
+server virtualization, and business continuity.
+
+Class 042 is exactly where we would file. The mark is not identical, it is two words
+with a descriptive tail in a different corner of software, and their goods are nothing
+like ours. But it is close enough that a bare STANDBY application in 042 would face a
+likelihood of confusion question, and that is a lawyer's call, not mine.
+
+Practical read: this does not kill Standby, and it does mean Standby is the candidate
+most in need of a real knockout search before anyone spends money on it.
+
+## No competitor collision
+
+No company called Standby appears in home services or AI voice agents. The name is
+clear in our actual market, which is the collision that would have been disqualifying.
+
+## Worth knowing, unrelated to naming
+
+The same search turned up **Bravi**, building "an AI operating system for home services
+businesses," using AI customer communication as the wedge to replace the front office.
+That is close to Lee's stated long term vision, described in nearly his words.
+
+Not a reason to change anything. It is a reason to know they exist, and it is mild
+confirmation that the direction is right, since somebody funded is walking the same
+road. Worth a proper competitive look at some point, separate from naming.
