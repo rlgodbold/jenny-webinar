@@ -45,6 +45,35 @@ do nothing.
 **Set.** Base code plus `PageView` initialises on all five surfaces: `/`, `/lp`, `/watch`,
 `/demo`, `/demo/start`. Confirmed with the real ID above, one init and one PageView each.
 
+## One switch, and why it may be the wrong shape (READ BEFORE DECIDING)
+
+`META_PIXEL_ID` is a single on/off for all five surfaces. That is fine to ship and it may
+be too coarse to leave, because the surfaces are not alike:
+
+| Surface | Traffic | Tracking |
+|---|---|---|
+| `/lp` | paid only | needed. It is the ad destination. |
+| `/watch` | **paid AND organic** | needed. See below. |
+| `/demo`, `/demo/start` | arrived through one of the two doors | needed |
+| `/` home page | **purely organic** | genuinely Lee's call |
+
+The important line is `/watch`. It is easy to file it with the home page because it takes
+organic visitors, and that was the first read here. It is wrong under the two doors model:
+**`/watch` is an ad destination too**, the second door, the one a slower buyer is pointed
+at. With the pixel off there we cannot see which ads produce class registrations, cannot
+build a retargeting pool from them, and cannot optimise that half of the funnel at all.
+Off on `/watch` does not mean collecting less, it means running blind on half the campaign.
+
+So the real question for Lee is narrow: **tracking on the home page, where visitors arrived
+on their own and never clicked an ad.** That is a genuine consent decision. It is not
+linked to whether the campaign can be measured, and he should not be offered a trade
+between the two, because there is not one.
+
+If he wants the home page excluded, the change is small: gate the marker per page rather
+than globally, so the home page can opt out while the four funnel surfaces stay on. Not
+built, because nobody has asked for it yet and a per-page split invented in advance is a
+guess about a decision he has not made.
+
 ## The events, and the rule that matters
 
 | Event | Fires | Where |
@@ -67,9 +96,20 @@ faked, because an event that fired on page load would tell Meta everyone complet
 ## Still open
 
 **Domain verification for jennycallagent.com.** Blocked on Lee clearing an account
-security prompt in Business Manager. Once cleared it is a meta tag in the head of the home
-page, which is a code change here. Worth doing early: verification can take up to 72 hours
-after the tag goes live, so leaving it to launch day risks launching without it.
+security prompt in Business Manager.
+
+**Use the DNS TXT method, not the meta tag.** Two reasons, and the second is the durable
+one. It never touches `index.html`, which is under a hard hold, so nobody has to carve out
+an exception under time pressure. And a meta tag lives in a page while a DNS record does
+not: any future rewrite of that `<head>` can silently drop the tag, and the failure is
+invisible until an ad rejects or the domain quietly unverifies weeks later. The DNS record
+survives every deploy.
+
+For whoever sets it: jennycallagent.com runs on Render, but the record goes at the
+REGISTRAR holding the domain, not in the Render dashboard. That is where people get stuck.
+
+Worth starting early either way: Meta can take up to 72 hours to verify after the record is
+live, so leaving it to launch day risks launching without it.
 
 **Conversions API.** Insertion point only, `capiEvent()` in `server.js`, a no-op without a
 token. It is how closed deals eventually get fed back so Meta optimises toward buyers
