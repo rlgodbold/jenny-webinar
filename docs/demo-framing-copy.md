@@ -39,9 +39,10 @@ The last item is the replacement for "she'll ring the cell you just verified." I
 still demos a real win. Every owner has lost a customer to voicemail and none have
 lost one to a callback.
 
-CANDIDATE, do not ship without confirmation: "Call back and move the time, or cancel
-it." Reschedule and cancel are live in production, but I have not confirmed they work
-on the demo path, and I am not adding a claim I have not checked.
+DROPPED 2026-08-26: the "call back and move the time, or cancel it" candidate is out.
+Unconfirmed on the demo path, and the demo does not need it. Keep the test drive to
+the reliable core: answer, quote, book. A demo that does three things well beats one
+that does four things unevenly, because the fourth is the one they will remember.
 
 ### Replacement fairness block
 
@@ -81,16 +82,29 @@ as recordings in the heading itself, not in fine print.
     Sometimes a caller just wants a person. This is Jenny doing the handoff, both
     sides of it.
 
-    AVAILABILITY LINE: NEEDS CONFIRMATION BEFORE SHIP.
+    AVAILABILITY LINE (final, pending Lee's confirmation of what we commit to):
 
-Proposed, if transfer is not enabled for new accounts:
-
-    Not switched on for new accounts yet. This is where it's headed.
+        Not part of day one. It turns on once you've decided who picks up and when.
 
 **This line is not optional and it is not decoration.** A labeled recording still
 creates an expectation. If a prospect watches this and signs, they believe they are
-buying it. Whoever confirms the true status owns the exact words, and I will write
-them once I have the truth. Do not ship the clip without an availability line.
+buying it. A label is the promise in a smaller font, not an exemption from it.
+
+Why this wording. The verified status is that transfer is real and Junk Doctors runs
+it, but it is per client and needs an allowlist, a hunt list, and a decided receiver
+with hours. So it is neither day one nor vaporware. My earlier draft, "this is where
+it's headed," was wrong in a specific way: it implies we are still building it, when
+the truth is it is built and waiting on the owner's own decision about who answers.
+
+The final wording is better than accurate, it is useful. It puts the precondition
+where it actually lives, with the owner, and it reads as a real operational step
+rather than a feature we are short of. Nobody feels sold to by a sentence that hands
+them the next decision.
+
+**CLIP STATUS: fast follow, not today.** It needs real transfer call audio with client
+consent and a two party consent state check, and Lee needs to confirm exactly what we
+commit to. Alston owns routing both. The rest of Part 1 and clip B ship now and do not
+wait on it.
 
 ### Clip B: her, in your voice
 
