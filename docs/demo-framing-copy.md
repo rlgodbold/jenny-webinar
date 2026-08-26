@@ -1,7 +1,37 @@
 # Demo framing copy: fairness frame + capability showcase
 
 Priority 2, per Lee 2026-08-26. Companion to docs/demo-perfection-plan.md and
-docs/demo-copy-transfer-fix.md. Placement is Acelynn's. Nothing applied.
+docs/demo-copy-transfer-fix.md. Placement is Acelynn's.
+
+## STATUS, READ THIS BEFORE APPLYING ANYTHING FROM THIS FILE
+
+Lee pivoted the demo on 2026-08-26 after this was written. Marking what survived so
+nobody applies a superseded section as verbatim source. A stale doc used as a copy
+source is the same failure as reading main instead of the working branch, one level
+over, and it is more expensive because the output is customer facing.
+
+**STILL LIVE, applied on ads-funnel, do not re-apply:**
+- Part 1, the "things to try" list and the how-to-judge-her block. Shipped at 8b98538.
+- The consent line rewrite in docs/demo-copy-transfer-fix.md. Shipped at 5c0e25b.
+
+**SUPERSEDED by the pivot:**
+- Part 2's structure as a separate "What else she does" showcase section with two
+  labeled clips. The pivot folds the voice demonstration into the main flow instead.
+- Clip A, the transfer showcase, is dropped entirely. No transfer clip, no transfer
+  availability line, no audio to source. The verified availability wording is kept
+  below only as a record of the true status, not as copy to ship.
+
+**REPOSITIONED, still good:**
+- Clip B becomes the A/B reveal immediately after the demo call rather than a
+  standalone showcase item. Script at docs/clip-b-script.md is unaffected and the
+  reasoning behind it fits the new flow better than the old one.
+
+**PENDING LEE, blocks the rewrite:**
+- Voice order. Recommendation to him is standard voice in the demo, Dale as the
+  reveal right after, so the base product is never the disappointment at the buying
+  moment. If he rules Dale first, this file gets rewritten to match.
+- Whether the local voice path is included, an upgrade with a price, or on request.
+  That is a commitment line and it does not get written from inference.
 
 Lee's decision: the live demo does NOT perform transfer or friction, because a
 technical or user error in front of a prospect costs more trust than the capability
