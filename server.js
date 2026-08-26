@@ -437,14 +437,6 @@ const DEMO_PUBLIC = process.env.DEMO_PUBLIC === "true";
 // dropping the real ID in later is an env change and a restart, not a code change.
 const META_PIXEL_ID = (process.env.META_PIXEL_ID || "").replace(/[^0-9]/g, "");
 
-// CAPABILITY SHOWCASE GATE. Marketing's call, and it is the right one: a showcase that
-// promises a recording with no recording behind it reads as broken, not as forthcoming.
-// So the whole section is stripped unless the audio actually exists on disk, and the
-// player is injected when it does. Dropping the file in is the entire deployment step:
-// the section cannot ship empty, and it cannot be forgotten once the file lands.
-const CLIP_B_REL = "clips/her-in-your-voice.mp3";
-const clipBExists = () => fs.existsSync(path.join(__dirname, "public", CLIP_B_REL));
-
 function pixelSnippet() {
   if (!META_PIXEL_ID) return "<script>window.jpx=function(){};</script>";
   return `<script>
@@ -504,14 +496,6 @@ function sendDemoAwareHtml(res, next, filename) {
     // Pages without the marker are untouched, so adding this changed nothing about how
     // the existing pages render.
     html = html.replace("<!--META_PIXEL-->", pixelSnippet());
-    if (clipBExists()) {
-      html = html.replace(
-        "<!--CLIP_B_AUDIO-->",
-        `<audio controls preload="none" src="/${CLIP_B_REL}">Your browser cannot play this recording.</audio>`
-      );
-    } else {
-      html = html.replace(/<!--SHOWCASE_START-->[\s\S]*?<!--SHOWCASE_END-->/g, "");
-    }
     res.type("html").send(html);
   });
 }
