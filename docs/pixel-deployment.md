@@ -45,10 +45,14 @@ do nothing.
 **Set.** Base code plus `PageView` initialises on all five surfaces: `/`, `/lp`, `/watch`,
 `/demo`, `/demo/start`. Confirmed with the real ID above, one init and one PageView each.
 
-## One switch, and why it may be the wrong shape (READ BEFORE DECIDING)
+## One switch, and why it turned out to be the right shape (DECIDED)
 
-`META_PIXEL_ID` is a single on/off for all five surfaces. That is fine to ship and it may
-be too coarse to leave, because the surfaces are not alike:
+**Lee ruled 2026-08-26: pixel ON for all five surfaces, home page included.** So no
+per-page split is needed and none was built. The single `META_PIXEL_ID` flip on Render at
+go-live covers everything. The rest of this section is kept as the record of why it was
+worth asking rather than assuming.
+
+`META_PIXEL_ID` is a single on/off for all five surfaces. The surfaces are not alike:
 
 | Surface | Traffic | Tracking |
 |---|---|---|
@@ -69,10 +73,8 @@ on their own and never clicked an ad.** That is a genuine consent decision. It i
 linked to whether the campaign can be measured, and he should not be offered a trade
 between the two, because there is not one.
 
-If he wants the home page excluded, the change is small: gate the marker per page rather
-than globally, so the home page can opt out while the four funnel surfaces stay on. Not
-built, because nobody has asked for it yet and a per-page split invented in advance is a
-guess about a decision he has not made.
+He ruled to include it, so the single switch stands. Had he excluded it, the change was
+small: gate the marker per page rather than globally. Recorded in case that changes.
 
 ## The events, and the rule that matters
 
