@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--META_PIXEL-->
 <style>
   :root{--navy:#0b1526;--navy2:#101d33;--paper:#f6f3ec;--card:#ffffff;--line:#e5e0d4;
         --ink:#141a24;--body:#4a5261;--muted:#8a8272;
@@ -182,11 +183,22 @@ form.addEventListener('submit',async(e)=>{
   btn.disabled=true;btn.textContent='One second...';
   try{
     const params=new URLSearchParams(window.location.search);
-    const src='watch-recording'+(params.get('utm_source')?':'+params.get('utm_source'):'');
+    // Capture the full ad attribution, not just the network. Without campaign and
+    // content we can see that Facebook sent a signup but not WHICH AD produced it,
+    // which makes creative testing guesswork. Packed into the single `source` field
+    // the server already stores and exports (capped at 80 chars), so no server or
+    // schema change is needed. Format: watch-recording:<source>/<campaign>/<content>
+    const utmTag=(k)=>(params.get(k)||'').replace(/[^A-Za-z0-9._-]/g,'').slice(0,20);
+    const utm=[utmTag('utm_source'),utmTag('utm_campaign'),utmTag('utm_content')].join('/').replace(/\/+$/,'');
+    const src='watch-recording'+(utm?':'+utm:'');
     const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name,email,source:src})});
     const data=await res.json();
     if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent='Watch the masterclass';return;}
+    // Lead fires HERE, on success, never on button click. On click it would count
+    // validation failures and network errors as conversions and teach Meta to buy
+    // people who fail to sign up. No-op when no pixel ID is configured.
+    if(window.jpx)window.jpx('track','Lead');
     if(data.when){$('nextWhen').textContent=data.when+'.';$('nextUp').style.display='block';}
     $('formPanel').style.display='none';
     $('pointsRow').style.display='none';

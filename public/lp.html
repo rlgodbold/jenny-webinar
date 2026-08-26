@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jenny answers your phone | For junk removal owners</title>
+<meta name="description" content="For junk removal owners. She answers every call, quotes your prices, and books the job into your own Workiz." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--META_PIXEL-->
+<style>
+  :root{--navy:#0b1526;--navy2:#101d33;--paper:#f6f3ec;--card:#ffffff;--line:#e5e0d4;
+        --ink:#141a24;--body:#4a5261;--muted:#8a8272;
+        --org:#ff6320;--org-d:#e5511a;--green:#1d9e57;
+        --cond:'Barlow Condensed',sans-serif;--sans:'Barlow',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--paper);color:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+
+  /* hero: everything through the first CTA is built to fit a 375x812 phone */
+  .hero{background:var(--navy);color:#fff;padding:26px 0 30px}
+  .eyebrow{font-family:var(--cond);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+           font-size:13px;color:var(--org);margin-bottom:12px}
+  h1{font-family:var(--cond);font-weight:800;line-height:1.04;letter-spacing:-.01em;
+     font-size:clamp(30px,8.2vw,44px);color:#fff;margin-bottom:12px}
+  .subhead{font-size:17px;color:#c7cedb;font-weight:500;margin-bottom:16px}
+  .lede{font-size:16px;color:#aeb7c6;margin-bottom:22px}
+
+  .cta{display:block;width:100%;text-align:center;background:var(--org);color:#fff;text-decoration:none;
+       font-family:var(--cond);font-weight:800;font-size:21px;letter-spacing:.02em;text-transform:uppercase;
+       padding:17px 20px;border:0;border-radius:10px;cursor:pointer;box-shadow:0 3px 0 var(--org-d)}
+  .cta:active{transform:translateY(2px);box-shadow:0 1px 0 var(--org-d)}
+  .micro{text-align:center;font-size:14px;color:#8f98a8;margin-top:10px}
+
+  .field{margin-bottom:11px}
+  .field input{width:100%;padding:14px 15px;font-size:16px;font-family:var(--sans);
+               border:1px solid #2a3549;border-radius:9px;background:#152238;color:#fff}
+  .field input::placeholder{color:#7c869a}
+  .err{display:none;background:#3a1616;border:1px solid #6b2626;color:#ffb4b4;
+       padding:10px 13px;border-radius:8px;font-size:14px;margin-bottom:11px}
+
+  /* body */
+  section{padding:34px 0}
+  .body-copy p{font-size:17px;color:var(--ink);margin-bottom:16px}
+  .body-copy p:last-child{margin-bottom:0}
+  .kicker{font-family:var(--cond);font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+          font-size:14px;color:var(--org-d);margin-bottom:14px}
+
+  .verbs{border-top:1px solid var(--line)}
+  .verb{display:flex;gap:14px;padding:17px 0;border-bottom:1px solid var(--line)}
+  .verb .tick{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--green);
+              color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .verb b{font-family:var(--cond);font-weight:800;font-size:19px;color:var(--ink);
+          text-transform:uppercase;letter-spacing:.02em;display:block;margin-bottom:2px}
+  .verb span{font-size:16px;color:var(--body)}
+
+  .host{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .host img{width:76px;height:76px;border-radius:50%;object-fit:cover;object-position:center top;
+            float:left;margin:0 16px 8px 0;border:3px solid var(--paper)}
+  .host p{font-size:16px;color:var(--ink)}
+
+  .closer{background:var(--navy2);color:#fff;padding:34px 0}
+  .closer h2{font-family:var(--cond);font-weight:800;font-size:27px;color:#fff;
+             margin-bottom:16px;text-align:center;line-height:1.15}
+
+  .done{display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;text-align:center}
+  .done h2{font-family:var(--cond);font-weight:800;font-size:25px;color:var(--ink);margin-bottom:8px}
+  .done p{font-size:16px;color:var(--body);margin-bottom:16px}
+  .frame{position:relative;padding-bottom:56.25%;height:0;background:#000;border-radius:10px;overflow:hidden}
+  .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">For junk removal owners</div>
+    <h1>If you own a junk removal company, you should not have to choose between your family and the phone.</h1>
+    <p class="subhead">One of them pays for the other. That is the trap.</p>
+    <p class="lede">You know the day you decide to get help with the phone. It is the day you break. It is 97 degrees, you are on a truck, you are behind on estimates, and the phone will not stop.</p>
+
+    <!-- THE CTA, HIGH. Both states live here. The server strips whichever one does not
+         apply (sendPageHtml), so flipping DEMO_PUBLIC switches the page with no deploy. -->
+    <div id="formPanel">
+      <div class="err" id="lpErr"></div>
+      <form id="lpForm" novalidate>
+        <div class="field"><input id="name" type="text" placeholder="First and last name" autocomplete="name" /></div>
+        <div class="field"><input id="email" type="email" placeholder="Email address" autocomplete="email" /></div>
+        <!--DEMO_FALLBACK_START--><button class="cta" id="lpBtn" type="submit">Hear her answer a real call</button><!--DEMO_FALLBACK_END-->
+        <!--DEMO_LINK_START--><button class="cta" id="lpBtn" type="submit">Hear her answer as your company</button><!--DEMO_LINK_END-->
+      </form>
+      <p class="micro">No credit card. Takes about a minute.</p>
+    </div>
+
+    <!-- Post submit happens HERE, on the same screen. No thank you page, no dead end. -->
+    <div class="done" id="donePanel">
+      <h2 id="doneTitle">You are in.</h2>
+      <p id="doneSub">Press play.</p>
+      <div class="frame" id="videoFrame">
+        <!-- Editor's cut drops in here, same as /watch. -->
+        <iframe id="lpVideo" src="" title="AI Voice Agent Masterclass" allowfullscreen></iframe>
+      </div>
+      <!--DEMO_LINK_START--><a class="cta" href="/demo" id="demoGo" style="margin-top:16px">Start the demo</a><!--DEMO_LINK_END-->
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap body-copy">
+    <div class="kicker">The hiring trap</div>
+    <p>So in the worst week of your year, you are supposed to write a job post, interview six people, hire one, and train them on your own price list at ten at night. That is why owners wait too long, hire wrong, and do it again four months later.</p>
+    <p>I built the one that shows up ready.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <!-- One .verb row per claim. A fourth drops in as one more row, no layout change.
+         Nothing is parked here commented out on purpose: commented copy gets uncommented,
+         and the email claim is not true for a new tenant until onboarding is verified. -->
+    <div class="verbs">
+      <div class="verb"><div class="tick">&#10003;</div><div><b>She answers.</b><span>Every call, every time, including the ones that come in while you are in the back of a truck.</span></div></div>
+      <div class="verb"><div class="tick">&#10003;</div><div><b>She quotes.</b><span>Your prices, your items, your minimums.</span></div></div>
+      <div class="verb"><div class="tick">&#10003;</div><div><b>She books it.</b><span>Into your own Workiz, on your calendar.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF SLOT. Deliberately empty. Real call audio goes here only after Lee clears a
+     client in writing and the two party consent check is done. Do not fill this with a
+     sample, a mockup, or a synthetic call. -->
+<!--PROOF_SLOT-->
+
+<!-- PRICE SLOT. Deliberately empty and deliberately NOT a commented out number, so a
+     stale price cannot be uncommented back onto a live ad page by accident. The number
+     is frozen until Alston confirms and propagates it. -->
+<!--PRICE_SLOT-->
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="host">
+      <img src="/lee.jpg" alt="Lee Godbold" />
+      <p>I am Lee Godbold. I run Junk Removal Authority and I have owned junk removal companies for years. I built this because I got tired of choosing between the phone and everything else.</p>
+    </div>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>If you own a junk removal company, you should not have to choose between your family and the phone.</h2>
+    <!-- Second CTA: identical words, identical action. Scrolls to the one form. -->
+    <!--DEMO_FALLBACK_START--><a class="cta" href="#top" id="lpBtn2">Hear her answer a real call</a><!--DEMO_FALLBACK_END-->
+    <!--DEMO_LINK_START--><a class="cta" href="#top" id="lpBtn2">Hear her answer as your company</a><!--DEMO_LINK_END-->
+    <p class="micro">No credit card. Takes about a minute.</p>
+  </div>
+</section>
+
+<script>
+const $=(id)=>document.getElementById(id);
+const form=$('lpForm'),errEl=$('lpErr'),btn=$('lpBtn'),btn2=$('lpBtn2');
+const label=btn?btn.textContent:'';
+function showErr(m){errEl.textContent=m;errEl.style.display='block';}
+
+// Second CTA is the same action as the first: send them back to the one form.
+if(btn2){btn2.addEventListener('click',(e)=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});$('name').focus();});}
+
+form.addEventListener('submit',async(e)=>{
+  e.preventDefault();errEl.style.display='none';
+  const name=$('name').value.trim(),email=$('email').value.trim();
+  if(!name){showErr('Please enter your name.');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('Please enter a valid email.');return;}
+  btn.disabled=true;btn.textContent='One second...';
+  try{
+    // Same attribution mechanism as the /watch patch, different prefix so the two
+    // entry points stay distinguishable inside the one `source` field the server
+    // already stores and exports. Format: lp:<source>/<campaign>/<content>
+    const params=new URLSearchParams(window.location.search);
+    const utmTag=(k)=>(params.get(k)||'').replace(/[^A-Za-z0-9._-]/g,'').slice(0,20);
+    const utm=[utmTag('utm_source'),utmTag('utm_campaign'),utmTag('utm_content')].join('/').replace(/\/+$/,'');
+    const src='lp'+(utm?':'+utm:'');
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,email,source:src})});
+    const data=await res.json();
+    if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent=label;return;}
+
+    // Lead fires HERE, on success, never on click. A Lead on click counts network
+    // errors and validation failures as conversions and teaches Meta to buy people
+    // who fail to sign up.
+    if(window.jpx)window.jpx('track','Lead');
+
+    $('formPanel').style.display='none';
+    $('donePanel').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent=label;}
+});
+</script>
+</body>
+</html>

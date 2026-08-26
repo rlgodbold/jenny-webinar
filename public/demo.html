@@ -8,6 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<!--META_PIXEL-->
+<!-- DEMOCOMPLETED INSERTION POINT.
+     The custom DemoCompleted event ("they actually heard her through") is the real
+     intent signal, but the demo runs on the separate jra-voice-agents-demo service,
+     so nothing on THIS page knows when the call ends. It cannot be fired from here.
+     Wiring it needs the demo service to report completion back (postMessage from the
+     embed, or a callback to this origin). Flagged to marketing rather than faked,
+     because a DemoCompleted that fires on page load would be worse than none at all. -->
+
 <style>
   :root{
     --bg:#ffffff; --soft:#f1f5f9; --tint:#eff6ff; --card:#ffffff;

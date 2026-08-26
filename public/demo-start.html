@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<!--META_PIXEL-->
 <style>
   :root{
     --bg:#ffffff; --soft:#f1f5f9; --tint:#eff6ff; --card:#ffffff;
@@ -105,6 +106,8 @@
         })
       });
       if (!res.ok) throw new Error("Something went wrong — email lee@junkra.com and we'll sort it.");
+      // Fires on success only, same rule as Lead on /watch. No-op without a pixel ID.
+      if (window.jpx) window.jpx("track", "CompleteRegistration");
       document.getElementById("panel").style.display = "none";
       document.getElementById("ok").style.display = "block";
     } catch (err) {

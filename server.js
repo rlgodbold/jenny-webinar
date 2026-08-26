@@ -429,6 +429,37 @@ app.get("/admin", (_req, res) =>
 //   DEMO_PREVIEW_KEY="..." -> /demo?key=... previews it while it stays hidden
 // Going live later is an env change on Render, not a code change.
 const DEMO_PUBLIC = process.env.DEMO_PUBLIC === "true";
+
+// META PIXEL. The ID comes from the environment and is never hardcoded, because we do
+// not have it yet and a placeholder that ships is a placeholder that runs. With no ID
+// set, pages get a no-op `window.jpx` and load nothing from Meta at all: no script tag,
+// no network call, no cookie. Event calls on the pages stay identical either way, so
+// dropping the real ID in later is an env change and a restart, not a code change.
+const META_PIXEL_ID = (process.env.META_PIXEL_ID || "").replace(/[^0-9]/g, "");
+
+function pixelSnippet() {
+  if (!META_PIXEL_ID) return "<script>window.jpx=function(){};</script>";
+  return `<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','${META_PIXEL_ID}');fbq('track','PageView');
+window.jpx=function(){fbq.apply(null,arguments)};
+</script>`;
+}
+
+// CONVERSIONS API — INSERTION POINT, deliberately not built tonight.
+// Server-side events are how we eventually feed CLOSED DEALS back to Meta so it
+// optimizes toward buyers instead of form fillers. Needs META_PIXEL_ID plus an access
+// token from Lee. Wired as a no-op call at each conversion site so turning it on is
+// filling this function in, not threading a new call through the routes.
+const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || "";
+async function capiEvent(eventName, payload = {}) {
+  if (!META_PIXEL_ID || !META_CAPI_TOKEN) return { ok: true, skipped: true };
+  return { ok: true, skipped: true, todo: eventName, payload };
+}
 const DEMO_PREVIEW_KEY = process.env.DEMO_PREVIEW_KEY || "";
 
 function hasPreviewCookie(req) {
@@ -462,6 +493,9 @@ function sendDemoAwareHtml(res, next, filename) {
     } else {
       html = html.replace(/<!--DEMO_FALLBACK_START-->[\s\S]*?<!--DEMO_FALLBACK_END-->/g, "");
     }
+    // Pages without the marker are untouched, so adding this changed nothing about how
+    // the existing pages render.
+    html = html.replace("<!--META_PIXEL-->", pixelSnippet());
     res.type("html").send(html);
   });
 }
@@ -473,8 +507,15 @@ app.get("/", (_req, res, next) => sendDemoAwareHtml(res, next, "index.html"));
 app.get("/watch", (_req, res, next) => sendDemoAwareHtml(res, next, "watch.html"));
 
 // The demo itself runs on its own service (jra-voice-agents-demo); /demo just talks to it.
-app.get("/demo", demoGate, (_req, res) => res.sendFile(path.join(__dirname, "public", "demo.html")));
-app.get("/demo/start", demoGate, (_req, res) => res.sendFile(path.join(__dirname, "public", "demo-start.html")));
+// The paid-ad landing page. ONE route: campaigns are told apart by UTMs, not by
+// separate pages, so pixel data stays pooled and there is one page to maintain.
+// Served through the demo-aware sender so the CTA switches with the DEMO_PUBLIC flag
+// alone, with no code change and no deploy on the day Lee flips it.
+app.get("/lp", (_req, res, next) => sendDemoAwareHtml(res, next, "lp.html"));
+
+// Through the same sender as everything else now, so the demo pages carry the pixel too.
+app.get("/demo", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo.html"));
+app.get("/demo/start", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo-start.html"));
 
 app.post("/api/demo-lead", async (req, res) => {
   const lead = req.body || {};
