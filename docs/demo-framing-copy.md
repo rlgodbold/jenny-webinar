@@ -129,9 +129,14 @@ person who can consent to himself.
 3. Do not put a play button anywhere in the "things to try" block.
 4. The fairness block stays where the current "fair warning" block is. It is in the
    right place already, it just needs to be the confident version.
-5. Existing copy in this area carries dash punctuation in at least four places
-   (the suburb line, the specific-item line, the stumble line, and the 24 hour
-   clock-out line). They are in scope for this pass under Lee's standing rule.
+5. Dash punctuation in this area is ALREADY FIXED. Acelynn cleared all 21 in
+   demo.html at commit 8846939 on ads-funnel. Verified: 0 on that branch, 21 still
+   on main. Nothing to do.
+
+   Note to self and anyone else writing copy against this repo: **read the working
+   branch, not main.** I quoted pre-fix content because I read the shared checkout,
+   which sits on main while the actual work happens on ads-funnel. Cheap mistake
+   here, expensive if it had been a claim or a price.
 
 ## PART 4: OPEN, AND BLOCKING THE CLIPS
 
