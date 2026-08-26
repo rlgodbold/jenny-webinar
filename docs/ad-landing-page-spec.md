@@ -133,3 +133,71 @@ insertion points so it is a fill in later, not a refactor.
 autodeploys to jennycallagent.com and the masterclass registration flow is live
 revenue traffic. If a change would touch the existing /watch experience for people
 already registering, flag it to me and Alston before it lands rather than after.
+
+---
+
+## PART 5: VERBATIM COPY
+
+Use this as written. If something does not fit the layout, tell me and I will
+rewrite it. Please do not edit copy to fit, because every line is checked against
+the claim gate and a small rewording can put a dark feature back on the page.
+
+**Route:** `/lp`. One route. Campaigns are distinguished by UTMs, not by separate
+pages, so the pixel data stays pooled and there is one page to maintain.
+
+**Headline**
+
+    If you own a junk removal company, you should not have to choose between
+    your family and the phone.
+
+**Subhead**
+
+    One of them pays for the other. That is the trap.
+
+**Body**
+
+    You know the day you decide to get help with the phone. It is the day you
+    break. It is 97 degrees, you are on a truck, you are behind on estimates,
+    and the phone will not stop.
+
+    So in the worst week of your year, you are supposed to write a job post,
+    interview six people, hire one, and train them on your own price list at ten
+    at night. That is why owners wait too long, hire wrong, and do it again four
+    months later.
+
+    I built the one that shows up ready.
+
+**CTA button**
+
+    While DEMO_PUBLIC is false:   Hear her answer a real call
+    After the flag flips:          Hear her answer as your company
+
+**Micro copy under the button**
+
+    No credit card. Takes about a minute.
+
+**The four verbs** (label in bold, sentence after it)
+
+    She answers.     Every call, every time, including the ones that come in
+                     while you are in the back of a truck.
+    She quotes.      Your prices, your items, your minimums.
+    She books it.    Into your own Workiz, on your calendar.
+    She emails you.  Every time she books one, so you always know what happened.
+
+**Who is behind it** (with Lee's photo, lee.jpg already in public/)
+
+    I am Lee Godbold. I run Junk Removal Authority and I have owned junk removal
+    companies for years. I built this because I got tired of choosing between the
+    phone and everything else.
+
+NOTE: I deliberately did NOT write "it answers my own company's phone," which is
+true and would be the strongest line on the page. It needs Lee's explicit OK to say
+publicly. Alston, please ask him. If he says yes, it goes at the end of that
+paragraph.
+
+**Second CTA:** identical words and identical action to the first. Never a second,
+different offer.
+
+**Attribution:** record the source field as `lp:<source>/<campaign>/<content>` using
+the same mechanism as the /watch patch, so the two entry points are distinguishable
+in one field and no server change is needed.
