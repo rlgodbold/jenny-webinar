@@ -56,14 +56,28 @@ them to go easy.
 
 ### Replacement list
 
+REVISED 2026-08-26 per Lee: steer to the realistic edge cases that actually happen in
+junk removal, not to stunts. Every item below is a call a real customer makes.
+
     Once she's set up as your company, call like one of your customers would:
 
     - Describe a load and ask what it'd run
     - Name your suburb, not just your city, she'll know it
-    - Ask about something specific, a hot tub, paint, a fridge
+    - Throw her a hot tub, a piano, or a fridge
+    - Ask about an estate cleanout, the whole house
+    - Tell her the other guy quoted you less
     - Grab a time window and book it
     - Ask for a person, and hear how she takes a name and a number instead of
       dropping you into voicemail
+
+Seven items is deliberate. A specific checklist steers behavior far better than a
+request to be fair does, and every additional realistic item is one fewer minute spent
+inventing something absurd. If it is too long visually, tell me and I will cut rather
+than have you trim, since which one goes is a judgment about what we most want tested.
+
+Note what these are: the odd item, the big scope, and the price shopper. Those are the
+three places a real junk removal call goes sideways, so they are the three worth
+testing. None of them is a stunt and all of them happen weekly.
 
 The last item is the replacement for "she'll ring the cell you just verified." It
 still demos a real win. Every owner has lost a customer to voicemail and none have
@@ -79,8 +93,9 @@ that does four things unevenly, because the fourth is the one they will remember
     How to judge her
 
     Run the calls you actually get. The three bedroom cleanout, the couch on the
-    curb, the price shopper, the how much for a truckload. Then throw a couple of
-    the odd ones at her, the stuff that comes up once a month.
+    curb, the price shopper, the how much for a truckload. Then the ones that make
+    a new hire sweat: the hot tub, the estate cleanout, the guy who already has a
+    cheaper quote.
 
     You're not testing whether she can be broken. Anyone can break anyone on day
     one. You're deciding whether she can run your phone. Those are different tests
