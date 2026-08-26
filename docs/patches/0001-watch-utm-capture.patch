@@ -1,0 +1,20 @@
+diff --git a/public/watch.html b/public/watch.html
+index e5eefac..9f730fe 100644
+--- a/public/watch.html
++++ b/public/watch.html
+@@ -182,7 +182,14 @@ form.addEventListener('submit',async(e)=>{
+   btn.disabled=true;btn.textContent='One second...';
+   try{
+     const params=new URLSearchParams(window.location.search);
+-    const src='watch-recording'+(params.get('utm_source')?':'+params.get('utm_source'):'');
++    // Capture the full ad attribution, not just the network. Without campaign and
++    // content we can see that Facebook sent a signup but not WHICH AD produced it,
++    // which makes creative testing guesswork. Packed into the single `source` field
++    // the server already stores and exports (capped at 80 chars), so no server or
++    // schema change is needed. Format: watch-recording:<source>/<campaign>/<content>
++    const utmTag=(k)=>(params.get(k)||'').replace(/[^A-Za-z0-9._-]/g,'').slice(0,20);
++    const utm=[utmTag('utm_source'),utmTag('utm_campaign'),utmTag('utm_content')].join('/').replace(/\/+$/,'');
++    const src='watch-recording'+(utm?':'+utm:'');
+     const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({name,email,source:src})});
+     const data=await res.json();
