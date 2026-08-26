@@ -48,19 +48,20 @@ CURRENT
     verification code to the number above, that's also the phone she'll ring if you
     try the transfer, so it has to be one you can answer.
 
-REPLACEMENT, if the tape genuinely gets sent
-    Calls with Caroline are recorded so we can send you the tape. We'll text a
+REPLACEMENT (the tape is verified as a real, shipped, kept promise)
+    We record this demo call so we can email you the tape afterward. We'll text a
     verification code to the number above, so use one you can get a text on.
 
-REPLACEMENT, if the tape is not actually sent
-    We'll text a verification code to the number above, so use one you can get a
-    text on.
+**The scoping change is "this demo call," and it is deliberate.** The old wording,
+"calls with Caroline are recorded," is ambiguous in a page whose entire framing is
+"this, but for your company." A prospect can reasonably read it as: when I buy this,
+my customers' calls get recorded. Recording is a separate feature that is off by
+default and is not part of the base offer, so that inference is one we would have to
+walk back later, on a sales call, after they have already priced it in.
 
-Do not ship the tape sentence unless something actually sends the tape. It is a
-promise made at the highest intent moment in the funnel, to someone who just handed
-us their cell number. If it does send, tell me, because it is a strong follow up
-asset that nothing in the sequence currently uses.
+Saying "this demo call" draws the line in three words and costs nothing.
 
-Separately: that sentence should not be read as implying a CLIENT gets call
-recordings, since recording is on the do-not-claim list as a tenant feature. The
-replacement keeps it scoped to "calls with Caroline," which is the demo itself.
+One operational precondition, Alston's to verify: recording has to actually be ON
+for the demo server. If it is off, the email still sends but the tape link silently
+drops, and the prospect gets an email promising a recording with no recording in it.
+That would turn a kept promise into a broken one at the worst possible moment.
