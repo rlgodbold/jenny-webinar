@@ -154,17 +154,57 @@
       <b>Once she's set up as your company, call like one of your customers would:</b>
       <ul>
         <li>Describe a load and ask what it'd run</li>
-        <li>Name your suburb, not just your city, and she'll know it</li>
-        <li>Ask about something specific: a hot tub, paint, a fridge</li>
+        <li>Name your suburb, not just your city, she'll know it</li>
+        <li>Ask about something specific, a hot tub, paint, a fridge</li>
         <li>Grab a time window and book it</li>
-        <li>Ask for a person: she'll ring the cell you just verified</li>
+        <!-- Replaces "she'll ring the cell you just verified". The demo does not perform
+             transfer (Lee, 2026-08-26): a technical or user error in front of a prospect
+             costs more trust than the capability wins. This describes what actually
+             happens instead, which is still a real win. -->
+        <li>Ask for a person, and hear how she takes a name and a number instead of dropping you into voicemail</li>
       </ul>
     </div>
 
     <div class="warn">
-      <b>Fair warning:</b> the Caroline you're about to hear is the worst she'll ever be. Like anyone on their first day, she'll occasionally stumble. It's rare, and every single call makes her better. What she'll never do is miss a call, call in sick, or get short with a customer at 8pm on a Saturday.
+      <b>How to judge her</b>
+      <p style="margin-top:10px">Run the calls you actually get. The three bedroom cleanout, the couch on the curb, the price shopper, the how much for a truckload. Then throw a couple of the odd ones at her, the stuff that comes up once a month.</p>
+      <p style="margin-top:10px">You're not testing whether she can be broken. Anyone can break anyone on day one. You're deciding whether she can run your phone. Those are different tests and only one of them tells you anything.</p>
+      <p style="margin-top:10px">So judge her the way you'd judge a receptionist in their first week. The Caroline you're about to hear is the worst she'll ever be. She'll stumble now and then, it's rare, and every call makes her better. What she'll never do is miss a call, call in sick, or get short with a customer at 8pm on a Saturday.</p>
     </div>
     <p class="consent" style="text-align:center">Your demo line is live for 24 hours, then she clocks out and you'll get our pricing to bring her on for real. After each call, check your email: she sends you the recording.</p>
+
+    <!-- ============================================================================
+         WHAT ELSE SHE DOES. Placement is the point, so do not move this beside the
+         live demo instructions and do not put a play control in the "things to try"
+         block. If a prospect thinks they can trigger these on their live call we have
+         rebuilt the exact problem this section exists to fix.
+
+         NOT GO-LIVE READY. No audio exists in the repo yet. Both clips are a fast
+         follow: clip B needs the file, clip A needs the file PLUS Lee confirming what
+         we commit to PLUS client consent and a two-party-consent state check. Do not
+         merge this to a live page until at least clip B's audio is in place, because
+         until then this section promises a recording that is not there.
+         ============================================================================ -->
+    <div class="showcase" style="margin-top:34px;padding-top:26px;border-top:1px solid rgba(0,0,0,.12)">
+      <h2 style="font-size:22px;margin-bottom:8px">What else she does</h2>
+      <p class="consent" style="margin-bottom:20px">These are recordings, not part of your test drive. Your call today is her answering, quoting, and booking. Here is where the rest of it goes.</p>
+
+      <!-- CLIP A, THE HANDOFF. Slot deliberately EMPTY, not stubbed with placeholder
+           text, same reasoning as the price slot: placeholder copy ships. The written
+           frame and its availability line live in docs/demo-framing-copy.md and drop
+           in when Alston clears the audio and Lee confirms the commitment. -->
+      <!--CLIP_A_SLOT-->
+
+      <div class="clip" style="margin-top:18px">
+        <h3 style="font-size:18px;margin-bottom:6px">Her, in your own voice</h3>
+        <p style="margin-bottom:8px">The standard voice is the one you heard on your call. If you'd rather she sounded like you, we can clone your voice. This one is Lee's.</p>
+        <p class="consent" style="margin-bottom:10px">An upgrade, not the default.</p>
+        <!-- CLIP_B_AUDIO: drop the <audio controls src="..."> here when the file lands.
+             Deliberately NOT an empty player: a control that renders and cannot play is
+             a worse first impression than a section that is not finished yet. -->
+        <!--CLIP_B_AUDIO-->
+      </div>
+    </div>
   </div>
 
   <footer>Junk Removal Authority · <a href="/">The AI Voice Agent Masterclass</a></footer>
