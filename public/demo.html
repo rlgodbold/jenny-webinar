@@ -173,6 +173,30 @@
       <p style="margin-top:10px">You're not testing whether she can be broken. Anyone can break anyone on day one. You're deciding whether she can run your phone. Those are different tests and only one of them tells you anything.</p>
       <p style="margin-top:10px">So judge her the way you'd judge a receptionist in their first week. The Caroline you're about to hear is the worst she'll ever be. She'll stumble now and then, it's rare, and every call makes her better. What she'll never do is miss a call, call in sick, or get short with a customer at 8pm on a Saturday.</p>
     </div>
+
+    <!-- THE A/B VOICE PAIR. Two players, never one file: the whole point is that a
+         listener can play them back to back on demand, which a single continuous
+         recording does not allow.
+
+         FAILS CLOSED ON PURPOSE, and this is not a polish decision. If only ONE file
+         existed and this rendered anyway, the surviving clip would play unlabelled as
+         "what she sounds like". If that survivor were the cloned voice, we would be
+         showing the paid upgrade as the standard product, which is precisely the
+         misrepresentation this demo was rewritten to remove. Failing open here is not
+         a degraded experience, it is a false claim. Both files or nothing. -->
+    <!--ABPAIR_START-->
+    <div class="abpair" style="margin-top:26px;padding-top:22px;border-top:1px solid rgba(0,0,0,.12)">
+      <p><b>Same call, twice. The only thing that changes is the voice.</b></p>
+      <div style="margin-top:14px">
+        <p style="margin-bottom:6px">1. The standard voice. This is what you start with.</p>
+        <!--AB_STANDARD-->
+      </div>
+      <div style="margin-top:16px">
+        <p style="margin-bottom:6px">2. The same call again, in Lee's own voice, cloned. An upgrade, not the default.</p>
+        <!--AB_CLONED-->
+      </div>
+    </div>
+    <!--ABPAIR_END-->
     <p class="consent" style="text-align:center">Your demo line is live for 24 hours, then she clocks out and you'll get our pricing to bring her on for real. After each call, check your email: she sends you the recording.</p>
 
   </div>

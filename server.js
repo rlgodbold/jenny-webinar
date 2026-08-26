@@ -437,6 +437,21 @@ const DEMO_PUBLIC = process.env.DEMO_PUBLIC === "true";
 // dropping the real ID in later is an env change and a restart, not a code change.
 const META_PIXEL_ID = (process.env.META_PIXEL_ID || "").replace(/[^0-9]/g, "");
 
+// THE A/B VOICE PAIR GATE. Both files or nothing rendered, and the fail-closed
+// direction is the whole point rather than a nicety: with only one file present, the
+// surviving clip would play unlabelled as "what she sounds like", and if that survivor
+// were the cloned voice we would be presenting the paid upgrade as the standard
+// product. That is the exact misrepresentation the demo was rewritten to remove, so
+// failing open here is not a degraded experience, it is a false claim.
+const AB_STANDARD_REL = "clips/ab-standard.mp3";
+const AB_CLONED_REL = "clips/ab-cloned.mp3";
+const abPairReady = () =>
+  fs.existsSync(path.join(__dirname, "public", AB_STANDARD_REL)) &&
+  fs.existsSync(path.join(__dirname, "public", AB_CLONED_REL));
+
+const abPlayer = (rel) =>
+  `<audio controls preload="none" src="/${rel}">Your browser cannot play this recording.</audio>`;
+
 function pixelSnippet() {
   if (!META_PIXEL_ID) return "<script>window.jpx=function(){};</script>";
   return `<script>
@@ -496,6 +511,13 @@ function sendDemoAwareHtml(res, next, filename) {
     // Pages without the marker are untouched, so adding this changed nothing about how
     // the existing pages render.
     html = html.replace("<!--META_PIXEL-->", pixelSnippet());
+    if (abPairReady()) {
+      html = html
+        .replace("<!--AB_STANDARD-->", abPlayer(AB_STANDARD_REL))
+        .replace("<!--AB_CLONED-->", abPlayer(AB_CLONED_REL));
+    } else {
+      html = html.replace(/<!--ABPAIR_START-->[\s\S]*?<!--ABPAIR_END-->/g, "");
+    }
     res.type("html").send(html);
   });
 }
