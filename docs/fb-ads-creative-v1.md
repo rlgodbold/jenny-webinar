@@ -121,7 +121,7 @@ Script (Lee, 30 to 40 seconds):
 ## CONCEPT 3: WHAT SHE ACTUALLY DOES (product clarity, mid funnel)
 
 Angle: skeptics do not know what "AI receptionist" actually means, and vagueness
-reads as vapor. Say the four things plainly and let the specificity do the work.
+reads as vapor. Say the things plainly and let the specificity do the work.
 
 Hook variants:
 - A. "Here is exactly what she does. Three things, no hand waving."

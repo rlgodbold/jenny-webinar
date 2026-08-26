@@ -127,7 +127,7 @@ insertion points so it is a fill in later, not a refactor.
 
 **MUST**
 1. UTM patch applied on a branch (docs/patches/0001-watch-utm-capture.patch).
-2. Landing page built to the block order above, price free, four verbs only.
+2. Landing page built to the block order above, price free, three verbs only.
 3. Pixel base code plus the four event insertion points, driven by an env var,
    no ops cleanly when the var is absent.
 4. CTA driven off DEMO_PUBLIC so the flag flip needs no deploy.
