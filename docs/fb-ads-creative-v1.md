@@ -9,6 +9,25 @@ Companion to docs/fb-ads-plan.md (8/19), which holds the funnel and account plan
    unpropagated as of today. Every concept below is written so a price can be
    dropped in later without a rewrite, or left out entirely.
 2. **Only the day one live list gets claimed** (docs/tenant-day-one-live.md).
+3. **THE DEMO DEMONSTRATES ONLY WHAT A NEW TENANT GETS ON DAY ONE.** No exceptions
+   for a self serve demo, because no human is present to caveat anything. This is a
+   law, not a preference, and it binds the demo as tightly as it binds the ads. A
+   claim someone reads is arguable. A capability they watched work is not, and they
+   will describe us to other owners using it.
+
+   Named so nobody makes the trade quietly: **removing a capability from the demo
+   makes the demo weaker**, so there will be real pull to keep it because it demos
+   better. That pull is how a company ends up selling what it does not deliver, one
+   reasonable decision at a time.
+
+   And the corollary: **we do not ship a feature to make a claim true.** If it
+   ships, it ships because it is ready. A feature shipped under campaign pressure is
+   one that half works in front of the customers we just sold it to.
+
+   OPEN as of 2026-08-25: demo.html:151 instructs the prospect to ask for a person
+   and promises she rings their cell, and :111 makes transfer the stated reason we
+   collect their number, while production transfer is dark for new tenants. Alston
+   is verifying. Also :116 promises we send them the recorded tape, unverified.
 
 ### What we can say
 
