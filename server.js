@@ -50,6 +50,15 @@ const NOTIFY_EMAILS = (process.env.ATTENDEE_NOTIFY_EMAILS || "lee@junkra.com,sha
 const attendeesUrl = () =>
   `${PUBLIC_BASE_URL}/attendees${ATTENDEES_TOKEN ? "?token=" + encodeURIComponent(ATTENDEES_TOKEN) : ""}`;
 
+// Privacy policy identity. COMPANY_POSTAL_ADDRESS is the same env the CAN-SPAM email
+// footer already reads (email.js), so Lee sets ONE physical address and it flows to
+// both. Until it is set, the page shows a visible placeholder so nobody ships it blank.
+const COMPANY_NAME = process.env.COMPANY_NAME || "Junk Removal Authority";
+const COMPANY_MAILING_ADDRESS =
+  process.env.COMPANY_POSTAL_ADDRESS || "[JRA PHYSICAL MAILING ADDRESS placeholder]";
+const PRIVACY_CONTACT_EMAIL = webinar.contactEmail || "lee@junkra.com";
+const PRIVACY_LAST_UPDATED = "August 27, 2026";
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -649,6 +658,130 @@ app.post("/api/lp-lead", async (req, res) => {
 
   // Front end can send them straight on to the demo.
   res.json({ ok: true, next: "/demo" });
+});
+
+// ── Privacy policy ──────────────────────────────────────────────────────────
+// Server-rendered (not a static file) so express.static never serves it raw and so
+// the mailing address + contact email come from one place. Meta's Business Tools
+// Terms require an advertiser running the pixel to give this notice and keep a
+// policy reachable, so /watch and /lp link here. Copy stays plain and dash-free.
+function privacyPage() {
+  const email = esc(PRIVACY_CONTACT_EMAIL);
+  const addr = esc(COMPANY_MAILING_ADDRESS);
+  const brand = esc(COMPANY_NAME);
+  return `<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy | ${brand}</title>
+<meta name="description" content="How ${brand} and Jenny collect, use, and protect your information, and how you can opt out of advertising and analytics." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0b1526;--paper:#f6f3ec;--card:#ffffff;--line:#e5e0d4;
+        --ink:#141a24;--body:#4a5261;--muted:#8a8272;--org:#ff6320;
+        --cond:'Barlow Condensed',sans-serif;--sans:'Barlow',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--paper);color:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px}
+  .hero{background:var(--navy);color:#b8c4d8}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--cond);font-weight:800;font-size:24px;letter-spacing:.02em;color:#fff;text-decoration:none;text-transform:uppercase}
+  .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--org)}
+  .htitle{padding:14px 0 34px}
+  h1{font-family:var(--cond);font-weight:800;font-size:clamp(34px,6vw,52px);line-height:1;letter-spacing:.01em;color:#fff;text-transform:uppercase;margin-bottom:10px}
+  .updated{font-size:14px;color:#8fa0b8}
+  article{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--org);border-radius:4px;
+          box-shadow:0 18px 40px rgba(20,26,36,.08);padding:34px 34px 30px;margin:-22px auto 40px;position:relative;z-index:2}
+  article h2{font-family:var(--cond);font-weight:800;font-size:24px;letter-spacing:.01em;color:var(--ink);text-transform:uppercase;margin:30px 0 8px}
+  article h2:first-of-type{margin-top:0}
+  article p{font-size:16px;margin-bottom:12px}
+  article ul{margin:0 0 12px 20px}
+  article li{font-size:16px;margin-bottom:7px}
+  article a{color:var(--org);font-weight:600}
+  .addr{border-left:3px solid var(--org);background:#fffdf8;padding:12px 16px;margin:10px 0 4px;font-size:16px}
+  footer{border-top:1px solid var(--line);margin-top:10px;padding:24px 0 42px;text-align:center;font-size:13px;color:var(--muted)}
+  footer a{color:var(--muted)}
+  @media(max-width:640px){article{padding:24px 20px}}
+</style></head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/"><span class="dot"></span>Jenny</a>
+    </div>
+    <div class="htitle">
+      <h1>Privacy Policy</h1>
+      <div class="updated">Last updated ${PRIVACY_LAST_UPDATED}</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<article>
+  <p>This policy explains what ${brand} collects when you visit this site or its landing pages for Jenny, our AI voice agent, why we collect it, and the choices you have. We keep it plain on purpose. If anything here is unclear, email us at <a href="mailto:${email}">${email}</a> and we will answer.</p>
+
+  <h2>Who we are</h2>
+  <p>This site is operated by ${brand}. When we say "we" or "us" we mean ${brand}. Jenny is the name of the AI voice agent we sell to junk removal companies.</p>
+
+  <h2>What we collect and why</h2>
+  <p>When you fill out a form on this site, such as the registration form on our class pages or the lead form on our landing pages, we collect the information you type in:</p>
+  <ul>
+    <li>Your name, so we know who we are talking to.</li>
+    <li>Your email address, so we can send you the class link, reminders, and follow up about Jenny.</li>
+    <li>Your phone number, when you choose to give it, so we or a member of our team can call or text you about Jenny.</li>
+    <li>Anything else you type into a form, such as your company name.</li>
+  </ul>
+  <p>You do not have to fill out any form to read this site. If you do not submit a form, we do not collect your name, email, or phone number.</p>
+  <p>We also collect a small amount of technical information automatically when any visitor loads a page, such as your IP address, the type of device and browser you use, and which pages you view. We use this to keep the site working, to understand which pages people find useful, and to measure our advertising.</p>
+
+  <h2>Advertising and analytics tools we use</h2>
+  <p>We run paid ads, and we use tools that help us measure whether those ads work and show them to the right people. These tools set cookies or similar identifiers in your browser and may receive information about your visit, including pages you view and actions such as submitting a form.</p>
+  <ul>
+    <li><b>Meta (Facebook) pixel and Conversions.</b> We use the Meta pixel from Meta Platforms, Inc. It tells us when a visit or a form submission came from one of our Facebook or Instagram ads, and it lets us show ads to people who visited this site. Meta may also use this data under its own policies. You can read how Meta uses this information in the <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta Privacy Policy</a>.</li>
+    <li><b>Other advertising and analytics tools.</b> We may use similar measurement or retargeting tools from other advertising and analytics providers for the same purposes.</li>
+  </ul>
+  <p>We do not sell your personal information.</p>
+
+  <h2>How to opt out</h2>
+  <p>You have several ways to limit this:</p>
+  <ul>
+    <li><b>Do not submit a form.</b> If you never send us a form, we never receive your name, email, or phone number.</li>
+    <li><b>Control ads on Meta.</b> You can adjust which ads you see and how your activity is used inside your Facebook and Instagram Ad Settings. See <a href="https://www.facebook.com/help/568137493302217" rel="noopener" target="_blank">Meta's guidance on ad preferences</a>.</li>
+    <li><b>Use your browser controls.</b> You can block or delete cookies in your browser settings, and you can turn on your browser's "Do Not Track" or tracking protection features. Blocking cookies may change how parts of the site work.</li>
+    <li><b>Industry opt out pages.</b> You can opt out of interest based advertising from many companies at the <a href="https://optout.aboutads.info/" rel="noopener" target="_blank">Digital Advertising Alliance</a> and the <a href="https://optout.networkadvertising.org/" rel="noopener" target="_blank">Network Advertising Initiative</a>.</li>
+    <li><b>Stop our emails.</b> Every marketing email we send has an unsubscribe link at the bottom. Click it and we stop.</li>
+  </ul>
+
+  <h2>How we share information</h2>
+  <p>We share your information only with the service providers that help us run this business, such as our email provider, our scheduling and phone tools, and the advertising and analytics providers named above. They may only use it to provide their service to us. We may also share information if the law requires it.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep the information you submit for as long as we are in contact with you about Jenny, and after that only as long as we need it for our records or to meet legal requirements. You can ask us to delete your information at any time using the contact details below.</p>
+
+  <h2>Your choices and requests</h2>
+  <p>You can ask us to see, correct, or delete the personal information we hold about you, or ask us to stop contacting you. Email <a href="mailto:${email}">${email}</a> or write to the address below and we will take care of it.</p>
+
+  <h2>Children</h2>
+  <p>This site is meant for business owners. It is not directed to children, and we do not knowingly collect information from anyone under 18.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If we change this policy we will update the date at the top of this page. Please check back from time to time.</p>
+
+  <h2>How to contact us</h2>
+  <p>Questions about your privacy, or requests about your information, can go to:</p>
+  <p>Email: <a href="mailto:${email}">${email}</a></p>
+  <div class="addr">${brand}<br>${addr}</div>
+</article>
+</div>
+
+<footer><div class="wrap">${brand} &middot; <a href="/">Home</a></div></footer>
+</body></html>`;
+}
+
+app.get(["/privacy", "/privacy-policy"], (_req, res) => {
+  res.type("html").send(privacyPage());
 });
 
 app.use(express.static(path.join(__dirname, "public")));
