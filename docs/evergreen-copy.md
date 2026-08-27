@@ -131,3 +131,45 @@ Three things I can see from the copy side that are not copy:
    reminder scheduler runs off those dates. Somebody should confirm nothing is armed to
    fire for a session that no longer exists, the same way tomorrow's 24 hour reminder
    was armed and nearly missed.
+
+---
+
+# ADDENDUM: legal pass items for the post-8/27 homepage rewrite
+
+RBG's review flagged two things on index.html. The homepage is frozen until after the
+8/27 class, so they ship with the evergreen rewrite rather than separately.
+
+## Line 331, the on-hold email verb
+
+    CURRENT      Jenny quotes from your price list, books into your CRM, and emails
+                 your team a summary of every call. Come to the class and watch it
+                 work on a live call.
+
+    REPLACEMENT  Jenny quotes from your price list and books into your CRM. Come to
+                 the class and watch it work on a live call.
+
+"Emails your team a summary of every call" is the verb we pulled everywhere else on
+2026-08-26, because booking emails default to the JRA team rather than the tenant owner
+unless onboarding seeds them. It survived here only because this page was frozen. The
+sentence reads fine without it, and the verb comes back the moment onboarding is
+verified to seed reliably.
+
+## Line 314, integrations
+
+    CURRENT      How Jenny connects to popular Field Service Management software and
+                 CRMs like Workiz and Housecall Pro.
+
+**HELD, pending Lee's ruling.** Lee says we can work with any CRM that has API access.
+Alston's read of clientConfig.js was Workiz only. Both can be true in different senses,
+and the difference is what matters for a page that paid traffic lands on:
+
+- "We can build an integration for any CRM with an API" is a capability statement
+- "A Housecall Pro shop can sign today and be live in days" is a delivery promise
+
+The page reads as the second. If the truth is the first, the line needs a timing
+qualifier, because a Housecall Pro owner who signs expecting the standard week and
+gets a custom integration project is the refund conversation we keep designing away
+from.
+
+Once Lee rules, this line and /watch:166 get the same treatment, since they make the
+same claim in different words. Do not fix one without the other.
