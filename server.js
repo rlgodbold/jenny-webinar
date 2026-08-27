@@ -748,7 +748,7 @@ function privacyPage() {
 
   <h2>Who we share it with</h2>
   <p><strong>We do not sell your personal information, and we do not rent or trade it.</strong></p>
-  <p>Some privacy laws define selling or sharing broadly enough to include advertising pixels. The advertising described above is the only activity of that kind we do, and you can limit it as described.</p>
+  <p>Some privacy laws define selling or sharing broadly enough to include advertising like this, and two of our activities fall under that definition. The first is the Meta pixel described above. The second is that we provide contact information from our own customer and business records to Meta so it can show ads to our existing contacts and to people who resemble them, which Meta calls custom and lookalike audiences. You can limit the pixel as described above, and you can tell us not to use your information for either kind of advertising by writing to us at the address in the Contact section below.</p>
   <p>We share it only with the service providers that make the site work, such as our website host, our email sending platform, and the advertising service described above. They are permitted to use it to provide their service to us and for nothing else. We will also disclose information if the law requires it, or to protect our rights, safety, or property.</p>
 
   <h2>How long we keep it</h2>
