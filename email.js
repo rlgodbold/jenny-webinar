@@ -41,11 +41,11 @@ function listUnsubHeaders(email) {
   };
 }
 
-function marketingFooter(email) {
+function marketingFooter(email, reason = `You're receiving this because you registered for a ${COMPANY_NAME} / Jenny webinar.`) {
   return `
   <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0 14px" />
   <p style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;line-height:1.5;color:#94a3b8;margin:0">
-    You're receiving this because you registered for a ${COMPANY_NAME} / Jenny webinar.<br>
+    ${reason}<br>
     ${COMPANY_NAME}${COMPANY_POSTAL_ADDRESS ? " · " + COMPANY_POSTAL_ADDRESS : ""}<br>
     <a href="${unsubscribeUrl(email)}" style="color:#64748b">Unsubscribe</a> from these emails.
   </p>`;
@@ -93,20 +93,20 @@ async function send({ to, subject, html, headers }) {
 // asked to hear an AI answer a phone got a Zoom invitation to a class instead. It is also
 // the thing that stops being merely wrong and starts being impossible once the Thursday
 // series ends, since the email would name a date that will never happen.
-const doorOf = (source = "") => {
+export const doorOf = (source = "") => {
   const v = String(source || "");
   if (v === "lp" || v.startsWith("lp:")) return "lp";
   if (v.startsWith("watch-recording")) return "watch";
   return "webinar";
 };
 
-const shell = (firstName, bodyHtml, email) => `
+const shell = (firstName, bodyHtml, email, reason) => `
   <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
     <p style="margin:0 0 16px">Hey ${firstName},</p>
     ${bodyHtml}
     <p style="margin:0 0 4px">Lee Godbold</p>
     <p style="margin:0 0 16px">Junk Removal Authority</p>
-    ${marketingFooter(email)}
+    ${marketingFooter(email, reason)}
   </div>`;
 
 const btn = (href, label) =>
@@ -123,7 +123,7 @@ async function sendDemoConfirmation({ name, email }) {
   return send({
     to: email,
     subject: "Hear her answer your phone",
-    html: shell(firstNameOf(name), body, email),
+    html: shell(firstNameOf(name), body, email, `You're receiving this because you asked to hear Jenny answer the phone at ${COMPANY_NAME}.`),
     headers: listUnsubHeaders(email),
   });
 }
@@ -138,7 +138,7 @@ async function sendClassConfirmation({ name, email }) {
   return send({
     to: email,
     subject: "Your masterclass is ready",
-    html: shell(firstNameOf(name), body, email),
+    html: shell(firstNameOf(name), body, email, `You're receiving this because you asked for the AI Voice Agent Masterclass from ${COMPANY_NAME}.`),
     headers: listUnsubHeaders(email),
   });
 }
@@ -162,7 +162,7 @@ export async function sendConfirmationEmail({ name, email, session, source = "" 
     <p style="margin:0 0 16px">You're in. Here are the details for <strong>${webinar.title}</strong>:</p>
     <table style="margin:0 0 20px;font-size:16px"><tr><td style="padding:2px 12px 2px 0;color:#64748b">When</td><td><strong>${when.full}</strong></td></tr></table>
     ${joinLine}
-    <p style="margin:0 0 16px">We'll cover how an AI voice agent answers every call, quotes jobs, and books straight into your CRM — so you stop losing after-hours and overflow calls, and get your evenings back.</p>
+    <p style="margin:0 0 16px">We'll cover how an AI voice agent answers every call, quotes jobs, and books straight into your CRM, so you stop losing after-hours and overflow calls, and get your evenings back.</p>
     <p style="margin:0 0 4px">See you there,</p>
     <p style="margin:0 0 16px"><strong>${webinar.hostName}</strong><br>${webinar.hostTitle}</p>
     ${marketingFooter(email)}
@@ -170,7 +170,7 @@ export async function sendConfirmationEmail({ name, email, session, source = "" 
 
   return send({
     to: email,
-    subject: `You're registered: ${webinar.title} — ${when.dateStr}`,
+    subject: `You're registered: ${webinar.title}, ${when.dateStr}`,
     html,
     headers: listUnsubHeaders(email),
   });
@@ -205,31 +205,31 @@ export async function sendReminderEmail({ name, email, kind, session }) {
     html = `
     <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
       <p style="margin:0 0 16px">Hi ${firstName},</p>
-      <p style="margin:0 0 16px">We go live in about an hour — the <strong>AI Voice Agent Masterclass</strong> starts at <strong>${when.timeStr} ET</strong> today.</p>
+      <p style="margin:0 0 16px">We go live in about an hour. The <strong>AI Voice Agent Masterclass</strong> starts at <strong>${when.timeStr} ET</strong> today.</p>
       ${button("Join the webinar →")}
-      <p style="margin:16px 0">Grab a coffee and a notepad. You'll hear Jenny handle real calls — quotes, specialty items, and the everyday questions junk removal owners get — see the dashboard live, and get the limited discounted offer at the end.</p>
+      <p style="margin:16px 0">Grab a coffee and a notepad. You'll hear Jenny handle real calls, quotes, specialty items, and the everyday questions junk removal owners get, see the dashboard live, and get the limited discounted offer at the end.</p>
       <p style="margin:0 0 4px">See you soon,</p>
       <p style="margin:0 0 8px"><strong>Lee Godbold</strong><br>Founder, Junk Removal Authority</p>
       ${marketingFooter(email)}
     </div>`;
   } else {
-    subject = `Tomorrow at ${when.timeStr} ET — your seat's saved 🎟️`;
+    subject = `Tomorrow at ${when.timeStr} ET, your seat's saved 🎟️`;
     html = `
     <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
       <p style="margin:0 0 16px">Hi ${firstName},</p>
-      <p style="margin:0 0 14px">Quick reminder — the <strong>AI Voice Agent Masterclass for junk removal owners</strong> is <strong>tomorrow</strong>:</p>
+      <p style="margin:0 0 14px">Quick reminder, the <strong>AI Voice Agent Masterclass for junk removal owners</strong> is <strong>tomorrow</strong>:</p>
       <p style="margin:0 0 4px"><strong>📅 ${when.full}</strong></p>
       <p style="margin:0 0 4px">📍 Live on Zoom</p>
       ${button("Join the webinar →")}
       <p style="margin:14px 0 8px">Here's what we'll get into:</p>
       <ul style="padding-left:20px;margin:0 0 16px">
-        <li style="margin-bottom:7px"><strong>Real call recordings</strong> — hear Jenny handle the calls you field every day: price quotes, hot tubs, hazmat, bed bugs, and the questions owners get asked most</li>
+        <li style="margin-bottom:7px"><strong>Real call recordings</strong>: hear Jenny handle the calls you field every day: price quotes, hot tubs, hazmat, bed bugs, and the questions owners get asked most</li>
         <li style="margin-bottom:7px">The features that make an AI voice agent actually work for the trades</li>
         <li style="margin-bottom:7px">How it plugs into your CRM / field service software (Workiz, Housecall Pro, and more)</li>
         <li style="margin-bottom:7px">A look at the <strong>live dashboard</strong> and the stats you'll get</li>
-        <li style="margin-bottom:7px">A <strong>limited, discounted offer</strong> to set Jenny up in your own business — live attendees only</li>
+        <li style="margin-bottom:7px">A <strong>limited, discounted offer</strong> to set Jenny up in your own business, live attendees only</li>
       </ul>
-      <p style="margin:0 0 16px">Block off the hour, and bring the calls you handle day to day — I'll show you how Jenny works through them.</p>
+      <p style="margin:0 0 16px">Block off the hour, and bring the calls you handle day to day. I'll show you how Jenny works through them.</p>
       <p style="margin:0 0 4px">See you tomorrow,</p>
       <p style="margin:0 0 8px"><strong>Lee Godbold</strong><br>Founder, Junk Removal Authority</p>
       ${marketingFooter(email)}

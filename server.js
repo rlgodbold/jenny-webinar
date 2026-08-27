@@ -11,6 +11,7 @@ import {
   sendAttendeeNotification,
   hasPostalAddress,
   sendDemoInterestLead,
+  doorOf,
 } from "./email.js";
 import { startReminderScheduler } from "./reminders.js";
 import { getSubscriber } from "./store.js";
@@ -106,10 +107,17 @@ app.post("/api/register", async (req, res) => {
 
   // Which session are they registering for? A valid, still-open session id from
   // the form wins; otherwise default to the next upcoming session.
+  // PAID AND RECORDING LEADS ARE NOT CLASS REGISTRANTS, so they do not get bound to a
+  // session. Binding them was sending a Zoom reminder for a class they never asked about,
+  // because reminders.js iterates everyone attached to a session with no idea which door
+  // they came through. Filtering the reminder would have hidden the symptom and left them
+  // counted as attendees in /attendees and in the CSV export. Not binding fixes all three.
   const requestedId = String(req.body?.sessionId || "").slice(0, 20);
   const openIds = new Set(upcomingSessions().map((s) => s.id));
-  const session =
-    (requestedId && openIds.has(requestedId) && getSession(requestedId)) || currentSession();
+  const classRegistrant = doorOf(source) === "webinar";
+  const session = classRegistrant
+    ? (requestedId && openIds.has(requestedId) && getSession(requestedId)) || currentSession()
+    : null;
 
   const record = {
     name,
@@ -650,6 +658,19 @@ app.post("/api/lp-lead", async (req, res) => {
   // Front end can send them straight on to the demo.
   res.json({ ok: true, next: "/demo" });
 });
+
+// The managed pages are templated on the way out (demo state, pixel marker, A/B gate).
+// express.static would hand out the raw file and bypass all of it: /lp.html showed both
+// flag states at once, duplicate ids and an unreplaced marker. Redirect to the real route
+// so there is exactly one way to get each page.
+const MANAGED_HTML = {
+  "/index.html": "/",
+  "/lp.html": "/lp",
+  "/watch.html": "/watch",
+  "/demo.html": "/demo",
+  "/demo-start.html": "/demo/start",
+};
+app.get(Object.keys(MANAGED_HTML), (req, res) => res.redirect(301, MANAGED_HTML[req.path]));
 
 app.use(express.static(path.join(__dirname, "public")));
 
