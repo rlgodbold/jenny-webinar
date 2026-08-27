@@ -238,3 +238,63 @@ export function verifyUnsubToken(email, token) {
   const b = Buffer.from(String(token || ""));
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
+
+// ── Demo / ad leads ──────────────────────────────────────────────────────────
+// Separate from webinar subscribers: these are paid-traffic + demo prospects that
+// route to the sales team and feed the follow-up funnel. Keyed by email (dedup),
+// persisted to leads.json, atomic write. `status` is the follow-up lifecycle
+// (new -> contacted -> booked -> lost); `stage` is where in the funnel they entered
+// (lead = landing-page capture, demo = completed the demo).
+const LEADS_FILE = path.join(DATA_DIR, "leads.json");
+const leads = new Map();
+(function loadLeads() {
+  try {
+    for (const l of JSON.parse(fs.readFileSync(LEADS_FILE, "utf8"))) leads.set(l.email, l);
+  } catch { /* first run: no file yet */ }
+})();
+function persistLeads() {
+  const tmp = LEADS_FILE + ".tmp";
+  fs.writeFileSync(tmp, JSON.stringify([...leads.values()], null, 2));
+  fs.renameSync(tmp, LEADS_FILE); // atomic
+}
+
+export function upsertLead({ email, name, company, cell, fsm, plan, stage, source, utm, ip } = {}) {
+  email = normalizeEmail(email);
+  const now = new Date().toISOString();
+  let l = leads.get(email);
+  if (!l) {
+    l = {
+      email, name: name || "", company: company || "", cell: cell || "", fsm: fsm || "", plan: plan || "",
+      status: "new", stage: stage || "lead", source: source || "", utm: utm || {}, ip: ip || "",
+      createdAt: now, updatedAt: now, history: [],
+    };
+    leads.set(email, l);
+    logEvent({ type: "lead_new", email, stage: l.stage, source });
+  } else {
+    // Fill/refresh known fields; never blank out something we already have.
+    if (name) l.name = name;
+    if (company) l.company = company;
+    if (cell) l.cell = cell;
+    if (fsm) l.fsm = fsm;
+    if (plan) l.plan = plan;
+    if (source) l.source = source;
+    if (utm && Object.keys(utm).length) l.utm = { ...l.utm, ...utm };
+    // Stage only advances forward: lead -> demo (never demo -> lead).
+    if (stage === "demo") l.stage = "demo";
+    l.updatedAt = now;
+    logEvent({ type: "lead_update", email, stage: l.stage, source });
+  }
+  l.history.push({ at: now, stage: stage || l.stage, source: source || "" });
+  persistLeads();
+  return l;
+}
+
+export function listLeads() {
+  return [...leads.values()].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+export function leadStats() {
+  const all = [...leads.values()];
+  const tally = (key) => all.reduce((m, l) => ((m[l[key]] = (m[l[key]] || 0) + 1), m), {});
+  return { total: all.length, byStage: tally("stage"), byStatus: tally("status") };
+}
