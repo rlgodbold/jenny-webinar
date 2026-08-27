@@ -1,5 +1,41 @@
 # Copy for after DEMO_PUBLIC flips
 
+## READ FIRST: THE FLIP IS A PACKAGE, NOT A TOGGLE
+
+As of 2026-08-27 the DEMO_PUBLIC flip has accumulated **four separate requirements**,
+found by four different people at four different times. Anyone treating it as one
+environment variable will ship all four problems at once.
+
+    1. THE VIDEO FRAME              marketing
+       lp.html's video iframe sits OUTSIDE the DEMO_FALLBACK block, so after the flip
+       the done panel reads "Press play" over a dead player with the real CTA beneath
+       it. Wrap it, and swap the title and sub. Copy in Part 1 below.
+
+    2. THE CONFIRMATION EMAIL       marketing
+       Every registration currently gets the webinar email with a Zoom link and a
+       date. Wrong for a /lp lead in every state. Branch on the `source` prefix.
+       Both emails written in Part 2 below.
+
+    3. PHONE COLLECTION COPY        legal
+       The flip activates the demo form's phone, company, city, state and FSM fields.
+       The privacy policy describes the CURRENT live forms, which collect name and
+       email only. It becomes inaccurate the moment the flag moves.
+
+    4. SMS DISCLOSURE               legal
+       The flip also activates a verification SMS. That needs its own transactional
+       and A2P disclosure.
+
+**Items 3 and 4 mean the flip is a legal-copy change, not just a product change**,
+under the standing rule that any site change triggers a same-change legal check.
+
+The order that matters: **the privacy policy update ships with or before the flip,
+never after.** A flag that outruns its policy is a live inaccuracy, and it is the exact
+failure the trigger rule was written to prevent.
+
+None of this is an argument against flipping. It is an argument for flipping once,
+with the package, instead of four times.
+
+
 For Cale. The flag flip is necessary and not sufficient. Two things still deliver the
 wrong thing to a paid lead, and both are copy rather than logic.
 
