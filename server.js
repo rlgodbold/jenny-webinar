@@ -725,7 +725,7 @@ function privacyPage() {
   <p>This site is operated by ${brand} ("JRA," "we," "us"). Jenny is the name of the AI voice agent we sell to junk removal companies. You can reach us at <a href="mailto:${email}">${email}</a> or by mail at ${addr}.</p>
 
   <h2>What we collect</h2>
-  <p><strong>Information you give us.</strong> When you register on this site, we ask for your name and your email address. That is all the form collects. If you email us or reply to one of our emails, we keep that correspondence.</p>
+  <p><strong>Information you give us.</strong> When you register on this site, we ask for your name, your email address, and which session you want to attend. That is all we ask for. If you email us or reply to one of our emails, we keep that correspondence.</p>
   <p><strong>Information collected automatically.</strong> Like most websites, we and the services we use record technical information when you visit: your IP address, your browser and device type, the pages you view, and how you arrived. This happens through cookies and similar technologies.</p>
   <p>We do not ask for and do not want payment card numbers, government identification numbers, or any sensitive personal information through this website.</p>
 
