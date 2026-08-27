@@ -89,6 +89,21 @@ lead with no closes look identical in the bank account and need opposite fixes.*
 
 ## ON CAC
 
+**First, exclude the test records.** Two deliberate test leads exist in the store from
+tracing the lead path end to end on 2026-08-26 and 27:
+
+    lee+fbtest826@junkra.com     name "TEST LEAD do not contact"
+    lee+pixeltest827@junkra.com  name "PIXEL TEST do not contact"
+
+Both are unsubscribed and both carry "TEST" in the name field, so they are trivially
+filterable. **They are not being hard deleted on purpose**, because a data migration for
+two rows is not worth the engineering time. The control is here instead: exclude them
+whenever leads are counted.
+
+This matters more than two rows sounds. At roughly 75 leads a month, two fakes is about
+three percent on the number Lee steers by, and it lands hardest in week one when the
+denominator is smallest and the ratio is most distorted.
+
     CAC = total ad spend / customers signed and attributed to ads
 
 Target $600 to $800. Ceiling before it stops making sense: about $1,600, which is where
