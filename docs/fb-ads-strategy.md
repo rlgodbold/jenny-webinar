@@ -156,3 +156,30 @@ It is one environment variable.
 
 Everything else is done: page live, terms correct and consistent, domain verified,
 payment on the right account, audiences prepared, creative finished, copy written.
+
+---
+
+## OPERATIONAL RULE: DEPLOYS WHILE ADS ARE RUNNING
+
+On 2026-08-26 a routine deploy took jennycallagent.com to 502 for about two minutes
+while Render swapped instances. Entirely normal, nothing broken, no rollback needed.
+
+Nobody was hurt only because the ads were not live yet.
+
+**Once spending starts, a two minute deploy window is money spent sending junk removal
+owners to an error page, and a first impression we do not get a second run at.** At
+$100 a day that is small in dollars and large in effect, because the people who click
+during that window are exactly the ones we paid to reach and they do not come back.
+
+So, once ads are live:
+
+1. **Deploy outside spending hours where possible.** Ads can be scheduled; deploys are
+   nearly always flexible.
+2. **Or pause the campaign for the deploy.** Two minutes of paused delivery costs
+   nothing. Two minutes of 502 costs the clicks and the impression.
+3. **Every ship ends with a curl for a 200 on the live URL**, then the content check.
+   Status first. Checking the words without checking the status certifies a page that
+   may not load, which is how the 502 above nearly went unnoticed.
+
+None of this is an argument against deploying. It is an argument for doing it when
+nobody is arriving.
