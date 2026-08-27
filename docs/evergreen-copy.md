@@ -159,17 +159,26 @@ verified to seed reliably.
     CURRENT      How Jenny connects to popular Field Service Management software and
                  CRMs like Workiz and Housecall Pro.
 
-**HELD, pending Lee's ruling.** Lee says we can work with any CRM that has API access.
-Alston's read of clientConfig.js was Workiz only. Both can be true in different senses,
-and the difference is what matters for a page that paid traffic lands on:
+**RESOLVED 2026-08-26.** Lee confirmed the multi-platform claim is true, but it carries
+a condition: **API access is gated behind a CRM's higher plan tiers.** Workiz puts it on
+Ultimate, so an owner on a cheaper plan has to upgrade at their own cost before Jenny
+can book anything. RBG's fix keeps the platform names and attaches the condition.
 
-- "We can build an integration for any CRM with an API" is a capability statement
-- "A Housecall Pro shop can sign today and be live in days" is a delivery promise
+    CURRENT      How Jenny connects to popular Field Service Management software and
+                 CRMs like Workiz and Housecall Pro.
 
-The page reads as the second. If the truth is the first, the line needs a timing
-qualifier, because a Housecall Pro owner who signs expecting the standard week and
-gets a custom integration project is the refund conversation we keep designing away
-from.
+    REPLACEMENT  How Jenny connects to popular Field Service Management software and
+                 CRMs like Workiz and Housecall Pro. Requires a CRM plan that
+                 includes API access.
 
-Once Lee rules, this line and /watch:166 get the same treatment, since they make the
-same claim in different words. Do not fix one without the other.
+The matching /watch fix is already on branch legal/pre-spend-copy at ec4b5d0, worded
+slightly longer because that line is the sales qualifier and carries more weight:
+"a CRM plan that includes API access ... On some platforms API access sits on a higher
+tier than you may be on today."
+
+**Do not fix one without the other.** They make the same claim in different words, and
+a qualifier on one page does not travel to the other.
+
+A research pass on the other platforms' API tiers is running. If one turns out to need
+partner approval with lead time, name it specifically here rather than leaving it under
+the blanket qualifier.
