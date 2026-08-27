@@ -35,7 +35,17 @@ reason to act now. Three reasons:
    most expensive part of the business with people who never intended to stay.
 3. It gives us an honest deadline instead of a manufactured one.
 
-**Decision (Lee, 2026-08-26): the waiver runs THROUGH SEPTEMBER 30 2026.**
+**Decision (Lee, 2026-08-26): the waiver runs THROUGH SEPTEMBER 30, 2026.**
+
+**ALWAYS WRITE THE YEAR. Never bare "September 30, 2026."** Standing rule from legal
+(Richard Petty). Two offers end September 30, 2026 a year apart and both are public at the
+same time: this setup fee waiver ends **September 30, 2026**, and the cloned-voice
+rollout pricing ends **September 30, 2027**. Bare "September 30, 2026" is ambiguous between
+them. The failure is not legal, it is a billing and sales argument: somebody says "the
+September 30, 2026 offer" meaning the other one, or a client who signed in September 2026
+reads the voice clone email and believes his setup waiver runs another year, or
+somebody strips the wrong line in October 2026. Applies to site copy, the sales script,
+call language and internal notes.
 
 It was originally "the next 10 companies." RBG ruled that a counted-scarcity claim
 needs a real counter and an honored cutoff or it is deceptive pricing, and she was
@@ -48,11 +58,11 @@ changed, and it is the test to apply to any future offer.
 false price claim. Four surfaces carry it, and the fourth is easy to miss because it
 does not contain the date:
 
-    public/watch.html       price block, "waived through September 30"
-    public/lp.html          "We are waiving it through September 30."
-    public/demo-start.html  "waiving through September 30"
+    public/watch.html       price block, "waived through September 30, 2026"
+    public/lp.html          "We are waiving it through September 30, 2026."
+    public/demo-start.html  "waiving through September 30, 2026"
     public/watch.html       META DESCRIPTION, "currently waived". No date in it, so a
-                            search for "September 30" will NOT find this one.
+                            search for "September 30, 2026" will NOT find this one.
 
 A scheduled task, remove-setup-fee-waiver-oct-1, fires 1 October to do this. That is
 the mechanism rather than a promise, and this document is what it reads for the
@@ -73,7 +83,7 @@ replacement wording.
     her to your Workiz. It is not refundable, because that work happens whether you
     stay or not.
 
-    We are waiving it through September 30.
+    We are waiving it through September 30, 2026.
 
     Your first month is refundable. Cancel any time in the first 30 days and we send
     the $750 back. No form, no reason required.
@@ -104,7 +114,7 @@ statement of what happens.
 ### Short block, for the existing price displays on watch.html and demo-start.html
 
     $750 a month, month to month.
-    One time $350 setup, waived through September 30.
+    One time $350 setup, waived through September 30, 2026.
     First month refundable within 30 days.
 
 ### Meta description and link previews
