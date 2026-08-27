@@ -13,6 +13,12 @@ import { unsubToken } from "./store.js";
 // First name for a friendly greeting; never generic if we have a name.
 const firstNameOf = (name) => (String(name || "").trim().split(/\s+/)[0] || "there");
 
+// Escape user-supplied values before they land in an HTML email body.
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 const FROM_EMAIL =
   process.env.NOTIFICATION_FROM_EMAIL ||
@@ -198,25 +204,35 @@ export const hasPostalAddress = () => Boolean(COMPANY_POSTAL_ADDRESS);
  * needs to make the call without opening anything else. The FSM answer sits near the top
  * because it is the one thing that can disqualify an otherwise perfect lead.
  */
+// Who gets the sales lead alerts (Shane + Lee by default). Comma-separated env override.
+const LEAD_NOTIFY_EMAILS = (
+  process.env.LEAD_NOTIFY_EMAILS || process.env.DEMO_LEAD_EMAIL || "shane@junkra.com,lee@junkra.com"
+).split(",").map((s) => s.trim()).filter(Boolean);
+
 export async function sendDemoInterestLead(lead = {}) {
+  const utm = lead.utm || {};
+  const utmStr = Object.entries(utm).map(([k, v]) => `${k}=${v}`).join("  ") || "(none)";
   const rows = [
+    ["Stage", lead.stage || "Lead"],
     ["Name", lead.name],
     ["Company", lead.company],
     ["Phone", lead.cell],
     ["Email", lead.email],
     ["Field service software", lead.fsm || "(not answered)"],
     ["Plan they picked", lead.plan || "(not answered)"],
+    ["Source", lead.source || "(unknown)"],
+    ["Campaign (UTM)", utmStr],
   ];
   const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.7;color:#0f172a">
-    <h2 style="margin:0 0 12px;font-size:18px">Demo lead — wants Caroline for real</h2>
+    <h2 style="margin:0 0 12px;font-size:18px">Jenny lead — ${esc(lead.stage || "new lead")}</h2>
     <table style="border-collapse:collapse">${rows
-      .map(([k, v]) => `<tr><td style="padding:4px 14px 4px 0;color:#64748b">${k}</td><td><b>${String(v || "—")}</b></td></tr>`)
+      .map(([k, v]) => `<tr><td style="padding:4px 14px 4px 0;color:#64748b">${k}</td><td><b>${esc(String(v || "—"))}</b></td></tr>`)
       .join("")}</table>
-    <p style="margin-top:16px;color:#64748b;font-size:13px">They tested the demo line and came back through /demo/start.</p>
+    <p style="margin-top:16px;color:#64748b;font-size:13px">Follow up soon while they are warm. This lead is stored in the leads list.</p>
   </div>`;
   return send({
-    to: process.env.DEMO_LEAD_EMAIL || "lee@junkra.com",
-    subject: `Demo lead: ${lead.company || lead.name || "someone"} wants Caroline`,
+    to: LEAD_NOTIFY_EMAILS,
+    subject: `Jenny lead: ${lead.company || lead.name || "someone"}${lead.stage ? " — " + lead.stage : ""}`,
     html,
   });
 }

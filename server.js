@@ -25,7 +25,11 @@ import {
   countsBySession,
   logCampaign,
   normalizeEmail,
+  upsertLead,
+  listLeads,
+  leadStats,
 } from "./store.js";
+import { sendSmsAll } from "./sms.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -54,6 +58,39 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
   );
+
+// Who gets a text the instant a lead comes in (Shane + Lee). Comma-separated env override.
+const LEAD_SMS_RECIPIENTS = (process.env.LEAD_SMS_RECIPIENTS || "+19079828460,+19196222698")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+
+// Pull UTM/source params off a lead payload so we know which ad produced them.
+function pickUtm(body = {}) {
+  const utm = {};
+  for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
+    const v = String(body[k] || "").trim().slice(0, 120);
+    if (v) utm[k] = v;
+  }
+  return utm;
+}
+
+// Text Shane + Lee about a new lead. Best-effort: never throws (a lead alert must not 500).
+async function notifyLeadSms(lead, kind) {
+  const who = kind === "demo" ? "completed the demo" : "new landing-page lead";
+  const bits = [
+    `Jenny lead (${who}):`,
+    lead.name || "(no name)",
+    lead.company ? "/ " + lead.company : "",
+    lead.cell || "",
+    lead.email || "",
+    lead.fsm ? "· uses " + lead.fsm : "",
+  ].filter(Boolean);
+  try {
+    return await sendSmsAll(LEAD_SMS_RECIPIENTS, bits.join(" "));
+  } catch (e) {
+    console.error("[lead] sms failed:", e?.message);
+    return [];
+  }
+}
 
 // ── Register ────────────────────────────────────────────────────────────────
 app.post("/api/register", async (req, res) => {
@@ -250,6 +287,22 @@ app.get("/api/admin/stats", (req, res) => {
 app.get("/api/admin/subscribers", (req, res) => {
   if (!checkAdmin(req, res)) return;
   res.json({ subscribers: listSubscribers() });
+});
+
+// Sales leads (demo + landing-page) for the team and the follow-up funnel.
+app.get("/api/admin/leads", (req, res) => {
+  if (!checkAdmin(req, res)) return;
+  res.json({ stats: leadStats(), leads: listLeads() });
+});
+
+app.get("/api/admin/leads.csv", (req, res) => {
+  if (!checkAdmin(req, res)) return;
+  const cols = ["createdAt", "updatedAt", "status", "stage", "name", "company", "cell", "email", "fsm", "plan", "source"];
+  const cell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = listLeads().map((l) => cols.map((c) => cell(l[c])).join(","));
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", 'attachment; filename="jenny-leads.csv"');
+  res.send([cols.join(","), ...rows].join("\n"));
 });
 
 // Build a subscriber CSV, optionally filtered to one session id (?session=YYYY-MM-DD).
@@ -539,19 +592,63 @@ app.get("/lp", (_req, res, next) => sendDemoAwareHtml(res, next, "lp.html"));
 app.get("/demo", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo.html"));
 app.get("/demo/start", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo-start.html"));
 
+// Demo lead: the person tested Jenny and came back through /demo/start. This is the
+// hottest lead we get. Store it, email Shane + Lee, text Shane + Lee — each step is
+// best-effort and independent, so no single failure loses the lead or 500s the caller.
 app.post("/api/demo-lead", async (req, res) => {
   const lead = req.body || {};
-  if (!String(lead.name || "").trim() || !String(lead.email || "").trim()) {
+  const email = normalizeEmail(lead.email);
+  if (!String(lead.name || "").trim() || !EMAIL_RE.test(email)) {
     return res.status(400).json({ error: "name and email are required" });
   }
+  const ip = (req.headers["x-forwarded-for"] || req.ip || "").toString().split(",")[0].trim();
+  const utm = pickUtm(lead);
+
+  let stored = null;
   try {
-    await sendDemoInterestLead(lead);
-  } catch (error) {
-    // A lead is too valuable to lose to a mail hiccup: log it loudly and still thank them,
-    // because the alternative is a warm prospect staring at an error they cannot fix.
-    console.error("[demo-lead] email failed — LEAD DETAILS:", JSON.stringify(lead), error?.message);
+    stored = upsertLead({
+      email, name: lead.name, company: lead.company, cell: lead.cell, fsm: lead.fsm,
+      plan: lead.plan, stage: "demo", source: lead.source || "demo-start", utm, ip,
+    });
+  } catch (e) {
+    // Storage failed: log the full lead loudly so it is never silently lost.
+    console.error("[demo-lead] STORE FAILED — LEAD:", JSON.stringify(lead), e?.message);
   }
+
+  const forNotify = { ...lead, email, utm, stage: "Completed the demo", source: stored?.source || lead.source };
+  sendDemoInterestLead(forNotify).catch((e) => console.error("[demo-lead] email:", e?.message));
+  notifyLeadSms(forNotify, "demo").catch((e) => console.error("[demo-lead] sms:", e?.message));
+
   res.json({ ok: true });
+});
+
+// Front capture on the landing page: grab name + email (+ optional number) BEFORE the
+// demo, so a paid click that does not finish the demo is still a captured lead.
+app.post("/api/lp-lead", async (req, res) => {
+  const lead = req.body || {};
+  const email = normalizeEmail(lead.email);
+  if (!String(lead.name || "").trim() || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: "name and email are required" });
+  }
+  const ip = (req.headers["x-forwarded-for"] || req.ip || "").toString().split(",")[0].trim();
+  const utm = pickUtm(lead);
+
+  let stored = null;
+  try {
+    stored = upsertLead({
+      email, name: lead.name, cell: lead.cell, stage: "lead",
+      source: lead.source || "lp", utm, ip,
+    });
+  } catch (e) {
+    console.error("[lp-lead] STORE FAILED — LEAD:", JSON.stringify(lead), e?.message);
+  }
+
+  const forNotify = { ...lead, email, utm, stage: "New lead (landing page)", source: stored?.source || lead.source };
+  sendDemoInterestLead(forNotify).catch((e) => console.error("[lp-lead] email:", e?.message));
+  notifyLeadSms(forNotify, "lp").catch((e) => console.error("[lp-lead] sms:", e?.message));
+
+  // Front end can send them straight on to the demo.
+  res.json({ ok: true, next: "/demo" });
 });
 
 app.use(express.static(path.join(__dirname, "public")));
