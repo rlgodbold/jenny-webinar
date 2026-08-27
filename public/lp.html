@@ -109,8 +109,9 @@
       <h2>You are in.</h2>
       <p>Press play.</p>
       <div class="frame" id="videoFrame">
-        <!-- Editor's cut drops in here, same as /watch. -->
-        <iframe id="lpVideo" src="" title="AI Voice Agent Masterclass" allowfullscreen></iframe>
+        <!-- Same recording as /watch, and same reason for data-src over src: a hidden
+             iframe still loads, so a plain src would hit Google for every visitor. -->
+        <iframe id="lpVideo" src="" data-src="https://www.youtube-nocookie.com/embed/PGPbfcVgwEg" title="AI Voice Agent Masterclass" allowfullscreen></iframe>
       </div>
       <!--DEMO_FALLBACK_END-->
     </div>
@@ -219,6 +220,7 @@ form.addEventListener('submit',async(e)=>{
     if(window.jpx)window.jpx('track','Lead');
 
     $('formPanel').style.display='none';
+    const lv=$('lpVideo'); if(lv&&lv.dataset.src&&!lv.getAttribute('src'))lv.setAttribute('src',lv.dataset.src);
     $('donePanel').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent=label;}

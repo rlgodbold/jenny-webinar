@@ -151,8 +151,13 @@
 
     <section class="videosec" id="videoSection">
       <div class="videowrap">
-        <!-- WATCH_VIDEO: set the src when the edited cut is uploaded (unlisted YouTube embed URL). -->
-        <iframe id="classVideo" src="" title="The AI Voice Agent Masterclass" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <!-- The recording lives in data-src, not src, and JS moves it across at reveal.
+             A display:none iframe still LOADS, so a plain src attribute would fetch from
+             Google on every single page view, including visitors who never register. That
+             is a new third party request on a page whose privacy policy was just legally
+             reviewed and names only Meta and Google Fonts. This way nothing is requested
+             until somebody has actually registered. nocookie domain for the same reason. -->
+        <iframe id="classVideo" src="" data-src="https://www.youtube-nocookie.com/embed/PGPbfcVgwEg" title="The AI Voice Agent Masterclass" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
 
       <div class="offer">
@@ -207,6 +212,7 @@ form.addEventListener('submit',async(e)=>{
     if(window.jpx)window.jpx('track','Lead');
     $('formPanel').style.display='none';
     $('pointsRow').style.display='none';
+    const cv=$('classVideo'); if(cv&&cv.dataset.src&&!cv.getAttribute('src'))cv.setAttribute('src',cv.dataset.src);
     $('videoSection').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent='Watch the masterclass';}
