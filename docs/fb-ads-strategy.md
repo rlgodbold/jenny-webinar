@@ -173,10 +173,13 @@ during that window are exactly the ones we paid to reach and they do not come ba
 
 So, once ads are live:
 
-1. **Deploy outside spending hours where possible.** Ads can be scheduled; deploys are
-   nearly always flexible.
-2. **Or pause the campaign for the deploy.** Two minutes of paused delivery costs
-   nothing. Two minutes of 502 costs the clicks and the impression.
+1. **Pause the campaign for the deploy.** This is the default and it is the right one.
+   Two minutes of paused delivery costs nothing and we make it back the same day.
+   Two minutes of 502 costs the clicks, the impression, and the people we paid to
+   reach. Alston's point, and better than my first version: pausing constrains
+   nobody, whereas scheduling deploys around ad hours constrains everyone who ships.
+2. **Deploying outside spending hours is a fallback**, not the rule. Useful when
+   pausing is awkward, but it should never be the thing that decides when we can ship.
 3. **Every ship ends with a curl for a 200 on the live URL**, then the content check.
    Status first. Checking the words without checking the status certifies a page that
    may not load, which is how the 502 above nearly went unnoticed.
