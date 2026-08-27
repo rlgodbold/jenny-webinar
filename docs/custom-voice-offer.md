@@ -4,7 +4,7 @@
 >
 > Everything below anchors the free first year to "the same 10 companies as the setup
 > waiver." That anchor no longer exists: Lee moved the setup waiver to a date, through
-> September 30 2026.
+> September 30, 2026.
 >
 > **This needs Lee's explicit decision before any of it is written into customer-facing
 > copy**, per his standing rule that every new or changed promotion goes through him.
