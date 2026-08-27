@@ -35,15 +35,28 @@ reason to act now. Three reasons:
    most expensive part of the business with people who never intended to stay.
 3. It gives us an honest deadline instead of a manufactured one.
 
-**Decision: the waiver is for the next 10 companies we onboard.** Ten is roughly two
-months of expected ad output and it is genuinely capacity bound, since onboarding
-still has manual steps. This is a real limit, not a countdown timer, which is the only
-kind of scarcity we use.
+**Decision (Lee, 2026-08-26): the waiver runs THROUGH SEPTEMBER 30 2026.**
 
-**COMMITMENT, and I am putting it in writing so it binds us:** when the tenth company
-is onboarded, the waiver comes off the page. If we leave it up we are running fake
-scarcity, and this audience talks to each other. I own noticing. Somebody should also
-count.
+It was originally "the next 10 companies." RBG ruled that a counted-scarcity claim
+needs a real counter and an honored cutoff or it is deceptive pricing, and she was
+right. My own commitment to take it down at company ten rested on me remembering.
+
+**A date honors itself. A count rests on somebody remembering.** That is why it
+changed, and it is the test to apply to any future offer.
+
+**THE WAIVER MUST COME OFF ON OCTOBER 1.** An expired waiver still advertised is a
+false price claim. Four surfaces carry it, and the fourth is easy to miss because it
+does not contain the date:
+
+    public/watch.html       price block, "waived through September 30"
+    public/lp.html          "We are waiving it through September 30."
+    public/demo-start.html  "waiving through September 30"
+    public/watch.html       META DESCRIPTION, "currently waived". No date in it, so a
+                            search for "September 30" will NOT find this one.
+
+A scheduled task, remove-setup-fee-waiver-oct-1, fires 1 October to do this. That is
+the mechanism rather than a promise, and this document is what it reads for the
+replacement wording.
 
 ---
 
@@ -60,13 +73,18 @@ count.
     her to your Workiz. It is not refundable, because that work happens whether you
     stay or not.
 
-    We are waiving it for the next 10 companies we bring on.
+    We are waiving it through September 30.
 
     Your first month is refundable. Cancel any time in the first 30 days and we send
     the $750 back. No form, no reason required.
 
     So while the waiver is on, the only money at stake is your first month, and you
-    get that back if it is not working.
+    get that back if you cancel in the first 30 days.
+
+RBG's wording note, 2026-08-26: the close previously ended "if it is not working,"
+which paraphrases "cancel for any reason" as a condition about whether the product
+works. That is a NARROWER promise than the contract actually gives. "If you cancel in
+the first 30 days" echoes the terms faithfully and is the stronger offer besides.
 
 That last line is the one that closes, and it also answers the question a careful
 reader will otherwise ask: what happens to the $350 if I cancel in week three. While
@@ -78,7 +96,7 @@ Do not cut it for space, and do not move it above the terms it summarizes, becau
 summary that arrives before the detail reads as a sales claim instead of a plain
 statement of what happens.
 
-**Post waiver version of that last line**, for when the tenth company is onboarded:
+**Post waiver version of that last line**, for October 1:
 
     If you cancel in the first 30 days we refund the $750. The $350 setup stays with
     us, because the work is already done.
@@ -86,7 +104,7 @@ statement of what happens.
 ### Short block, for the existing price displays on watch.html and demo-start.html
 
     $750 a month, month to month.
-    One time $350 setup, waived for the next 10 companies.
+    One time $350 setup, waived through September 30.
     First month refundable within 30 days.
 
 ### Meta description and link previews

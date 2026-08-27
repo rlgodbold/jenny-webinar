@@ -1,5 +1,19 @@
 # Custom voice: pricing, promo, and copy
 
+> **STATUS 2026-08-26: THE PROMO IN THIS DOC HAS NO VALID DEADLINE. NOT LIVE ANYWHERE.**
+>
+> Everything below anchors the free first year to "the same 10 companies as the setup
+> waiver." That anchor no longer exists: Lee moved the setup waiver to a date, through
+> September 30 2026.
+>
+> **This needs Lee's explicit decision before any of it is written into customer-facing
+> copy**, per his standing rule that every new or changed promotion goes through him.
+> My recommendation is the same date, so there is one deadline for everything rather
+> than one that is a count and one that is a date for a closer to explain on a call.
+>
+> Nothing here is live, so nothing is currently wrong on the site. Do not place any of
+> this copy until he rules.
+
 Lee set the structure on 2026-08-26: a paid upgrade, extra setup fee plus more per
 month, with an early adopter promo that includes it free for 12 months. Amounts and
 cutoff are marketing's call. Here they are.
