@@ -51,6 +51,15 @@ const NOTIFY_EMAILS = (process.env.ATTENDEE_NOTIFY_EMAILS || "lee@junkra.com,sha
 const attendeesUrl = () =>
   `${PUBLIC_BASE_URL}/attendees${ATTENDEES_TOKEN ? "?token=" + encodeURIComponent(ATTENDEES_TOKEN) : ""}`;
 
+// Privacy policy identity. COMPANY_POSTAL_ADDRESS is the same env the CAN-SPAM email
+// footer already reads (email.js), so Lee sets ONE physical address and it flows to
+// both. Until it is set, the page shows a visible placeholder so nobody ships it blank.
+const COMPANY_NAME = process.env.COMPANY_NAME || "Junk Removal Authority";
+const COMPANY_MAILING_ADDRESS =
+  process.env.COMPANY_POSTAL_ADDRESS || "[JRA PHYSICAL MAILING ADDRESS placeholder]";
+const PRIVACY_CONTACT_EMAIL = webinar.contactEmail || "lee@junkra.com";
+const PRIVACY_LAST_UPDATED = "August 27, 2026";
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -657,6 +666,126 @@ app.post("/api/lp-lead", async (req, res) => {
 
   // Front end can send them straight on to the demo.
   res.json({ ok: true, next: "/demo" });
+});
+
+// ── Privacy policy ──────────────────────────────────────────────────────────
+// Server-rendered (not a static file) so express.static never serves it raw and so
+// the mailing address + contact email come from one place. Meta's Business Tools
+// Terms require an advertiser running the pixel to give this notice and keep a
+// policy reachable, so /watch and /lp link here. Copy stays plain and dash-free.
+function privacyPage() {
+  const email = esc(PRIVACY_CONTACT_EMAIL);
+  const addr = esc(COMPANY_MAILING_ADDRESS);
+  const brand = esc(COMPANY_NAME);
+  return `<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy | ${brand}</title>
+<meta name="description" content="How ${brand} and Jenny collect, use, and protect your information, and how you can opt out of advertising and analytics." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0b1526;--paper:#f6f3ec;--card:#ffffff;--line:#e5e0d4;
+        --ink:#141a24;--body:#4a5261;--muted:#8a8272;--org:#ff6320;
+        --cond:'Barlow Condensed',sans-serif;--sans:'Barlow',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--paper);color:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px}
+  .hero{background:var(--navy);color:#b8c4d8}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--cond);font-weight:800;font-size:24px;letter-spacing:.02em;color:#fff;text-decoration:none;text-transform:uppercase}
+  .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--org)}
+  .htitle{padding:14px 0 34px}
+  h1{font-family:var(--cond);font-weight:800;font-size:clamp(34px,6vw,52px);line-height:1;letter-spacing:.01em;color:#fff;text-transform:uppercase;margin-bottom:10px}
+  .updated{font-size:14px;color:#8fa0b8}
+  article{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--org);border-radius:4px;
+          box-shadow:0 18px 40px rgba(20,26,36,.08);padding:34px 34px 30px;margin:-22px auto 40px;position:relative;z-index:2}
+  article h2{font-family:var(--cond);font-weight:800;font-size:24px;letter-spacing:.01em;color:var(--ink);text-transform:uppercase;margin:30px 0 8px}
+  article h2:first-of-type{margin-top:0}
+  article p{font-size:16px;margin-bottom:12px}
+  article ul{margin:0 0 12px 20px}
+  article li{font-size:16px;margin-bottom:7px}
+  article a{color:var(--org);font-weight:600}
+  .addr{border-left:3px solid var(--org);background:#fffdf8;padding:12px 16px;margin:10px 0 4px;font-size:16px}
+  footer{border-top:1px solid var(--line);margin-top:10px;padding:24px 0 42px;text-align:center;font-size:13px;color:var(--muted)}
+  footer a{color:var(--muted)}
+  @media(max-width:640px){article{padding:24px 20px}}
+</style></head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/"><span class="dot"></span>Jenny</a>
+    </div>
+    <div class="htitle">
+      <h1>Privacy Policy</h1>
+      <div class="updated">Last updated ${PRIVACY_LAST_UPDATED}</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<article>
+  <p>This policy explains what ${brand} collects on this website, why we collect it, and what you can do about it. We have tried to write it in plain language rather than legal boilerplate.</p>
+
+  <h2>Who we are</h2>
+  <p>This site is operated by ${brand} ("JRA," "we," "us"). Jenny is the name of the AI voice agent we sell to junk removal companies. You can reach us at <a href="mailto:${email}">${email}</a> or by mail at ${addr}.</p>
+
+  <h2>What we collect</h2>
+  <p><strong>Information you give us.</strong> When you register on this site, we ask for your name, your email address, and which session you want to attend.${DEMO_PUBLIC ? "" : " That is all we ask for."} If you email us or reply to one of our emails, we keep that correspondence.</p>
+  ${DEMO_PUBLIC ? `<p>If you request a live demo, we also ask for your business name, your city and state, and a mobile number. That is all we ask for. We use the mobile number for two things and nothing else: so that Jenny can call you for the demo, and to send you a one time code confirming the number is yours. Those are the only messages we send to it. We do not use it for marketing texts. You can reply STOP to any message to stop them, and message and data rates may apply.</p>
+  ` : ""}<p><strong>Information collected automatically.</strong> Like most websites, we and the services we use record technical information when you visit: your IP address, your browser and device type, the pages you view, and how you arrived. This happens through cookies and similar technologies.</p>
+  <p>We do not ask for and do not want payment card numbers, government identification numbers, or any sensitive personal information through this website.</p>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To give you the class, recording, or material you registered for.</li>
+    <li>To follow up with you about it and about our services, by email.</li>
+    <li>To measure how our advertising performs, and to show ads to people who have visited this site.</li>
+    <li>To operate, secure, and improve the site.</li>
+  </ul>
+
+  <h2>Advertising and analytics</h2>
+  <p>We use the Meta pixel on this site. It is a piece of code from Meta Platforms, the company behind Facebook and Instagram, and it tells us how many people who saw one of our ads went on to register. It also lets us show follow-up ads on Facebook and Instagram to people who visited this site. Meta receives information about your visit, including your IP address, and handles it under its own privacy policy.</p>
+  <p>You can limit this. Your ad settings inside Facebook and Instagram control how your activity off those platforms is used for advertising. Your browser and device settings also let you block or delete cookies, and both iOS and Android offer a setting that limits ad tracking.</p>
+  <p>We also load fonts from Google Fonts, which means Google receives your IP address in order to serve them. We do not use Google Fonts to track you and we receive nothing from it.</p>
+
+  <h2>Email</h2>
+  <p>If you register, we will email you about what you signed up for and about our services. Every one of those emails has an unsubscribe link, and you can also reply with the word UNSUBSCRIBE. We act on opt-outs promptly and in any event within ten business days. Unsubscribing from marketing email does not stop messages we need to send you about something you specifically requested.</p>
+
+  <h2>Who we share it with</h2>
+  <p><strong>We do not sell your personal information, and we do not rent or trade it.</strong></p>
+  <p>Some privacy laws define selling or sharing broadly enough to include advertising like this, and two of our activities fall under that definition. The first is the Meta pixel described above. The second is that we provide contact information from our own customer and business records to Meta so it can show ads to our existing contacts and to people who resemble them, which Meta calls custom and lookalike audiences. You can limit the pixel as described above, and you can tell us not to use your information for either kind of advertising by writing to us at the address in the Contact section below.</p>
+  <p>We share it only with the service providers that make the site work, such as our website host, our email sending platform, and the advertising service described above. They are permitted to use it to provide their service to us and for nothing else. We will also disclose information if the law requires it, or to protect our rights, safety, or property.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep the registration information you give us for as long as it is needed for the purposes described in this policy, and we delete it on request. Technical and advertising data is kept for shorter periods set by the services described above. You can ask us to delete your information at any time using the contact details below.</p>
+
+  <h2>Your choices</h2>
+  <p>Write to us at <a href="mailto:${email}">${email}</a> and we will, on request, tell you what personal information we hold about you, correct it if it is wrong, or delete it. We will not treat you differently for asking. Depending on where you live you may have additional rights under your state's privacy law, and we will honor them.</p>
+
+  <h2>Children</h2>
+  <p>This site is for business owners. It is not directed at children, and we do not knowingly collect information from anyone under sixteen.</p>
+
+  <h2>Security</h2>
+  <p>We use reasonable measures to protect the information we hold. No website can promise perfect security, and we are not going to claim otherwise.</p>
+
+  <h2>Changes</h2>
+  <p>If we change this policy we will update the date at the top. If the change is significant, we will say so on the site.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy, or a request about your information: <a href="mailto:${email}">${email}</a>, or by mail:</p>
+  <div class="addr">${brand}<br>${addr}</div>
+</article>
+</div>
+
+<footer><div class="wrap">${brand} &middot; <a href="/">Home</a></div></footer>
+</body></html>`;
+}
+
+app.get(["/privacy", "/privacy-policy"], (_req, res) => {
+  res.type("html").send(privacyPage());
 });
 
 // The managed pages are templated on the way out (demo state, pixel marker, A/B gate).
