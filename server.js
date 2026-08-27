@@ -674,7 +674,6 @@ function privacyPage() {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Privacy Policy | ${brand}</title>
 <meta name="description" content="How ${brand} and Jenny collect, use, and protect your information, and how you can opt out of advertising and analytics." />
-<meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -748,10 +747,11 @@ function privacyPage() {
 
   <h2>Who we share it with</h2>
   <p><strong>We do not sell your personal information, and we do not rent or trade it.</strong></p>
+  <p>Some privacy laws define selling or sharing broadly enough to include advertising pixels. The advertising described above is the only activity of that kind we do, and you can limit it as described.</p>
   <p>We share it only with the service providers that make the site work, such as our website host, our email sending platform, and the advertising service described above. They are permitted to use it to provide their service to us and for nothing else. We will also disclose information if the law requires it, or to protect our rights, safety, or property.</p>
 
   <h2>How long we keep it</h2>
-  <p>We keep the registration information you give us for as long as it is needed for the purposes described in this policy, and we delete it on request. You can ask us to delete your information at any time using the contact details below.</p>
+  <p>We keep the registration information you give us for as long as it is needed for the purposes described in this policy, and we delete it on request. Technical and advertising data is kept for shorter periods set by the services described above. You can ask us to delete your information at any time using the contact details below.</p>
 
   <h2>Your choices</h2>
   <p>Write to us at <a href="mailto:${email}">${email}</a> and we will, on request, tell you what personal information we hold about you, correct it if it is wrong, or delete it. We will not treat you differently for asking. Depending on where you live you may have additional rights under your state's privacy law, and we will honor them.</p>
