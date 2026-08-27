@@ -12,17 +12,29 @@ policy is live at all.
 
 ## The order
 
-**1. Merge `lp-demo-fix` (b0b301c).**
+**1. Merge `privacy-policy-preads` FIRST.**
+Order corrected 2026-08-27 for conflict safety, not for dependency. server.js is edited
+on BOTH branches and main has no privacy route yet, so a server.js conflict resolved
+toward lp-demo-fix would silently delete the legal page. Land the policy first, then
+bring lp-demo-fix up onto it. If a conflict appears in server.js, the privacy policy is
+a roughly 100 line template literal block at `function privacyPage()`. Keep it.
+
+**2. Bring `lp-demo-fix` up onto the new main, then merge it.**
 Paid leads stop being bound to a webinar session, so they stop getting Zoom reminders
 for a class they never asked about. Also fixes the /lp success panel, the email
 branching, and the raw .html bypass. Clean fast-forward.
 *Blocks:* the DEMO_PUBLIC flip. Flipping first shows a dead player to paid traffic.
 
-**2. Merge `privacy-policy-preads` (d234ed6).**
-Puts /privacy on the live site with footer links.
-*Blocks:* the pixel. Meta's own terms require a privacy policy for pixel use, and a
-cookie-setting tracker on a site with no policy is the version of this with
-consequences. An ad account gets flagged rather than gently corrected.
+The policy also blocks the pixel on its own account: Meta's terms require a privacy
+policy for pixel use, and a cookie-setting tracker on a site without one is the version
+of this that gets an ad account flagged rather than gently corrected.
+
+**0. Before any of it: confirm the A2P campaign covers PROSPECT verification.**
+The registered campaign is a Low Volume Mixed use case. "Mixed" is broad but carriers
+treat verification as a distinct use case that some campaign types exclude, and this has
+to be read from the registered use cases rather than inferred from the label. If it does
+not cover it, the DEMO_PUBLIC flip is blocked regardless of every policy step below,
+because the demo cannot send its code. One answer, two gates, so ask it early.
 
 **3. Start DNS TXT domain verification at the registrar.**
 Not in Render, at the registrar holding jennycallagent.com. Do this EARLY and in

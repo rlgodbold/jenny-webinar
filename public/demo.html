@@ -120,9 +120,25 @@
       <input id="cell" name="cell" required type="tel" autocomplete="tel" placeholder="We text a verification code to this number" />
       <label for="email">Email</label>
       <input id="email" name="email" required type="email" autocomplete="email" placeholder="Where we send the recording" />
+      <!-- CONSENT SITS ABOVE THE BUTTON, not below it. It used to follow the button,
+           which meant a prospect could press "Text me a code" having never seen the
+           sentence: on a phone the button is plausibly the last thing above the fold and
+           the disclosure is what you scroll to afterwards. Point-of-collection consent
+           has to be visible at the moment of the act, so it moved. Not one word changed
+           in the move.
+
+           STILL OWED, from legal, and deliberately left EMPTY rather than filled with a
+           placeholder, because placeholder copy ships: the two consents below are
+           currently ONE sentence and they are separate permissions with separate legal
+           bases. Recording needs its own disclosure, which is load bearing because the
+           prospect calls IN to a recorded line and in a two party consent state this page
+           is where the consent happens. SMS needs rates, frequency and STOP wording, plus
+           a privacy policy link at the point of collection once /privacy is live. -->
+      <p class="consent">We record this demo call so we can email you the tape. We'll text a verification code to the number above, and it's the phone she'll recognize when you call in, so use the one you'll be calling from.</p>
+      <!--CONSENT_RECORDING_SLOT-->
+      <!--CONSENT_SMS_SLOT-->
       <button type="submit" id="regBtn">Text me a code</button>
       <div class="err" id="regErr"></div>
-      <p class="consent">We record this demo call so we can email you the tape. We'll text a verification code to the number above, and it's the phone she'll recognize when you call in, so use the one you'll be calling from.</p>
     </form>
   </div>
 
