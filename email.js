@@ -79,7 +79,68 @@ async function send({ to, subject, html, headers }) {
 }
 
 // ── Transactional: registration confirmation ────────────────────────────────
-export async function sendConfirmationEmail({ name, email, session }) {
+// Which door did this lead come through? The server already packs it into `source`:
+// `lp:<utms>` from the ad landing page, `watch-recording:<utms>` from the class page,
+// and anything else (or nothing) is a plain home-page registration for a live class.
+//
+// This branch exists because the webinar email was going to EVERYONE, so a paid lead who
+// asked to hear an AI answer a phone got a Zoom invitation to a class instead. It is also
+// the thing that stops being merely wrong and starts being impossible once the Thursday
+// series ends, since the email would name a date that will never happen.
+const doorOf = (source = "") => {
+  const v = String(source || "");
+  if (v === "lp" || v.startsWith("lp:")) return "lp";
+  if (v.startsWith("watch-recording")) return "watch";
+  return "webinar";
+};
+
+const shell = (firstName, bodyHtml, email) => `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;font-size:16px;line-height:1.6">
+    <p style="margin:0 0 16px">Hey ${firstName},</p>
+    ${bodyHtml}
+    <p style="margin:0 0 4px">Lee Godbold</p>
+    <p style="margin:0 0 16px">Junk Removal Authority</p>
+    ${marketingFooter(email)}
+  </div>`;
+
+const btn = (href, label) =>
+  `<p style="margin:0 0 16px"><a href="${href}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;display:inline-block;font-weight:600">${label}</a></p>`;
+
+// EMAIL A: the ad landing page. No date, no Zoom, nothing that expires.
+async function sendDemoConfirmation({ name, email }) {
+  const base = (process.env.PUBLIC_BASE_URL || "https://jennycallagent.com").replace(/\/$/, "");
+  const body = `
+    <p style="margin:0 0 16px">You asked to hear what an AI sounds like answering a junk removal phone. Here is how it works.</p>
+    <p style="margin:0 0 16px">You tell her your company name, your city and roughly what you charge. A couple of minutes later you call a number and she answers as your company, quoting your prices, in your towns.</p>
+    <p style="margin:0 0 16px">Run the calls you actually get. The three bedroom cleanout, the couch on the curb, the price shopper. Then throw a couple of the odd ones at her.</p>
+    ${btn(base + "/demo", "Start the demo")}`;
+  return send({
+    to: email,
+    subject: "Hear her answer your phone",
+    html: shell(firstNameOf(name), body, email),
+    headers: listUnsubHeaders(email),
+  });
+}
+
+// EMAIL B: the class, evergreen. Also no date and no Zoom, because it is a recording now.
+async function sendClassConfirmation({ name, email }) {
+  const base = (process.env.PUBLIC_BASE_URL || "https://jennycallagent.com").replace(/\/$/, "");
+  const body = `
+    <p style="margin:0 0 16px">Here is the AI Voice Agent Masterclass. Watch it whenever you have the time, all the way through or in pieces.</p>
+    ${btn(base + "/watch", "Watch the class")}
+    <p style="margin:0 0 16px">When you are done, the thing worth doing next is hearing her answer the phone as your own company. That takes about a minute.</p>`;
+  return send({
+    to: email,
+    subject: "Your masterclass is ready",
+    html: shell(firstNameOf(name), body, email),
+    headers: listUnsubHeaders(email),
+  });
+}
+
+export async function sendConfirmationEmail({ name, email, session, source = "" }) {
+  const door = doorOf(source);
+  if (door === "lp") return sendDemoConfirmation({ name, email });
+  if (door === "watch") return sendClassConfirmation({ name, email });
   session = session || currentSession();
   const when = formatWhen(session);
   const firstName = firstNameOf(name);

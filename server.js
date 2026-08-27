@@ -93,7 +93,7 @@ app.post("/api/register", async (req, res) => {
     return res.status(500).json({ error: "Something went wrong. Try again." });
   }
 
-  sendConfirmationEmail({ name, email, session }).catch((e) =>
+  sendConfirmationEmail({ name, email, session, source }).catch((e) =>
     console.error("[register] email error:", e?.message)
   );
 

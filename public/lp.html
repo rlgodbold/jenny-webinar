@@ -96,13 +96,23 @@
 
     <!-- Post submit happens HERE, on the same screen. No thank you page, no dead end. -->
     <div class="done" id="donePanel">
-      <h2 id="doneTitle">You are in.</h2>
-      <p id="doneSub">Press play.</p>
+      <!-- Both states of the success panel live here and the server strips whichever one
+           does not apply. The VIDEO FRAME is inside the fallback block on purpose: with
+           the demo live, an instruction to press play above a player that cannot play is
+           the first thing a paid lead sees, and it reads as broken. -->
+      <!--DEMO_LINK_START-->
+      <h2>You're in.</h2>
+      <p>Now hear her answer as your own company. Your prices, your towns. Takes about a minute.</p>
+      <a class="cta" href="/demo" id="demoGo" style="margin-top:16px">Start the demo</a>
+      <!--DEMO_LINK_END-->
+      <!--DEMO_FALLBACK_START-->
+      <h2>You are in.</h2>
+      <p>Press play.</p>
       <div class="frame" id="videoFrame">
         <!-- Editor's cut drops in here, same as /watch. -->
         <iframe id="lpVideo" src="" title="AI Voice Agent Masterclass" allowfullscreen></iframe>
       </div>
-      <!--DEMO_LINK_START--><a class="cta" href="/demo" id="demoGo" style="margin-top:16px">Start the demo</a><!--DEMO_LINK_END-->
+      <!--DEMO_FALLBACK_END-->
     </div>
   </div>
 </header>
