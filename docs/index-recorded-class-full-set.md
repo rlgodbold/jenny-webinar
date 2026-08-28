@@ -121,14 +121,33 @@ Not a delete. The slot is real and should describe what a viewer actually gets.
     ANCHOR   A limited, discounted offer
     ANCHOR   Like what you see? Live attendees get a limited-quantity discount to set Jenny up in their own business.
 
+**Do not put an offer here.** Under the recorded model there is no live attendance to
+reward, so there is no separate attendee deal. The terms live where the terms live, in one
+voice, and the dated offer line is held pending Lee's answer on the 2027 price.
+
+Two variants. **Neither one waits on Lee**, which is the point: this slot must not be what
+holds the page.
+
+**VARIANT A, RECOMMENDED, CUT THE ITEM ENTIRELY.** The agenda describes what is IN the
+class. "A limited, discounted offer" was never class content, it was a reward for showing
+up live. With no live attendance there is nothing to describe, so the honest move is that
+the agenda goes from five items to four. Nothing is lost, because nothing real was there.
+Acelynn should check whether the surrounding layout assumes five.
+
+**VARIANT B, ONLY IF SOMEONE CONFIRMS THE RECORDING ACTUALLY COVERS PRICING:**
+
     HEADING  What it costs, plainly
     BODY     The real price, what is included, and how to start. No pressure and no
              sales call required to find out.
 
-**Do not put an offer here.** Under the recorded model there is no live attendance to
-reward, so there is no separate attendee deal. The terms live where the terms live, in one
-voice, and the dated offer line is still held pending Lee's answer on the 2027 price. This
-slot describes that pricing is covered, it does not state pricing.
+**Do not ship B on my say-so.** I have not watched the recording and nobody in this thread
+has. Acelynn verified the video EMBEDS, which is not the same as knowing what is in it. An
+agenda item promising a pricing segment that the recording does not contain is the same
+defect as the empty player and the Zoom email: the page is fine and what the viewer
+actually receives does not match. B is safe the moment one person watches it and says yes,
+and not before.
+
+Default to A. Upgrade to B on confirmation.
 
 ---
 
