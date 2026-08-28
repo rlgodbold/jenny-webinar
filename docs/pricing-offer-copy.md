@@ -157,3 +157,52 @@ checked against each other.
 **This wording must match the work order.** If the work order says something different
 about the setup fee or the refund window, the work order wins and this file changes,
 not the other way round. Somebody should read them side by side before launch.
+
+---
+
+# THE DATED OFFER LINE (question a settled 2026-08-28)
+
+**The special is the FREE VOICE CLONE**, their own voice or a region-specific actor we
+hire. Not the $750 rate, not the setup waiver. The $350 setup waiver is a SEPARATE offer
+with its own earlier date and stays its own sentence.
+
+## The copy
+
+    Sign up by September 30, 2026 and you get your own voice, free through
+    September 30, 2027. Your own voice, or a local person we hire and record for
+    you, so your customers hear someone who sounds like your town. After
+    September 30, 2027 it is $100 a month if you keep it.
+
+    The one time $350 setup fee is waived through September 30, 2026.
+
+Two offers, two sentences, three explicit years, and the renewal price inside the same
+sentence as the free period.
+
+## Why "available at additional cost" cannot ship
+
+The renewal number already exists and Lee approved it on 2026-08-26: **$100 a month**,
+with $500 one time for setup. It is in `custom-voice-offer.md` under a section titled
+"Disclose the renewal up front. Not negotiable," which reads:
+
+> After the free year it is $100 a month if they keep it. That number appears in the
+> same breath as the free year, every time, in every surface and on every call.
+
+So vague wording is not a cautious choice here, it is a departure from a rule Lee already
+set, on the one offer where it matters most. A client whose CUSTOMERS recognise their
+voice cannot walk away at renewal. That is a retention lever if they saw the number
+coming and a trap if they did not, and the trap version is the one that generates the
+refund argument.
+
+## Two things Lee still has to answer
+
+**1. Does "free" cover the $500 voice setup, or only the $100 a month?** Those are two
+separate charges. The draft above says "free," which a reader will take as both. If only
+the monthly is included, the line has to say so and the number changes.
+
+**2. The free period changed shape and the older doc is now stale.** `custom-voice-offer.md`
+says free for "their first year," rolling per client, anchored to "the next 10 companies."
+Both are superseded: the count-bound framing was replaced by a date after RBG ruled that
+counted scarcity needs a real counter, and the period is now a FIXED end date. Under
+September 30, 2027, a client signing in September 2026 gets twelve months and one signing
+today gets thirteen. That is fine and simpler, but `custom-voice-offer.md` should be
+updated to match or the sales script will contradict the site.
