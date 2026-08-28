@@ -105,6 +105,69 @@ promotion here. One offer, stated in one voice, in the places that state terms.
 The sub now ends by pointing at the demo instead, which is the two door design doing
 its job: the class is a door, not a destination.
 
+## THE DATED OFFER LINE: DRAFTED, NOT READY TO SHIP
+
+Lee's intent, verbatim 2026-08-28: "sign up by September 30 2026 to get the special for
+one year, good through September 30 2027."
+
+The two years are right and they do resolve the ambiguity Richard Petty flagged. But this
+sentence cannot be written correctly yet, because it introduces a term that does not exist
+on the site today, and three things have to be true before it is safe to publish.
+
+**What the site says right now, confirmed live 2026-08-28:**
+
+    $750 a month. Month to month, cancel any time, no contract.
+    Plus a one time $350 setup, waived through September 30.
+
+The $750 has **no end date**. It is open ended. "Good through September 30, 2027" puts an
+end date on it, which means there is a price after that date, and we do not currently say
+what it is anywhere on the site or in any doc.
+
+### The three questions, in order of how badly a wrong guess hurts
+
+**1. What is "the special"?** Three different things could be meant and they produce three
+different pages:
+
+  a. the $750 monthly rate, locked for a year
+  b. the $350 setup waiver
+  c. the cloned-voice rollout pricing
+
+(b) does not work: a one time fee has no duration, so "for one year" cannot describe it.
+(c) is a separate offer that already runs 2026 to 2027 and is exactly the offer legal
+warned would get confused with this one. (a) is the only reading that fits the words, but
+it is an inference and this is a price.
+
+**2. What is the price on October 1, 2027?** Whatever the special is, ending it implies a
+next price. **Lee's own standing rule already answers how to handle this: the renewal price
+appears in the same breath as the offer, always.** That rule exists because a client who
+signs at one price and meets a different one at month thirteen is a refund argument and a
+churn event, and the whole point of stating it up front is that it becomes a retention
+lever instead. A one year lock with an unstated cliff is the single most dangerous sentence
+we could put on this page, and it is dangerous in direct proportion to how good the deal is.
+
+**3. How does a one year term sit beside "month to month, cancel any time, no contract"?**
+These are reconcilable, the special lasts a year and the client can still leave whenever,
+but only if the copy says so. Unqualified, "get the special for one year" reads to a careful
+buyer like a twelve month commitment, which is the opposite of our actual terms and
+undercuts the strongest thing we say.
+
+### Draft, ready the moment those are answered
+
+Written for reading (a), with the renewal price as an explicit blank. Do not ship with the
+blank in it, and do not fill it by inference.
+
+    Sign up by September 30, 2026 and your rate is locked at $750 a month through
+    September 30, 2027. Still month to month, still cancel any time. After September
+    30, 2027 it goes to $____ a month.
+
+The $350 setup waiver stays a SEPARATE sentence and keeps its own date, because it is a
+separate offer that ends a year earlier:
+
+    The one time $350 setup fee is waived through September 30, 2026.
+
+Keeping them as two sentences with two explicit years is what actually discharges the legal
+requirement. Merging them into one dated clause would recreate the ambiguity in a new form.
+
 ## Note for whoever applies this
 
 The old heading at :371 carries dash punctuation and the old sub carries another.
