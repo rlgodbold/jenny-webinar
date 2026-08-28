@@ -4,7 +4,26 @@ Lee's standing rule is no dash punctuation in anything written for him or his br
 home page breaks it at scale. Not blocking anything, cosmetic, but it is his own rule on
 the page he looks at most while we enforce it line by line everywhere else.
 
-**SEQUENCE THIS AFTER THE RECORDED-CLASS MERGE.** Several dashed lines are already being
+> ## POST-MERGE STATUS, re-verified live 2026-08-28 after 6d112c2
+>
+> **UNBLOCKED. The recorded-class merge has landed, so this is ready to apply.**
+>
+> I re-checked all 17 anchors against the post-merge page rather than assuming they
+> survived, and they did not all survive. The merge fixed more than expected:
+>
+>     DONE by the merge   A0  "What we'll cover — live"      -> "What we'll cover"
+>     DONE by the merge   A1  meta description "free live"   -> "A free masterclass"
+>     DONE by the merge   A2  og:description "live class"    -> "Free on demand class", dash gone
+>     DONE by the merge   A3/B15  <title> dash               -> now a period
+>
+> **Sections A and C are complete. Only B1 to B14 remain**, all body copy, 15 anchors
+> still valid and confirmed present on the live page today. Visible dashed lines are down
+> from 20 to **14**.
+>
+> Section C (leave-these-alone) is now moot: every line in it was replaced by the merge.
+> Kept below only as a record of why it existed.
+
+**ORIGINAL SEQUENCING NOTE, now satisfied.** Several dashed lines are already being
 replaced by that change, and de-dashing them now would collide with Cale's staged branch
 and waste the work twice. Section C lists the ones to leave alone for exactly that reason.
 
@@ -18,7 +37,7 @@ splice or a run on. Each replacement below picks a comma, colon or period on pur
 
 ## A. One line that is not cosmetic at all
 
-**A0. "What we'll cover — live"**
+**A0. "What we'll cover — live"** **DONE, fixed in the recorded-class merge.**
 
 This is a dash AND an occasion word, and it is not in the 17 surfaces I swept or, as far as
 I can tell, in Cale's 23. It says the class is live, on a page that will say the class is
@@ -108,7 +127,7 @@ is the whole point and deserves its own sentence.
     ANCHOR   junk removal companies — and in this class
     REPLACE  junk removal companies, and in this class
 
-**B15.** The `<title>` tag, which is also visible as the browser tab and in search results.
+**B15.** The `<title>` tag, which is also visible as the browser tab and in search results. **DONE, fixed in the merge, now a period.**
 
     ANCHOR   Junk Removal Companies — Recapture Lost Revenue
     REPLACE  Junk Removal Companies: Recapture Lost Revenue
