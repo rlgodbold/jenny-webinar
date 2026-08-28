@@ -19,6 +19,39 @@ underwater, "watch it whenever you have time" beats "block out Friday at 2."
 The second door also needs to point at the first one. Someone who finishes the class
 should land on the demo, because the demo is what closes.
 
+## Before applying: two things verified 2026-08-28
+
+**1. Do NOT use the line numbers below. Match on the content strings.** The line numbers
+were accurate on 2026-08-26 and index.html has been touched since (privacy footer links).
+The standing rule on this codebase is to match on content, never on line numbers, and this
+document predates its own rule. All five anchors below were confirmed present on the live
+homepage on 2026-08-28:
+
+    "Reserve your spot for the live class."
+    "Seats are limited and the replay isn't guaranteed"
+    "A limited, discounted offer"
+    "Live attendees get a limited-quantity discount to set Jenny up in their own business."
+    "Reserve my free seat"
+
+The old copy is all still live and unchanged, so this rewrite is still exactly the right
+fix and nothing has been partially applied.
+
+**2. Block 2's sub points at the demo, and the demo is STILL GATED.** Verified on
+2026-08-28: DEMO_PUBLIC is false, /lp still serves the fallback CTA, and there is no
+working demo link anywhere. If the series-ended copy ships before the demo flip, the
+homepage promises a thing a visitor cannot get, which is the same class of problem as the
+scarcity claim this rewrite exists to remove.
+
+So block 2 has two variants and whoever applies it picks by the demo's actual state, not
+by what is planned:
+
+- **Demo live**: use the sub as written.
+- **Demo still gated**: use the gated variant under block 2.
+
+Do not ship the demo-pointing sub on the assumption the flip lands the same day. That is
+the wrong-state trap: correct for the state we are heading toward, broken in the state
+that is serving.
+
 ## Block 1, currently lines 206 to 208
 
     HEADING     Watch the class
@@ -36,6 +69,15 @@ should land on the demo, because the demo is what closes.
                 can hear Jenny answer the phone as your own company.
 
     BUTTON      Watch it now
+
+**Gated variant of the SUB, for use while the demo is not public:**
+
+    SUB         It's free and it starts the second you enter your email. It is the
+                whole class, not a preview.
+
+That keeps the real improvement, which is that it starts now, and drops only the forward
+pointer to a thing that is not reachable yet. When the demo goes public, swap in the sub
+as originally written. Nothing else in the block changes.
 
 This is the line that carried both held problems at once, the scarcity claim and the
 live attendee setup offer. Both are gone.
