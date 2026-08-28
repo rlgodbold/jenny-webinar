@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The AI Voice Agent Masterclass for Junk Removal Companies — Recapture Lost Revenue, Reclaim Your Freedom</title>
-<meta name="description" content="A free live masterclass for junk removal owners: how an AI voice agent answers every call, books jobs into your CRM, protects your ad spend and Google ranking, and gets you off the phone." />
+<title>The AI Voice Agent Masterclass for Junk Removal Companies. Recapture Lost Revenue, Reclaim Your Freedom</title>
+<meta name="description" content="A free masterclass for junk removal owners: how an AI voice agent answers every call, books jobs into your CRM, protects your ad spend and Google ranking, and gets you off the phone." />
 <meta property="og:title" content="The AI Voice Agent Masterclass for Junk Removal Companies" />
-<meta property="og:description" content="Recapture lost revenue and reclaim your freedom. Free live class for junk removal owners — see an AI voice agent book jobs 24/7." />
+<meta property="og:description" content="Recapture lost revenue and reclaim your freedom. Free on demand class for junk removal owners. See an AI voice agent book jobs 24/7." />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -44,13 +44,6 @@
   .byline img{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:center 18%;border:2px solid #fff;box-shadow:var(--shadow)}
   .byline span{font-size:13.5px;color:var(--muted);line-height:1.35}
   .byline b{color:var(--ink);font-weight:600}
-  .meta-row{display:flex;flex-wrap:wrap;gap:10px 22px}
-  .meta-row .m{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink);font-weight:500}
-  .meta-row .m svg{width:18px;height:18px;color:var(--blue)}
-  .countdown{display:flex;gap:10px;margin-top:24px}
-  .cd-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 0;min-width:64px;text-align:center;box-shadow:var(--shadow)}
-  .cd-box .n{font-size:25px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:var(--blue)}
-  .cd-box .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:6px}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
   .card .free{display:inline-block;background:#dcfce7;color:#166534;font-weight:800;font-size:12px;letter-spacing:.04em;padding:5px 11px;border-radius:999px;text-transform:uppercase;margin-bottom:14px}
@@ -72,13 +65,13 @@
   .reassure svg{width:14px;height:14px}
   .form-err{color:#dc2626;font-size:13.5px;margin-top:10px;display:none}
 
-  .success{display:none;text-align:center;padding:8px 0}
+.frame{position:relative;padding-bottom:56.25%;height:0;background:#000;border-radius:10px;overflow:hidden;margin-top:14px}
+  .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .success{display:none;text-align:center;padding:8px 0}
   .success .check{width:64px;height:64px;border-radius:50%;background:#dcfce7;display:grid;place-items:center;margin:0 auto 18px}
   .success .check svg{width:32px;height:32px;color:var(--green)}
   .success h2{margin-bottom:8px;color:var(--ink);font-size:21px;font-weight:800}
   .success p{color:var(--muted);font-size:15px;margin-bottom:20px}
-  .success .joinbtn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:14px 26px;border-radius:12px;font-weight:700;font-size:16px}
-  .success .smallnote{color:var(--muted);font-size:13px;margin-top:16px}
 
   section.block{padding:62px 0}
   section.alt{background:var(--soft)}
@@ -138,7 +131,6 @@
 
   .finalcta{background:linear-gradient(180deg,#ffffff,#eff6ff)}
   .finalcta-inner{text-align:center}
-  .finalcta .when-big{display:inline-flex;align-items:center;gap:10px;font-size:16px;color:var(--ink);border:1px solid var(--line);background:var(--card);padding:10px 18px;border-radius:999px;margin-bottom:24px;font-weight:600;box-shadow:var(--shadow)}
   .finalcta .btn{max-width:340px;margin:0 auto}
 
   footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:var(--muted);font-size:13px}
@@ -172,7 +164,7 @@
       <!--DEMO_LINK_START--><a href="/demo" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;
          color:#1d4ed8;text-decoration:none;background:#dbeafe;padding:7px 13px;border-radius:999px;white-space:nowrap">
         🔴 Try the live demo</a><!--DEMO_LINK_END-->
-      <div class="when-pill" id="topPill">Free live class · loading…</div>
+      <div class="when-pill" id="topPill">Free class · watch any time</div>
     </div>
   </div>
 </div>
@@ -180,36 +172,21 @@
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="forwho"><span class="live"></span> Free live masterclass for junk removal owners</span>
+      <span class="forwho"><span class="live"></span> Free masterclass for junk removal owners</span>
       <h1>Recapture lost revenue. <span class="accent">Reclaim your freedom.</span></h1>
-      <p class="sub">The live class built for <b>junk removal companies</b>: see the AI voice agent that answers every call, quotes the job, and books it straight into your CRM — 24/7. <b>It's not about sounding human. It's about never missing another lead.</b></p>
+      <p class="sub">The class built for <b>junk removal companies</b>: see the AI voice agent that answers every call, quotes the job, and books it straight into your CRM — 24/7. <b>It's not about sounding human. It's about never missing another lead.</b></p>
       <div class="byline">
         <img src="/lee.jpg" alt="Lee Godbold" />
         <span>Hosted by <b>Lee Godbold</b><br>Founder, Junk Removal Authority</span>
-      </div>
-      <div class="meta-row">
-        <div class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> <span id="dateMeta">—</span></div>
-        <div class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span id="timeMeta">—</span></div>
-        <div class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Live on Zoom</div>
-      </div>
-      <div class="countdown" id="countdown" aria-label="Time until the webinar starts">
-        <div class="cd-box"><div class="n" id="cdD">--</div><div class="l">Days</div></div>
-        <div class="cd-box"><div class="n" id="cdH">--</div><div class="l">Hours</div></div>
-        <div class="cd-box"><div class="n" id="cdM">--</div><div class="l">Mins</div></div>
-        <div class="cd-box"><div class="n" id="cdS">--</div><div class="l">Secs</div></div>
       </div>
     </div>
 
     <div class="card" id="formCard">
       <div id="formState">
         <span class="free">100% Free</span>
-        <h2>Save your seat</h2>
-        <p class="lead">Reserve your spot for the live class. Seats are limited and the replay isn't guaranteed.</p>
+        <h2>Watch the class</h2>
+        <p class="lead">Enter your name and email and it starts playing. No scheduling and nothing to sign up for.</p>
         <form id="regForm" novalidate>
-          <div class="field" id="sessionField" style="display:none">
-            <label for="session">Pick your date</label>
-            <select id="session" name="session"></select>
-          </div>
           <div class="field">
             <label for="name">Your name</label>
             <input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Smith" required />
@@ -218,7 +195,7 @@
             <label for="email">Email address</label>
             <input id="email" name="email" type="email" autocomplete="email" placeholder="you@yourcompany.com" required />
           </div>
-          <button class="btn" type="submit" id="submitBtn">Reserve my free seat →</button>
+          <button class="btn" type="submit" id="submitBtn">Watch the class →</button>
           <div class="form-err" id="formErr"></div>
           <div class="reassure">
             <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> No spam</span>
@@ -226,12 +203,25 @@
           </div>
         </form>
       </div>
+      <!-- SUCCESS STATE. Not in the 17-surface sweep because it is display:none until
+           submit, the same reason the JavaScript surfaces were missed. It was entirely
+           event shaped: join details, a "Join the webinar" Zoom button, and an
+           instruction to add the date to a calendar. None of that survives the recorded
+           model, and the form directly above now promises "it starts playing", so a
+           success state with no player would be a dead end and a false promise at once.
+
+           Copy here is NOT new. It is the same wording already approved and live on the
+           /lp fallback, so all three doors say the same thing. The video uses the same
+           data-src on reveal as /watch and /lp: a hidden iframe still loads, so a plain
+           src would fetch from Google on every homepage view including people who never
+           register. -->
       <div class="success" id="successState">
         <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
-        <h2>You're registered! 🎉</h2>
-        <p id="successWhen">Check your email for the confirmation and join details.</p>
-        <a class="joinbtn" id="joinBtn" href="#" style="display:none" target="_blank" rel="noopener">Join the webinar</a>
-        <p class="smallnote">A confirmation is on its way to your inbox. Add the date to your calendar so you don't miss it.</p>
+        <h2>You are in.</h2>
+        <p>Press play.</p>
+        <div class="frame" id="indexVideoWrap">
+          <iframe id="indexVideo" src="" data-src="https://www.youtube-nocookie.com/embed/PGPbfcVgwEg" title="The AI Voice Agent Masterclass" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -306,14 +296,13 @@
 <section class="block alt">
   <div class="wrap">
     <div class="kicker">Inside the masterclass</div>
-    <h2 class="section-title">What we'll cover — live</h2>
+    <h2 class="section-title">What we'll cover</h2>
     <p class="section-sub">Real calls, real features, and a look under the hood. Built for junk removal owners, not a generic "AI is the future" talk.</p>
     <div class="learn-grid">
       <div class="learn-item"><div class="num">1</div><div><h3>Real call scenarios — hear Jenny live</h3><p>Listen to actual recordings of Jenny handling real calls: price quotes, specialty items, and the questions owners get asked most.</p></div></div>
       <div class="learn-item"><div class="num">2</div><div><h3>The anatomy of an advanced AI voice agent</h3><p>The features that actually matter for the trades — and the ones that don't — so you know what to look for.</p></div></div>
       <div class="learn-item"><div class="num">3</div><div><h3>Integrations that fit your stack</h3><p>How Jenny connects to popular Field Service Management software and CRMs like Workiz and Housecall Pro.</p></div></div>
       <div class="learn-item"><div class="num">4</div><div><h3>A look at the live dashboard</h3><p>See exactly what gets tracked and reported — calls, bookings, revenue, and the stats that matter.</p></div></div>
-      <div class="learn-item"><div class="num">5</div><div><h3>A limited, discounted offer</h3><p>Like what you see? Live attendees get a limited-quantity discount to set Jenny up in their own business.</p></div></div>
     </div>
   </div>
 </section>
@@ -362,13 +351,14 @@
 
 <section class="block finalcta">
   <div class="wrap finalcta-inner">
-    <div class="when-big">
-      <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" style="width:18px;height:18px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      <span id="finalWhen">—</span>
-    </div>
-    <h2 class="section-title">Save your seat — it's free.</h2>
-    <p class="section-sub">Seats are limited and the replay isn't guaranteed — and live attendees get a limited, discounted offer to set up Jenny. Lock in your spot now.</p>
-    <button class="btn" onclick="document.getElementById('name').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('name').focus(),400)">Reserve my free seat →</button>
+    <h2 class="section-title">Watch the class, free.</h2>
+    <!--DEMO_LINK_START-->
+    <p class="section-sub">It's free and it starts the second you enter your email. Then you can hear Jenny answer the phone as your own company.</p>
+    <!--DEMO_LINK_END-->
+    <!--DEMO_FALLBACK_START-->
+    <p class="section-sub">It's free and it starts the second you enter your email. It is the whole class, not a preview.</p>
+    <!--DEMO_FALLBACK_END-->
+    <button class="btn" onclick="document.getElementById('name').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('name').focus(),400)">Watch the class →</button>
   </div>
 </section>
 
@@ -380,85 +370,36 @@
 </footer>
 
 <script>
-let WEBINAR=null, SESSIONS=[], cdTarget=null;
 const $=(id)=>document.getElementById(id);
-
-function applySession(sess){
-  if(!sess){
-    $('topPill').textContent='Free live class · new dates coming soon';
-    $('dateMeta').textContent='New dates coming soon';
-    $('timeMeta').textContent='—';
-    $('finalWhen').textContent='New dates coming soon';
-    cdTarget=null;
-    return;
-  }
-  const w=sess.when;
-  $('topPill').textContent='Free live class · '+w.full;
-  $('dateMeta').textContent=w.dateStr;
-  $('timeMeta').textContent=w.timeStr+' '+WEBINAR.timezoneLabel;
-  $('finalWhen').textContent=w.full;
-  cdTarget=new Date(sess.startsAtISO).getTime();
-}
-
-async function loadWebinar(){
-  try{
-    const r=await fetch('/api/webinar');
-    WEBINAR=await r.json();
-    SESSIONS=WEBINAR.sessions||[];
-    const sel=$('session');
-    if(SESSIONS.length){
-      sel.innerHTML=SESSIONS.map((s)=>'<option value="'+s.id+'">'+s.when.full+'</option>').join('');
-      sel.value=(WEBINAR.current&&WEBINAR.current.id)||SESSIONS[0].id;
-      // Only show the picker when there's more than one date to choose from.
-      $('sessionField').style.display=SESSIONS.length>1?'block':'none';
-      applySession(SESSIONS.find((s)=>s.id===sel.value)||SESSIONS[0]);
-      sel.addEventListener('change',()=>applySession(SESSIONS.find((s)=>s.id===sel.value)));
-    }else{
-      $('sessionField').style.display='none';
-      applySession(null);
-    }
-  }catch(e){}
-}
-
-function startCountdown(){
-  const D=$('cdD'),H=$('cdH'),M=$('cdM'),S=$('cdS');
-  function tick(){
-    if(!cdTarget){D.textContent='--';H.textContent='--';M.textContent='--';S.textContent='--';return;}
-    let diff=Math.max(0,cdTarget-Date.now());
-    const d=Math.floor(diff/86400000);diff-=d*86400000;
-    const h=Math.floor(diff/3600000);diff-=h*3600000;
-    const m=Math.floor(diff/60000);diff-=m*60000;
-    const s=Math.floor(diff/1000);
-    D.textContent=String(d);H.textContent=String(h).padStart(2,'0');
-    M.textContent=String(m).padStart(2,'0');S.textContent=String(s).padStart(2,'0');
-  }
-  tick();setInterval(tick,1000);
-}
 
 const form=$('regForm'),errEl=$('formErr'),btn=$('submitBtn');
 form.addEventListener('submit',async(e)=>{
   e.preventDefault();errEl.style.display='none';
   const name=$('name').value.trim();
   const email=$('email').value.trim();
-  const sessionId=($('session')&&$('session').value)||'';
+  // The date picker is gone with the live series. This was already null safe, so the
+  // POST still fires and simply carries no session.
+  const sessionId='';
   if(!name){showErr('Please enter your name.');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('Please enter a valid email.');return;}
-  btn.disabled=true;btn.textContent='Reserving your seat…';
+  btn.disabled=true;btn.textContent='One second...';
   try{
     const params=new URLSearchParams(window.location.search);
     const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,sessionId,source:params.get('utm_source')||''})});
     const data=await res.json();
-    if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent='Reserve my free seat →';return;}
+    if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent='Watch the class →';return;}
     $('formState').style.display='none';
     const ss=$('successState');ss.style.display='block';
-    if(data.when)$('successWhen').textContent="You're all set for "+data.when+". Check your email for the confirmation.";
-    if(data.zoomJoinUrl){const jb=$('joinBtn');jb.href=data.zoomJoinUrl;jb.style.display='inline-block';}
+    // Attribute, never .src: an iframe with an empty src ATTRIBUTE returns the document
+    // URL from the property, so if(!el.src) is always false and the assignment silently
+    // never runs while the markup still looks correct.
+    const iv=$('indexVideo'); if(iv&&iv.dataset.src&&!iv.getAttribute('src'))iv.setAttribute('src',iv.dataset.src);
     ss.scrollIntoView({behavior:'smooth',block:'center'});
-  }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent='Reserve my free seat →';}
+  }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent='Watch the class →';}
 });
 function showErr(m){errEl.textContent=m;errEl.style.display='block';}
 $('yr').textContent=new Date().getFullYear();
-loadWebinar();startCountdown();
+
 </script>
 </body>
 </html>

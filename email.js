@@ -147,7 +147,18 @@ export async function sendConfirmationEmail({ name, email, session, source = "" 
   const door = doorOf(source);
   if (door === "lp") return sendDemoConfirmation({ name, email });
   if (door === "watch") return sendClassConfirmation({ name, email });
+
+  // NO LIVE SESSION MEANS NO WEBINAR EMAIL. With the series ended, currentSession() is
+  // null, and the webinar template would send "You're registered: The AI Voice Agent
+  // Masterclass, " with an empty date and a green Join the webinar button pointing at a
+  // Zoom room that will never host anything. Verified by sending it in that state.
+  //
+  // A home page registrant under the recorded model is registering to watch the
+  // recording, which is exactly what the class email already says, so this routes to
+  // reviewed live copy rather than inventing any. The webinar template stays for the day
+  // a real scheduled session exists again.
   session = session || currentSession();
+  if (!session) return sendClassConfirmation({ name, email });
   const when = formatWhen(session);
   const firstName = firstNameOf(name);
   const joinUrl = session?.zoomJoinUrl || webinar.zoomJoinUrl;

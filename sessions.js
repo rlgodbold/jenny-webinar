@@ -27,10 +27,14 @@ const DATES = [
   // 8/27 cancelled: no live class this week; sent the recording + voice-clone update instead.
   // Removing a date stops its 1-hour reminders and stops the site advertising a class
   // that is not happening; registrants keep their place on the list.
-  ["2026-09-03", EDT], ["2026-09-10", EDT], ["2026-09-17", EDT], ["2026-09-24", EDT],
-  ["2026-10-01", EDT], ["2026-10-08", EDT], ["2026-10-15", EDT], ["2026-10-22", EDT], ["2026-10-29", EDT],
-  ["2026-11-05", EST], ["2026-11-12", EST], ["2026-11-19", EST], // skip 11/26 Thanksgiving
-  ["2026-12-03", EST], ["2026-12-10", EST], ["2026-12-17", EST], // skip 12/24 + 12/31
+  // SERIES ENDED (Lee, 2026-08-28): no more live webinars, the recorded class plays on
+  // demand at registration. The 15 remaining Thursdays through 12/17 were removed here
+  // rather than left to expire, because each one would have armed its own 24 hour
+  // reminder and told registrants to attend a class that will not happen. Zero
+  // registrants held any of those dates, verified before removal.
+  // PAST dates stay. Subscriber records carry sessions[] and reminded{} keyed by id, and
+  // the attendees view and CSV export filter by id, so deleting a past date orphans the
+  // records that reference it.
 ];
 
 export const sessions = DATES.map(([date, off]) => ({
