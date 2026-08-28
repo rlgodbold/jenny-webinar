@@ -42,15 +42,20 @@ working demo link anywhere. If the series-ended copy ships before the demo flip,
 homepage promises a thing a visitor cannot get, which is the same class of problem as the
 scarcity claim this rewrite exists to remove.
 
-So block 2 has two variants and whoever applies it picks by the demo's actual state, not
-by what is planned:
+So block 2 needs both subs. **Do not pick one by hand.** index.html already runs through
+`sendDemoAwareHtml` (server.js:595), the same machinery that switches the /lp CTA and
+success panel, so put BOTH subs in the file inside the existing markers and the flag picks
+at render. No deploy on the flip, no swap, nothing for anyone to remember. Exact markup is
+under block 2.
 
-- **Demo live**: use the sub as written.
-- **Demo still gated**: use the gated variant under block 2.
+This correction is Acelynn's and it is right. My first version of this fork was a manual
+swap, which is a manual step tied to a flag, which is the precise hazard this document
+exists to warn about. A fork the flag resolves cannot be forgotten. A fork a person
+resolves will eventually be forgotten, on a busy week, by someone who never read this file.
 
-Do not ship the demo-pointing sub on the assumption the flip lands the same day. That is
-the wrong-state trap: correct for the state we are heading toward, broken in the state
-that is serving.
+Marker semantics, confirmed against live /lp on 2026-08-28 while DEMO_PUBLIC was false:
+`DEMO_LINK` is the demo-is-live branch and was stripped; `DEMO_FALLBACK` is the
+demo-is-gated branch and was served.
 
 ## Block 1, currently lines 206 to 208
 
@@ -70,14 +75,24 @@ that is serving.
 
     BUTTON      Watch it now
 
-**Gated variant of the SUB, for use while the demo is not public:**
+**The SUB ships as both variants, switched by the flag. Apply it literally like this,
+keeping the surrounding element's own classes:**
 
-    SUB         It's free and it starts the second you enter your email. It is the
-                whole class, not a preview.
+    <!--DEMO_LINK_START-->
+    <p class="sub">It's free and it starts the second you enter your email. Then you
+    can hear Jenny answer the phone as your own company.</p>
+    <!--DEMO_LINK_END-->
+    <!--DEMO_FALLBACK_START-->
+    <p class="sub">It's free and it starts the second you enter your email. It is the
+    whole class, not a preview.</p>
+    <!--DEMO_FALLBACK_END-->
 
-That keeps the real improvement, which is that it starts now, and drops only the forward
-pointer to a thing that is not reachable yet. When the demo goes public, swap in the sub
-as originally written. Nothing else in the block changes.
+The gated variant keeps the real improvement, which is that it starts now, and drops only
+the forward pointer to something not reachable yet. Both are true sentences on their own,
+which is the test: neither variant is a placeholder waiting to be corrected later.
+
+The HEADING and BUTTON above are outside the markers. They do not vary by flag and must
+not be duplicated into either block.
 
 This is the line that carried both held problems at once, the scarcity claim and the
 live attendee setup offer. Both are gone.
