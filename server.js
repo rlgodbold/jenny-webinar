@@ -33,6 +33,7 @@ import {
   normalizeEmail,
   upsertLead,
   setContactOrigin,
+  DEMO_OPTIN_ORIGIN,
   grantMarketingConsent,
   revokeMarketingConsent,
   logEvent,
@@ -551,6 +552,22 @@ const abPairReady = () =>
 const abPlayer = (rel) =>
   `<audio controls preload="none" src="/${rel}">Your browser cannot play this recording.</audio>`;
 
+// SMS marketing opt-in copy, served from the environment and EMPTY until counsel and
+// Lee have signed it off. Empty means the checkbox does not render at all, which is the
+// point: /demo is live, so a placeholder label would be placeholder text in front of real
+// prospects. The arrival of cleared copy is what switches the checkbox on, rather than
+// somebody remembering to swap a stand-in out.
+const SMS_OPTIN_LABEL = process.env.SMS_OPTIN_LABEL || "";
+const SMS_OPTIN_FINEPRINT = process.env.SMS_OPTIN_FINEPRINT || "";
+
+function smsOptinBlock() {
+  if (!SMS_OPTIN_LABEL) return ""; // no cleared copy, no checkbox
+  return `<label class="optin" style="display:flex;gap:9px;align-items:flex-start;margin:14px 0 0;font-size:13px;color:var(--muted,#8a8272);font-weight:400">
+      <input type="checkbox" id="smsOptin" name="smsOptin" style="margin-top:3px;flex:0 0 auto" />
+      <span>${esc(SMS_OPTIN_LABEL)}${SMS_OPTIN_FINEPRINT ? `<br><span style="opacity:.85">${esc(SMS_OPTIN_FINEPRINT)}</span>` : ""}</span>
+    </label>`;
+}
+
 function pixelSnippet() {
   if (!META_PIXEL_ID) return "<script>window.jpx=function(){};</script>";
   return `<script>
@@ -610,6 +627,7 @@ function sendDemoAwareHtml(res, next, filename) {
     // Pages without the marker are untouched, so adding this changed nothing about how
     // the existing pages render.
     html = html.replace("<!--META_PIXEL-->", pixelSnippet());
+    html = html.replace("<!--SMS_OPTIN_SLOT-->", smsOptinBlock());
     if (abPairReady()) {
       html = html
         .replace("<!--AB_STANDARD-->", abPlayer(AB_STANDARD_REL))
@@ -641,6 +659,53 @@ app.get("/lp", (_req, res, next) => sendDemoAwareHtml(res, next, "lp.html"));
 // nurture emails is the most annoying failure this system can produce, and it is the one
 // a drip gets wrong by default.
 app.get("/book", (_req, res, next) => sendDemoAwareHtml(res, next, "book.html"));
+
+// ── Demo-form marketing opt-in, captured on OUR side ────────────────────────
+//
+// The demo form posts its registration to the demo voice service, which has no lead
+// store and no consent model. Rather than push marketing concerns into that service, the
+// page posts the opt-in here separately. Marketing consent then lives in exactly one
+// place, ours, which is also the only place that can enforce the origin rules.
+//
+// TWO THINGS THIS RECORDS, AND THE SECOND IS EASY TO GET WRONG.
+//
+// It records the A/B BUCKET FOR EVERY DEMO START, not only for people who ticked the box.
+// Completion rate is completions over STARTS, so recording the bucket only for opt-ins
+// would give us the numerator of one arm and no denominator for either. That mistake
+// produces a confident-looking rate that is not a rate.
+//
+// And it only grants consent when consent was actually given: no tick, no flag, and a
+// failure here grants nothing. Fail closed, because a false opt-in is the one error in
+// this system that reaches a person's phone.
+app.post("/api/demo-optin", (req, res) => {
+  const email = normalizeEmail(req.body?.email);
+  const phone = String(req.body?.phone || "").replace(/[^\d+]/g, "").slice(0, 20);
+  // Arm values are fixed by the cross-service contract with the demo service:
+  // "consent_shown" | "control". Anything unrecognised falls to control, and getting
+  // this string wrong is not a cosmetic bug: it silently files every treatment start as
+  // control, which yields an A/B that can only ever report "no difference".
+  const bucket = req.body?.bucket === "consent_shown" ? "consent_shown" : "control";
+  const consented = req.body?.consent === true;
+  const name = String(req.body?.name || "").trim().slice(0, 120);
+
+  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Bad email" });
+
+  upsertLead({ email, name, cell: phone, stage: "demo", source: "demo-form" });
+  logEvent({ type: "demo_start", email, bucket, consented });
+
+  if (!consented) {
+    // Recorded as a start in the control or unticked arm. The number keeps its
+    // transactional origin and stays unmarketable, which is the correct outcome.
+    setContactOrigin(email, "sms", "demo-verification");
+    return res.json({ ok: true, bucket, consent: false });
+  }
+
+  // Ticked. The number was collected while the opt-in was visible AND was affirmatively
+  // opted in, so it carries the marketing origin rather than the transactional one.
+  setContactOrigin(email, "sms", DEMO_OPTIN_ORIGIN);
+  grantMarketingConsent(email, "sms", "demo-form-optin");
+  return res.json({ ok: true, bucket, consent: true });
+});
 
 app.post("/api/book", (req, res) => {
   const email = normalizeEmail(req.body?.email);
