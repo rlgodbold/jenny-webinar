@@ -37,6 +37,11 @@ import {
   mayMarketTo,
 } from "./store.js";
 import { sendSequenceEmail, hasPostalAddress } from "./email.js";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 const MIN = 60 * 1000;
 const HOUR = 60 * MIN;
@@ -50,10 +55,35 @@ export const isLive = () => process.env.LEAD_SEQUENCE_MODE === "live";
 // An asset is present only if we have a real, cleared value for it. Empty means the
 // step that needs it cannot send. Deliberately no defaults and no placeholders: a
 // default here would become a dead link in a live email.
+
+// IS THE BOOKING PAGE ACTUALLY IN THIS BUILD?
+//
+// Every touch below drives /book. If the sequence is switched on in a build that does not
+// carry the booking page, every button in every email 404s, and it does so for exactly the
+// leads we paid for. That ordering was a checklist item until now. A checklist is a person
+// remembering; this is the build answering.
+//
+// The signal is deliberately NOT an HTTP request. server.js serves /book by reading
+// public/book.html off disk, so the presence of that file on THIS build's filesystem is not
+// a proxy for reachability, it is the same question the route itself answers, asked in the
+// same process against the same disk. A live fetch would add a network that can blip, and a
+// guard that wrongly fires cancels legitimate mail just as surely as a missing one sends
+// dead links.
+export function bookingPagePresent(publicDir = path.join(HERE, "public")) {
+  try {
+    return fs.existsSync(path.join(publicDir, "book.html"));
+  } catch {
+    return false; // FAIL CLOSED: if we cannot tell, we do not send a maybe-dead link.
+  }
+}
+
 export function assets() {
   const base = (process.env.PUBLIC_BASE_URL || "https://jennycallagent.com").replace(/\/$/, "");
   return {
-    bookingUrl: `${base}/book`,
+    // Empty when the page is not in the build, which makes every step that needs it skip
+    // through the SAME missing-asset path the uncleared testimonials link already uses.
+    // No second mechanism, no new branch in the worker.
+    bookingUrl: bookingPagePresent() ? `${base}/book` : "",
     classUrl: `${base}/watch`, // Lee's own recording, already published, already cleared
     demoLine: process.env.DEMO_LINE_NUMBER || "", // lives on the demo service, not here
     realCallClip: process.env.CLEARED_CALL_CLIP_URL || "", // needs a signed marketing release
@@ -103,6 +133,18 @@ function eligibility(lead) {
 export async function runSequenceTick(now = Date.now()) {
   const a = assets();
   const out = { checked: 0, due: 0, sent: 0, skipped: [], darkRun: !isLive() };
+
+  // Surfaced on the result AND logged, because this one is not a single step waiting on a
+  // single asset: every touch drives /book, so a build without the booking page skips the
+  // whole sequence. Silently doing nothing is indistinguishable from having no leads, and
+  // that is the version of this failure nobody notices.
+  out.bookingPagePresent = Boolean(a.bookingUrl);
+  if (!a.bookingUrl) {
+    console.warn(
+      "[sequence] BOOKING PAGE NOT IN THIS BUILD (public/book.html missing): " +
+        "every touch links /book, so all touches will skip. Merge the booking page before going live."
+    );
+  }
 
   // CAN-SPAM: marketing mail does not go out without a physical mailing address. The
   // broadcast path already refuses on this; a sequence is marketing mail too, and a

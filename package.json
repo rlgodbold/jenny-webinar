@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "export": "node scripts/export-csv.mjs"
+    "export": "node scripts/export-csv.mjs",
+    "proof:booking": "node scripts/proof-booking-guard.mjs"
   },
   "engines": {
     "node": ">=18"
