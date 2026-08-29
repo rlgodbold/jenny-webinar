@@ -53,7 +53,7 @@ function persist() {
   fs.renameSync(tmp, SUBS_FILE); // atomic
 }
 
-function logEvent(ev) {
+export function logEvent(ev) {
   try {
     fs.appendFileSync(
       EVENTS_FILE,
@@ -287,6 +287,170 @@ export function upsertLead({ email, name, company, cell, fsm, plan, stage, sourc
   l.history.push({ at: now, stage: stage || l.stage, source: source || "" });
   persistLeads();
   return l;
+}
+
+// ── Consent model ───────────────────────────────────────────────────────────
+//
+// Four rules, enforced here in data rather than in anybody's memory.
+//
+// 1. Consent is a FLAG with a GRANT DATE and a SOURCE. Not a boolean, not an inference.
+//    The date is the proof of when permission existed, which is the thing a complaint or
+//    an audit actually asks about.
+//
+// 2. A SEND READS THE FLAG, NEVER THE CONTACT COLUMN. The presence of a phone number or
+//    an email address is not permission to use it. This is the rule that gets broken by
+//    accident, because the contact column is right there and it looks like an invitation.
+//
+// 3. A CONTACT COLLECTED UNDER A NON-MARKETING REPRESENTATION IS PERMANENTLY OFF LIMITS
+//    FOR MARKETING, and no later flag rescues it. We told those people, in writing and in
+//    live copy legal reviewed, that their number was transactional and "not marketing".
+//    A flag set afterwards cannot reach back and change what they were told at the moment
+//    they handed it over. To market to such a person we need a FRESH contact captured
+//    under a marketing representation, not a new flag on the old one.
+//
+// 4. SMS MARKETING CONSENT IS ITS OWN FLAG, separate from the transactional code consent
+//    on /demo, and separate from email. One channel's permission is never another's.
+
+// Origins whose contacts can never be used for marketing, whatever any flag says later.
+// Keyed to the representation the person was actually shown.
+export const NON_MARKETING_ORIGINS = Object.freeze([
+  "demo-verification",   // /demo cell: "transactional... NOT MARKETING", live and legal-cleared
+  "demo-start-callback", // /demo/start "Best number": "Lee will reach out personally"
+]);
+
+function blankConsent() {
+  return {
+    email_marketing: { granted: false, at: null, source: null },
+    sms_marketing: { granted: false, at: null, source: null },
+  };
+}
+
+/** Record how a contact was ACQUIRED, which is what rule 3 is enforced against. */
+export function setContactOrigin(email, channel, origin) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l) return false;
+  l.contactOrigin = l.contactOrigin || {};
+  // First origin wins. A contact cannot be laundered by re-recording it later under a
+  // friendlier label.
+  if (!l.contactOrigin[channel]) l.contactOrigin[channel] = origin;
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  return true;
+}
+
+/** Grant marketing consent for one channel, stamping when and from where. */
+export function grantMarketingConsent(email, channel, source) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l) return false;
+  const key = `${channel}_marketing`;
+  l.consent = l.consent || blankConsent();
+  if (!l.consent[key]) return false;
+  l.consent[key] = { granted: true, at: new Date().toISOString(), source: source || "" };
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  logEvent({ type: "consent_granted", email: l.email, channel, source });
+  return true;
+}
+
+export function revokeMarketingConsent(email, channel, reason) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l || !l.consent) return false;
+  const key = `${channel}_marketing`;
+  if (!l.consent[key]) return false;
+  l.consent[key] = { granted: false, at: new Date().toISOString(), source: reason || "revoked" };
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  logEvent({ type: "consent_revoked", email: l.email, channel, reason });
+  return true;
+}
+
+/**
+ * THE ONLY QUESTION A SEND SHOULD ASK. Returns {ok, why} so a refusal is explainable
+ * rather than a bare false, because "why did this lead not get the email" is the question
+ * somebody will ask in three weeks.
+ */
+export function mayMarketTo(email, channel) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l) return { ok: false, why: "no_lead_record" };
+
+  const origin = l.contactOrigin?.[channel];
+  if (origin && NON_MARKETING_ORIGINS.includes(origin)) {
+    return { ok: false, why: `origin_forbids_marketing:${origin}` };
+  }
+
+  const c = l.consent?.[`${channel}_marketing`];
+  if (!c || !c.granted) return { ok: false, why: "no_consent_flag" };
+  if (!c.at) return { ok: false, why: "consent_without_grant_date" };
+
+  // Email additionally honours the subscriber-level unsubscribe, which is the surface a
+  // recipient actually clicks.
+  if (channel === "email" && !canEmailMarketing(l.email)) return { ok: false, why: "unsubscribed" };
+
+  return { ok: true, grantedAt: c.at, source: c.source };
+}
+
+// ── Marketing sequence state ────────────────────────────────────────────────
+// Per-lead, per-step send state, the same shape reminders.js uses for (session,
+// subscriber). Idempotent by construction: a restart, a double tick, or two workers
+// cannot re-send a step, because the check and the mark are both keyed on the step id.
+
+export function sequenceState(email) {
+  const l = leads.get(normalizeEmail(email));
+  return (l && l.sequence) || null;
+}
+
+/** Enrol a lead in a sequence, stamping the clock the offsets are measured from. */
+export function enrolInSequence(email, { sequenceId, startedAt } = {}) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l) return null;
+  if (l.sequence) return l.sequence; // never restart someone mid-flight
+  l.sequence = { id: sequenceId, startedAt: startedAt || new Date().toISOString(), sent: {}, exited: null };
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  logEvent({ type: "sequence_enrolled", email: l.email, sequenceId });
+  return l.sequence;
+}
+
+export function stepSent(email, stepId) {
+  const q = sequenceState(email);
+  return Boolean(q && q.sent[stepId]);
+}
+
+export function markStepSent(email, stepId, meta = {}) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l || !l.sequence) return false;
+  l.sequence.sent[stepId] = { at: new Date().toISOString(), ...meta };
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  logEvent({ type: "sequence_step_sent", email: l.email, stepId, ...meta });
+  return true;
+}
+
+/**
+ * Leave the sequence. Reasons: booked, unsubscribed, replied, manual.
+ * Recorded rather than deleted, so attribution can still see why someone stopped.
+ */
+export function exitSequence(email, reason) {
+  const l = leads.get(normalizeEmail(email));
+  if (!l || !l.sequence || l.sequence.exited) return false;
+  l.sequence.exited = { reason, at: new Date().toISOString() };
+  l.updatedAt = new Date().toISOString();
+  persistLeads();
+  logEvent({ type: "sequence_exited", email: l.email, reason });
+  return true;
+}
+
+/**
+ * FAIL-CLOSED marketing consent, deliberately stricter than canEmailMarketing().
+ *
+ * canEmailMarketing() returns true for an address with NO subscriber record, which is
+ * correct for transactional mail (a confirmation must reach someone who just registered)
+ * and wrong for a marketing sequence, where the absence of a record is the absence of
+ * consent. Enrolment demands an affirmative subscribed row and nothing less.
+ */
+export function canEnrolInMarketingSequence(email) {
+  const s = subscribers.get(normalizeEmail(email));
+  return Boolean(s && s.status === "subscribed");
 }
 
 export function listLeads() {

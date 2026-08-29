@@ -187,6 +187,80 @@ export async function sendConfirmationEmail({ name, email, session, source = "" 
   });
 }
 
+// ── Owner-lead sequence templates ───────────────────────────────────────────
+// Marketing owns this copy. Two rules hold it together:
+//   Every template takes its links from the assets object rather than hardcoding one,
+//   so a step cannot outlive the thing it points at.
+//   Nothing here states a price or a dated offer. The Sept 30 waiver deliberately does
+//   NOT appear: it expires, and a dated claim inside a drip that keeps running is a
+//   false price claim the day after. If an offer line is wanted later it comes from a
+//   date-aware helper, never a literal.
+
+const SEQ_TEMPLATES = {
+  realCall: ({ first, a }) => ({
+    subject: "The fastest way to get what Jenny does",
+    body: `
+      <p style="margin:0 0 16px">Thanks for taking a look at Jenny. The fastest way to get it is to hear her work rather than read about her.</p>
+      <p style="margin:0 0 16px">The full masterclass has real calls in it, start to finish. Watch whenever you have the time.</p>
+      ${seqBtn(a.classUrl, "Watch the class")}
+      <p style="margin:0 0 16px">If you would rather see her running on your own phones, grab fifteen minutes here.</p>
+      ${seqBtn(a.bookingUrl, "Book a demo")}`,
+  }),
+
+  testimonials: ({ first, a }) => ({
+    subject: "What other owners say after a month with Jenny",
+    body: `
+      <p style="margin:0 0 16px">You do not have to take my word for it. Here are a few junk removal owners on what changed after Jenny started answering.</p>
+      ${seqBtn(a.testimonialsUrl, "Hear what they said")}
+      <p style="margin:0 0 16px">If you want to see whether the numbers work for your shop, book fifteen minutes.</p>
+      ${seqBtn(a.bookingUrl, "Book a demo")}`,
+  }),
+
+  objections: ({ first, a }) => ({
+    subject: "The three things owners ask before they say yes",
+    body: `
+      <p style="margin:0 0 16px">The same three questions come up every time.</p>
+      <p style="margin:0 0 10px"><b>Will she sound real?</b> Judge that yourself on a call rather than from a description.</p>
+      <p style="margin:0 0 10px"><b>Will she book the job right?</b> She quotes from your prices and puts the job into your own Workiz.</p>
+      <p style="margin:0 0 16px"><b>What if she cannot handle a call?</b> She takes a name and a number and tells your team, rather than dropping anyone into voicemail.</p>
+      ${seqBtn(a.bookingUrl, "See it on your own phones")}
+      <p style="margin:0 0 16px">Anything else on your mind, just reply to this email and it comes to us.</p>`,
+  }),
+
+  breakup: ({ first, a }) => ({
+    subject: "Should I close your file?",
+    body: `
+      <p style="margin:0 0 16px">I have sent you a few things and I do not want to keep filling your inbox.</p>
+      <p style="margin:0 0 16px">If Jenny is not for you right now, no problem at all, I will stop here. If you do want to hear her on your own phones, this is the last easy nudge.</p>
+      ${seqBtn(a.bookingUrl, "Book a demo")}
+      <p style="margin:0 0 16px">Not interested? Just reply and we will stop. Either way, thanks for the look.</p>`,
+  }),
+};
+
+const seqBtn = (href, label) =>
+  `<p style="margin:0 0 16px"><a href="${href}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;display:inline-block;font-weight:600">${label}</a></p>`;
+
+/**
+ * Send one sequence touch. The postal-address gate is repeated here as well as in the
+ * worker: this function is exported, so a future caller could reach it without passing
+ * through the worker's check, and a marketing email with no mailing address must be
+ * impossible to send rather than merely unlikely.
+ */
+export async function sendSequenceEmail({ step, lead, assets }) {
+  if (!hasPostalAddress()) return { ok: false, error: "no_postal_address" };
+  const make = SEQ_TEMPLATES[step.template];
+  if (!make) return { ok: false, error: `unknown_template:${step.template}` };
+
+  const first = firstNameOf(lead.name);
+  const { subject, body } = make({ first, a: assets });
+  return send({
+    to: lead.email,
+    subject,
+    html: shell(first, body, lead.email, `You're receiving this because you asked about Jenny at ${COMPANY_NAME}.`),
+    headers: listUnsubHeaders(lead.email),
+  });
+}
+
 // ── Marketing: a broadcast to one recipient (caller iterates the list) ───────
 export async function sendMarketingEmail({ name, email, subject, bodyHtml }) {
   const firstName = firstNameOf(name);

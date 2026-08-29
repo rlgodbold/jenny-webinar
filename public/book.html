@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book a demo | Jenny</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--META_PIXEL-->
+<style>
+  :root{--navy:#0b1526;--paper:#f6f3ec;--card:#fff;--line:#e5e0d4;--ink:#141a24;--body:#4a5261;
+        --org:#ff6320;--org-d:#e5511a;--cond:'Barlow Condensed',sans-serif;--sans:'Barlow',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--paper);color:var(--body);line-height:1.6}
+  .wrap{max-width:520px;margin:0 auto;padding:0 20px}
+  .hero{background:var(--navy);color:#fff;padding:30px 0 34px}
+  h1{font-family:var(--cond);font-weight:800;font-size:clamp(28px,7vw,38px);line-height:1.05;color:#fff;margin-bottom:12px}
+  .sub{font-size:17px;color:#c7cedb;margin-bottom:22px}
+  .field{margin-bottom:11px}
+  .field input{width:100%;padding:14px 15px;font-size:16px;font-family:var(--sans);
+    border:1px solid #2a3549;border-radius:9px;background:#152238;color:#fff}
+  .field input::placeholder{color:#7c869a}
+  .cta{display:block;width:100%;text-align:center;background:var(--org);color:#fff;border:0;
+    font-family:var(--cond);font-weight:800;font-size:21px;text-transform:uppercase;letter-spacing:.02em;
+    padding:17px 20px;border-radius:10px;cursor:pointer;box-shadow:0 3px 0 var(--org-d)}
+  .micro{text-align:center;font-size:14px;color:#8f98a8;margin-top:10px}
+  .err{display:none;background:#3a1616;border:1px solid #6b2626;color:#ffb4b4;padding:10px 13px;border-radius:8px;font-size:14px;margin-bottom:11px}
+  .done{display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;text-align:center}
+  .done h2{font-family:var(--cond);font-weight:800;font-size:25px;color:var(--ink);margin-bottom:8px}
+  .done p{font-size:16px;color:var(--body)}
+  footer{padding:20px 0;text-align:center;font-size:13px;color:#8a8272}
+  footer a{color:#8a8272}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>See Jenny on your own phones.</h1>
+    <p class="sub">Fifteen minutes. Lee walks you through it on your own numbers and your own prices. No pressure and nothing to install.</p>
+    <div id="panel">
+      <div class="err" id="bookErr"></div>
+      <form id="bookForm" novalidate>
+        <div class="field"><input id="name" type="text" placeholder="First and last name" autocomplete="name" /></div>
+        <div class="field"><input id="email" type="email" placeholder="Email address" autocomplete="email" /></div>
+        <button class="cta" id="bookBtn" type="submit">Book my demo</button>
+      </form>
+      <p class="micro">We will email you to set a time.</p>
+    </div>
+    <div class="done" id="donePanel">
+      <h2>You are booked in.</h2>
+      <p>Lee will email you shortly to set a time. You will not get any more follow up emails from us in the meantime.</p>
+    </div>
+  </div>
+</header>
+<footer><div class="wrap"><a href="/privacy">Privacy Policy</a></div></footer>
+<script>
+const $=(id)=>document.getElementById(id);
+const form=$('bookForm'),errEl=$('bookErr'),btn=$('bookBtn');
+function showErr(m){errEl.textContent=m;errEl.style.display='block';}
+form.addEventListener('submit',async(e)=>{
+  e.preventDefault();errEl.style.display='none';
+  const name=$('name').value.trim(),email=$('email').value.trim();
+  if(!name){showErr('Please enter your name.');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('Please enter a valid email.');return;}
+  btn.disabled=true;btn.textContent='One second...';
+  try{
+    const res=await fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email})});
+    const data=await res.json();
+    if(!res.ok){showErr(data.error||'Something went wrong. Try again.');btn.disabled=false;btn.textContent='Book my demo';return;}
+    // Fires on SUCCESS only, never on click, same rule as Lead and CompleteRegistration.
+    if(window.jpx)window.jpx('track','Schedule');
+    $('panel').style.display='none';
+    $('donePanel').style.display='block';
+  }catch(err){showErr('Network error. Please try again.');btn.disabled=false;btn.textContent='Book my demo';}
+});
+</script>
+</body>
+</html>

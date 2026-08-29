@@ -14,12 +14,17 @@ import {
   doorOf,
 } from "./email.js";
 import { startReminderScheduler } from "./reminders.js";
+import { startSequenceScheduler, SEQUENCE_ID, isLive as sequenceIsLive } from "./sequence.js";
 import { getSubscriber } from "./store.js";
 import {
   upsertSubscriber,
   unsubscribe,
   resubscribe,
   verifyUnsubToken,
+  enrolInSequence,
+  exitSequence,
+  canEnrolInMarketingSequence,
+
   activeSubscribers,
   listSubscribers,
   stats,
@@ -27,6 +32,10 @@ import {
   logCampaign,
   normalizeEmail,
   upsertLead,
+  setContactOrigin,
+  grantMarketingConsent,
+  revokeMarketingConsent,
+  logEvent,
   listLeads,
   leadStats,
 } from "./store.js";
@@ -138,10 +147,30 @@ app.post("/api/register", async (req, res) => {
     ip,
   };
 
+  // ENROL AD LEADS IN THE FOLLOW-UP SEQUENCE.
+  // Only the landing page, because that is the paid-traffic door the sequence was written
+  // for. Consent is checked with the fail-closed rule: an address with no subscribed
+  // record is not consent, and the upsert below runs first so a brand new registrant has
+  // one by the time we ask.
+  const enrolAsLead = doorOf(source) === "lp";
+
   const isNew = !getSubscriber(email);
   try {
     fs.appendFileSync(REG_FILE, JSON.stringify(record) + "\n");
     upsertSubscriber({ email, name, source, ip, sessionId: session?.id || null }); // consent + list state
+    if (enrolAsLead) {
+      // The lead record is what the sequence walks; the subscriber record is what holds
+      // consent. Both, in that order, then enrol only if consent is affirmative.
+      upsertLead({ email, name, source, utm: { source }, ip, stage: "lead" });
+      // Record WHERE the address came from, then grant the email flag with its date and
+      // source. The landing page is a marketing opt-in, so this origin permits marketing;
+      // /demo and /demo/start origins never will.
+      setContactOrigin(email, "email", "lp-registration");
+      grantMarketingConsent(email, "email", source);
+      if (canEnrolInMarketingSequence(email)) {
+        enrolInSequence(email, { sequenceId: SEQUENCE_ID });
+      }
+    }
   } catch (err) {
     console.error("[register] write failed:", err.message);
     return res.status(500).json({ error: "Something went wrong. Try again." });
@@ -605,6 +634,41 @@ app.get("/watch", (_req, res, next) => sendDemoAwareHtml(res, next, "watch.html"
 // alone, with no code change and no deploy on the day Lee flips it.
 app.get("/lp", (_req, res, next) => sendDemoAwareHtml(res, next, "lp.html"));
 
+// ── Booking, the one action every sequence touch drives ─────────────────────
+// Deliberately minimal for v1. Calendar-versus-human-handoff is Lee's call and this does
+// not presume it: the page takes a request, marks the lead booked, and exits them from
+// the sequence. The exit is the load-bearing part. A lead who books and keeps receiving
+// nurture emails is the most annoying failure this system can produce, and it is the one
+// a drip gets wrong by default.
+app.get("/book", (_req, res, next) => sendDemoAwareHtml(res, next, "book.html"));
+
+app.post("/api/book", (req, res) => {
+  const email = normalizeEmail(req.body?.email);
+  const name = String(req.body?.name || "").trim().slice(0, 120);
+  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Please enter a valid email." });
+
+  upsertLead({ email, name, stage: "demo", status: "booked" });
+  exitSequence(email, "booked");
+  logEvent({ type: "demo_booked", email, source: "book_page" });
+
+  sendDemoInterestLead({ name, email, stage: "booked a demo", company: "", cell: "", fsm: "" })
+    .catch((e) => console.error("[book] notify:", e?.message));
+
+  return res.json({ ok: true });
+});
+
+// Manual pause, for whoever watches the reply-to inbox. v1 has no inbound email parsing,
+// so a lead who replies keeps receiving touches unless a human stops them. This is that
+// stop. Token-gated with the existing admin token rather than left open.
+app.post("/api/admin/lead-pause", (req, res) => {
+  if (!ADMIN_TOKEN || req.query.token !== ADMIN_TOKEN) return res.status(403).json({ error: "Forbidden" });
+  const email = normalizeEmail(req.body?.email);
+  const reason = String(req.body?.reason || "replied").slice(0, 40);
+  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Bad email" });
+  const ok = exitSequence(email, reason);
+  return res.json({ ok, email, reason });
+});
+
 // Through the same sender as everything else now, so the demo pages carry the pixel too.
 app.get("/demo", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo.html"));
 app.get("/demo/start", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo-start.html"));
@@ -808,4 +872,5 @@ app.listen(PORT, () => {
   console.log(`Jenny webinar site on http://localhost:${PORT}`);
   console.log(`Data dir: ${DATA_DIR}`);
   startReminderScheduler();
+  startSequenceScheduler();
 });
