@@ -143,6 +143,61 @@ The non-negotiable: **close rate must be recorded per product line, not blended.
 
 ---
 
+## SITE AUDIT RESULT (2026-08-29, read only, no edits made)
+
+**Every other page is healthy.** All 20 product and service pages return 200 and carry a lead
+form. The Contact Center is the ONLY broken one, so this is an isolated defect, not a
+systemic rot. That is worth saying plainly because it changes the size of the job.
+
+**The Contact Center question is settled: it is a RETIRED PAGE, not a broken redirect.**
+Evidence: it appears **zero times in the sitemap** (32 pages listed, including its three
+sibling service pages), and the redirect is a deliberate 301.
+
+**But the hole is bigger than a nav item.** It is still presented as a live product in two
+places:
+
+    global navigation      appears on every page of the site
+    /services/ index       listed as one of FOUR core services, beside
+                           Google Ads Management, Junk Removal Website, and SEO
+
+So the page whose entire job is to list what JRA sells says the Contact Center is sold.
+
+**Therefore it is not a fix, it is a decision, and it is Lee's:**
+
+  a. **Still sold** -> restore a real sales page and point both routes at it.
+  b. **Retired**    -> remove it from the nav AND from the /services/ index.
+
+**Either way, a third defect stands on its own:** the redirect target is wrong in both
+scenarios. Sending a visitor to "Thank you for your submission" when they submitted nothing
+is never right. If the product is retired, that should redirect to /services/ or /contact-us/.
+
+## PRODUCTS THE NAVIGATION DOES NOT SHOW
+
+The sitemap surfaced several lines absent from the main nav. These change the map:
+
+    /junk-removal-phone-training-course/    phone training course
+    /customer-reactivation-marketing/       reactivation marketing
+    /proximity-marketing/                   proximity marketing
+    /services/business-package/             business package
+    /affiliate/ and /affiliate-detail/      AN AFFILIATE PROGRAM ALREADY EXISTS
+    /join/                                  joining (the network?)
+    /franchise/                             a franchise page, on the franchise-ALTERNATIVE site
+    /media-room/                            media room
+
+**Two of these matter a lot.**
+
+**An affiliate program already exists.** Lee's original brief to me included building agency
+affiliate partnerships at 30% of MRR, which I parked behind paid ads. It should be checked
+before anything new is designed, because the answer may be "extend this" rather than "build
+one."
+
+**THREE PRODUCTS SOLVE THE SAME PROBLEM: the phone.** A phone training course (train your
+person), a Contact Center (outsource the person), and Jenny (replace the person). That can be
+a genuine ladder, matched to an owner's moment, and sold as one. Or it can be three things
+competing for the same budget and confusing the same buyer. **Which one it is has never been
+decided, and it should be**, because it is the clearest instance of the segment-by-moment
+principle in the whole catalogue.
+
 ## WHAT I HAVE NOT DONE
 
 I have not opened the Drive folder of testimonials. It is Lee's Google Drive and I would be
