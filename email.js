@@ -246,6 +246,22 @@ const seqBtn = (href, label) =>
  * through the worker's check, and a marketing email with no mailing address must be
  * impossible to send rather than merely unlikely.
  */
+/**
+ * Render a sequence touch WITHOUT sending it. Exists so copy can be reviewed, diffed and
+ * approved from the real code path rather than from a doc that drifts, and so a content
+ * gate never has to be run by pointing a send at a live inbox.
+ */
+export function renderSequenceEmail({ step, lead, assets }) {
+  const make = SEQ_TEMPLATES[step.template];
+  if (!make) return null;
+  const first = firstNameOf(lead.name);
+  const { subject, body } = make({ first, a: assets });
+  return {
+    subject,
+    html: shell(first, body, lead.email, `You're receiving this because you asked about Jenny at ${COMPANY_NAME}.`),
+  };
+}
+
 export async function sendSequenceEmail({ step, lead, assets }) {
   if (!hasPostalAddress()) return { ok: false, error: "no_postal_address" };
   const make = SEQ_TEMPLATES[step.template];
