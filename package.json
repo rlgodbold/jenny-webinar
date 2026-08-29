@@ -9,7 +9,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "export": "node scripts/export-csv.mjs",
-    "proof:booking": "node scripts/proof-booking-guard.mjs"
+    "proof:booking": "node scripts/proof-booking-guard.mjs",
+    "proof:consent": "node scripts/proof-consent-wording.mjs"
   },
   "engines": {
     "node": ">=18"

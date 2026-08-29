@@ -702,8 +702,20 @@ app.post("/api/demo-optin", (req, res) => {
 
   // Ticked. The number was collected while the opt-in was visible AND was affirmatively
   // opted in, so it carries the marketing origin rather than the transactional one.
+  //
+  // GRANT FIRST, THEN SET THE ORIGIN. The grant refuses if we cannot capture the exact
+  // wording shown, and a number must never end up wearing the marketing origin without the
+  // consent to match. Doing it in this order means a refusal leaves the number exactly where
+  // an unticked one lands: transactional, and unmarketable.
+  const granted = grantMarketingConsent(email, "sms", "demo-form-optin", {
+    label: SMS_OPTIN_LABEL,
+    fineprint: SMS_OPTIN_FINEPRINT,
+  });
+  if (!granted) {
+    setContactOrigin(email, "sms", "demo-verification");
+    return res.json({ ok: true, bucket, consent: false, why: "disclosure_not_captured" });
+  }
   setContactOrigin(email, "sms", DEMO_OPTIN_ORIGIN);
-  grantMarketingConsent(email, "sms", "demo-form-optin");
   return res.json({ ok: true, bucket, consent: true });
 });
 

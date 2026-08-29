@@ -359,17 +359,64 @@ export function setContactOrigin(email, channel, origin) {
 }
 
 /** Grant marketing consent for one channel, stamping when and from where. */
-export function grantMarketingConsent(email, channel, source) {
+/**
+ * WHAT THEY AGREED TO, STORED WITH THE FACT THAT THEY AGREED.
+ *
+ * A consent record that says only "granted, on this date, via demo-form-optin" answers WHEN
+ * somebody opted in but not WHAT THEY READ when they did. The sentence they actually saw
+ * lives in an env var with no history, so revising it once would make every earlier record
+ * indistinguishable from every later one. That is the exact question a TCPA dispute turns on,
+ * and it cannot be repaired after the fact: numbers collected under un-captured wording are
+ * permanently unreconstructable, so this is only worth anything BEFORE any consent lands.
+ *
+ * The literal text is stored, not just a hash. A hash proves two records share wording but
+ * reconstructs nothing on its own; it needs a registry mapping hashes back to sentences, and
+ * the day nobody kept that registry the hash is worthless. The record is self-contained
+ * instead, with a short version hash alongside purely so records can be grouped and a
+ * revision shows up as a visibly different value.
+ *
+ * The wording is read SERVER SIDE at grant time rather than echoed back by the browser. The
+ * client could tell us anything, and consent evidence a user can forge is not evidence. The
+ * accepted limitation is that a label edited between page render and submit would record the
+ * newer text; that needs a process restart to happen at all, and the alternative is worse.
+ */
+export function grantMarketingConsent(email, channel, source, disclosure = null) {
   const l = leads.get(normalizeEmail(email));
   if (!l) return false;
   const key = `${channel}_marketing`;
   l.consent = l.consent || blankConsent();
   if (!l.consent[key]) return false;
-  l.consent[key] = { granted: true, at: new Date().toISOString(), source: source || "" };
+
+  const shown = normalizeDisclosure(disclosure);
+
+  // FAIL CLOSED ON SMS. If we cannot record what someone agreed to, we do not record that
+  // they agreed. Refusing the grant leaves the number unmarketable, which is recoverable;
+  // storing a consent we cannot evidence is not.
+  //
+  // Email is deliberately not held to this yet. Its consent comes from the landing page
+  // registration, which predates this and whose wording is in version-controlled HTML rather
+  // than an env var, so it is already reconstructable from the commit history. Tightening it
+  // here would silently break sequence enrolment for every existing lead.
+  if (channel === "sms" && !shown) {
+    logEvent({ type: "consent_refused_no_disclosure", email: l.email, channel, source });
+    console.warn(`[consent] REFUSED sms grant for ${l.email}: no disclosure text captured.`);
+    return false;
+  }
+
+  l.consent[key] = { granted: true, at: new Date().toISOString(), source: source || "", shown };
   l.updatedAt = new Date().toISOString();
   persistLeads();
-  logEvent({ type: "consent_granted", email: l.email, channel, source });
+  logEvent({ type: "consent_granted", email: l.email, channel, source, disclosureVersion: shown?.version || null });
   return true;
+}
+
+/** The exact wording, plus a short hash of it so revisions are visible at a glance. */
+function normalizeDisclosure(d) {
+  const label = String(d?.label || "").trim();
+  if (!label) return null;
+  const fineprint = String(d?.fineprint || "").trim();
+  const version = crypto.createHash("sha256").update(`${label}\n${fineprint}`).digest("hex").slice(0, 12);
+  return { label, fineprint, version, capturedAt: new Date().toISOString() };
 }
 
 export function revokeMarketingConsent(email, channel, reason) {
