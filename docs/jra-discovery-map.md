@@ -205,3 +205,101 @@ reading his files; I would rather be told the folder is fair game than assume it
 
 I have not audited the other service pages the way I audited Contact Center. That sweep is
 the obvious next step and it is where I expect to find more of the same.
+
+---
+
+# SPECIALTY TRUCK BODIES (audited 2026-08-29)
+
+**Canonical domain is junkremovaltrucksforsale.com.** specialtytruckbodies.com redirects to
+it and both canonical tags agree, so there is no duplicate content problem. But **any STB ad
+should point at the canonical domain**, and note the brand in the ad ("Specialty Truck
+Bodies") will not match the domain a clicker sees.
+
+## STB IS COMPLETELY UN-INSTRUMENTED. THIS IS THE PRE-SPEND BLOCKER.
+
+Checked the live homepage for every common tag:
+
+    CallRail / call tracking    none
+    Google Analytics / gtag     none
+    Meta pixel (fbq)            none
+    Google Ads conversion       none
+
+**One static phone number, 919-342-5488, on every page.** Not a tracking number.
+
+And the conversion path is mostly that phone:
+
+    /              form + phone
+    /contact/      form + phone
+    /trucks/       PHONE ONLY
+    /trailers/     PHONE ONLY
+    /gallery/      PHONE ONLY
+    /financing/    PHONE ONLY
+    /warranty/     PHONE ONLY
+    /maintenance/  PHONE ONLY
+
+Six of eight pages, including the two where a buyer is deepest in consideration (trucks and
+financing), have no way to enquire except calling a number nobody can attribute.
+
+**So Lee's mandate is currently impossible on STB.** He asked to track leads to sales to close
+rates. Today we could measure clicks and cost from the ad platform and then nothing: no form
+events, no call attribution, no on-site behaviour. **Spend before instrumenting is spend that
+can never be evaluated**, and it cannot be reconstructed later.
+
+**This corrects my earlier speculation.** I said STB looked like the more interesting paid
+target because the ticket is high and the testimonials are unusually good. Both still true,
+but it is currently the LESS ready one, and the gap is about a week of plumbing rather than a
+strategy problem.
+
+## What STB needs before a dollar, in cost order
+
+1. **Call tracking. This is the big one and it is nearly free.** JRA already runs a CallRail
+   master account with 710 companies in it. Adding STB numbers is the same system that powers
+   the prospecting engine. Without it, the primary conversion path on six of eight pages is
+   invisible.
+2. **Analytics and a pixel**, so on-site behaviour and form conversions exist at all.
+3. **A form on /trucks/ and /financing/**, or at minimum a tracked number and a clear
+   secondary path for people who will not phone a stranger about a $60k purchase.
+
+## The capacity question still gates the plan
+
+I still cannot see order value, build lead time, or **how many trucks STB can build per
+month**. If that number is small, lead generation past it is waste and the entire STB plan
+becomes "generate exactly enough, then stop." That is a completely different campaign shape
+from "grow leads," and it is the single most decision-changing number in this mandate.
+
+---
+
+# THE AFFILIATE PROGRAM ALREADY EXISTS, AND IT IS SUBSTANTIAL
+
+`/affiliate/` and `/affiliate-detail/` are live and describe a real program: unique affiliate
+link, monthly residual income, covering website development, SEO, Google Ads, social media,
+Facebook video campaigns, **Call Center Services**, start-up packages and business consulting.
+
+Published earnings ladder: **$1,560 per referral per year**, scaling to $780,000 for 500
+referrals. That implies roughly $130 per referral per month. **No commission percentage is
+stated publicly.**
+
+**Three things follow.**
+
+**1. My parked mandate may already be built.** Lee asked me to design agency affiliate
+partnerships at 30% of MRR. Before designing anything, someone should establish what this
+program's actual terms are, whether it is active, and whether it has affiliates. "Extend
+this" may replace weeks of work.
+
+**2. It targets a WIDER audience than everything else.** The page opens with "anyone that
+owns or is looking to start a home service business such as plumbing, roofing, or junk
+removal." That is the only JRA property not aimed squarely at junk removal owners, which
+either makes it the growth channel or an inconsistency, but it should be a decision.
+
+**3. LEGAL FLAG, and it is the same class as the Jenny claim gate.** The page presents
+"**Typical earnings for affiliates**" and then lists figures up to $780,000 per year, and the
+entry page promises "how you can earn 50k, 100k or more." Earnings claims with the word
+*typical* attached are squarely in FTC territory and need substantiation: if no affiliate
+actually earns those figures, presenting them as typical is a problem. **This should go to
+Richard Petty before any affiliate recruitment is marketed**, and it is worth a look even if
+we never touch the program, because it is live copy today.
+
+**4. And the positioning collision.** The affiliate page sells Call Center Services as
+"prevents owners from being a slave to their phone." That is almost word for word the
+positioning Lee gave me for Jenny. The two products are not merely adjacent, **they are
+already using the same sentence**, which sharpens the ladder question considerably.
