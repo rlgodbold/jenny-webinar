@@ -318,6 +318,26 @@ export const NON_MARKETING_ORIGINS = Object.freeze([
   "demo-start-callback", // /demo/start "Best number": "Lee will reach out personally"
 ]);
 
+// The origin that a future demo-form marketing opt-in must write, and the reason it has
+// to be a DIFFERENT string from "demo-verification".
+//
+// Lee's ruling puts an optional marketing checkbox on the demo form, for the same number
+// the verification code goes to. That number's origin is "demo-verification", which rule 3
+// blocks forever. If the opt-in reused that origin, one of two things would happen and
+// both are wrong:
+//   - the new opt-ins would be blocked, making the checkbox useless, or
+//   - we would loosen the block, which would retroactively unblock every number ALREADY
+//     collected under "transactional... not marketing", which is precisely the population
+//     rule 3 exists to protect.
+//
+// So the distinction is by WHAT THE PERSON WAS SHOWN AT COLLECTION TIME, not by which
+// field the digits came from. A number collected while the opt-in existed AND with the box
+// ticked was acquired under a marketing representation and gets this origin. A number
+// collected before the checkbox shipped, or with the box left unticked, keeps
+// "demo-verification" and stays blocked forever. No backfill, ever: the existing
+// population was told something different and cannot be re-labelled.
+export const DEMO_OPTIN_ORIGIN = "demo-form-optin";
+
 function blankConsent() {
   return {
     email_marketing: { granted: false, at: null, source: null },
