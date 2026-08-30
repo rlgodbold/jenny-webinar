@@ -218,7 +218,7 @@ export async function sendReminderEmail({ name, email, kind, session }) {
       <p style="margin:0 0 16px">Hi ${firstName},</p>
       <p style="margin:0 0 16px">We go live in about an hour. The <strong>AI Voice Agent Masterclass</strong> starts at <strong>${when.timeStr} ET</strong> today.</p>
       ${button("Join the webinar →")}
-      <p style="margin:16px 0">Grab a coffee and a notepad. You'll hear Jenny handle real calls, quotes, specialty items, and the everyday questions junk removal owners get, see the dashboard live, and get the limited discounted offer at the end.</p>
+      <p style="margin:16px 0">Grab a coffee and a notepad. You'll hear Jenny handle demonstration calls, quotes, specialty items, and the everyday questions junk removal owners get, see the dashboard live, and get the limited discounted offer at the end.</p>
       <p style="margin:0 0 4px">See you soon,</p>
       <p style="margin:0 0 8px"><strong>Lee Godbold</strong><br>Founder, Junk Removal Authority</p>
       ${marketingFooter(email)}
@@ -234,7 +234,7 @@ export async function sendReminderEmail({ name, email, kind, session }) {
       ${button("Join the webinar →")}
       <p style="margin:14px 0 8px">Here's what we'll get into:</p>
       <ul style="padding-left:20px;margin:0 0 16px">
-        <li style="margin-bottom:7px"><strong>Real call recordings</strong>: hear Jenny handle the calls you field every day: price quotes, hot tubs, hazmat, bed bugs, and the questions owners get asked most</li>
+        <li style="margin-bottom:7px"><strong>Demonstration calls</strong>: hear Jenny handle the calls you field every day: price quotes, hot tubs, hazmat, bed bugs, and the questions owners get asked most</li>
         <li style="margin-bottom:7px">The features that make an AI voice agent actually work for the trades</li>
         <li style="margin-bottom:7px">How it plugs into your CRM / field service software (Workiz, Housecall Pro, and more)</li>
         <li style="margin-bottom:7px">A look at the <strong>live dashboard</strong> and the stats you'll get</li>
