@@ -85,7 +85,9 @@ function pickUtm(body = {}) {
 
 // Text Shane + Lee about a new lead. Best-effort: never throws (a lead alert must not 500).
 async function notifyLeadSms(lead, kind) {
-  const who = kind === "demo" ? "completed the demo" : "new landing-page lead";
+  // "demo" here is the /demo/start FORM, which is a request for a demo, not a completed one.
+  // The demo service never calls us, so nothing on this side can know a demo was completed.
+  const who = kind === "demo" ? "asked for a demo" : "new landing-page lead";
   const bits = [
     `Jenny lead (${who}):`,
     lead.name || "(no name)",
@@ -625,14 +627,16 @@ app.post("/api/demo-lead", async (req, res) => {
   try {
     stored = upsertLead({
       email, name: lead.name, company: lead.company, cell: lead.cell, fsm: lead.fsm,
-      plan: lead.plan, stage: "demo", source: lead.source || "demo-start", utm, ip,
+      // NOT "demo": in this store stage "demo" means completed the demo, and this person has
+      // only submitted a form asking us to get in touch.
+      plan: lead.plan, stage: "demo-requested", source: lead.source || "demo-start", utm, ip,
     });
   } catch (e) {
     // Storage failed: log the full lead loudly so it is never silently lost.
     console.error("[demo-lead] STORE FAILED — LEAD:", JSON.stringify(lead), e?.message);
   }
 
-  const forNotify = { ...lead, email, utm, stage: "Completed the demo", source: stored?.source || lead.source };
+  const forNotify = { ...lead, email, utm, stage: "Asked for a demo", source: stored?.source || lead.source };
   sendDemoInterestLead(forNotify).catch((e) => console.error("[demo-lead] email:", e?.message));
   notifyLeadSms(forNotify, "demo").catch((e) => console.error("[demo-lead] sms:", e?.message));
 
