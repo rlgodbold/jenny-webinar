@@ -296,7 +296,7 @@ export async function sendDemoInterestLead(lead = {}) {
     ["Campaign (UTM)", utmStr],
   ];
   const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.7;color:#0f172a">
-    <h2 style="margin:0 0 12px;font-size:18px">Jenny lead — ${esc(lead.stage || "new lead")}</h2>
+    <h2 style="margin:0 0 12px;font-size:18px">Jenny lead: ${esc(lead.stage || "new lead")}</h2>
     <table style="border-collapse:collapse">${rows
       .map(([k, v]) => `<tr><td style="padding:4px 14px 4px 0;color:#64748b">${k}</td><td><b>${esc(String(v || "—"))}</b></td></tr>`)
       .join("")}</table>
@@ -304,7 +304,7 @@ export async function sendDemoInterestLead(lead = {}) {
   </div>`;
   return send({
     to: LEAD_NOTIFY_EMAILS,
-    subject: `Jenny lead: ${lead.company || lead.name || "someone"}${lead.stage ? " — " + lead.stage : ""}`,
+    subject: `Jenny lead: ${lead.company || lead.name || "someone"}${lead.stage ? ", " + lead.stage : ""}`,
     html,
   });
 }
