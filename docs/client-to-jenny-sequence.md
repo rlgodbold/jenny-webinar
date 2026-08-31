@@ -119,7 +119,7 @@ reads like a promotion we have already lost.**
 
 # TOUCH 3: THE DEADLINE, SHORT
 
-**Subject:** $250 a month, starting April 1
+**Subject:** $250 a month, starting April 1, 2027
 
 **Preview text:** Short one
 
