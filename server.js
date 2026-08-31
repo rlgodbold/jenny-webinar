@@ -126,6 +126,8 @@ app.post("/api/register", async (req, res) => {
   const requestedId = String(req.body?.sessionId || "").slice(0, 20);
   const openIds = new Set(upcomingSessions().map((s) => s.id));
   const classRegistrant = doorOf(source) === "webinar";
+  // Paid ad traffic. The landing page posts here, so this is where an ad lead is captured.
+  const adLead = doorOf(source) === "lp";
   const session = classRegistrant
     ? (requestedId && openIds.has(requestedId) && getSession(requestedId)) || currentSession()
     : null;
@@ -141,9 +143,18 @@ app.post("/api/register", async (req, res) => {
   };
 
   const isNew = !getSubscriber(email);
+  // Whether this is a new LEAD, which is not the same question as a new subscriber. Someone
+  // who signed up on the home page months ago and now clicks an ad is not a new subscriber,
+  // but they are absolutely a new ad lead and worth an alert.
+  const isNewLead = adLead && !listLeads().some((l) => l.email === email);
   try {
     fs.appendFileSync(REG_FILE, JSON.stringify(record) + "\n");
     upsertSubscriber({ email, name, source, ip, sessionId: session?.id || null }); // consent + list state
+    // AD LEADS ALSO GO IN THE LEADS STORE. Without this they existed only as subscribers, so
+    // they appeared nowhere anyone looks to see what an ad lead did next, and no alert fired.
+    // The source string is passed through UNCHANGED because "lp:fb/campaign/creative" is the
+    // only thing distinguishing paid traffic from organic.
+    if (adLead) upsertLead({ email, name, source, utm: { source }, ip, stage: "lead" });
   } catch (err) {
     console.error("[register] write failed:", err.message);
     return res.status(500).json({ error: "Something went wrong. Try again." });
@@ -153,8 +164,19 @@ app.post("/api/register", async (req, res) => {
     console.error("[register] email error:", e?.message)
   );
 
+  // THE AD LEAD ALERT. This is the hottest lead we get and nothing was telling anyone it had
+  // arrived. Best-effort and independent, so a failing alert never costs us the capture above.
+  if (isNewLead) {
+    const forNotify = { name, email, source, utm: { source }, stage: "Landing page lead" };
+    sendDemoInterestLead(forNotify).catch((e) => console.error("[register] lead email:", e?.message));
+    notifyLeadSms(forNotify, "lp").catch((e) => console.error("[register] lead sms:", e?.message));
+  }
+
   // Notify the team on each genuinely-new attendee (not on a re-submit).
-  if (isNew && NOTIFY_EMAILS.length) {
+  // NOT for ad leads: they are not attendees, and calling them one is what made this alert
+  // unreadable. They get the purpose-built lead alert above, which carries the source and the
+  // stage, so this is a worse duplicate rather than lost coverage. Other doors are unchanged.
+  if (isNew && !adLead && NOTIFY_EMAILS.length) {
     sendAttendeeNotification({
       name,
       email,
