@@ -95,7 +95,13 @@ async function send({ to, subject, html, headers }) {
 // series ends, since the email would name a date that will never happen.
 export const doorOf = (source = "") => {
   const v = String(source || "");
+  // /lp and /jenny are two doors onto the same paid-ad funnel, so they share a door here.
+  // They stay distinguishable in reporting because the raw `source` string is stored intact.
+  // Anything not matched below falls through to "webinar", which is why a new entry point
+  // MUST be added here: without it the lead gets no lead record, no alert to Lee and Shane,
+  // and the masterclass confirmation instead of the Jenny one.
   if (v === "lp" || v.startsWith("lp:")) return "lp";
+  if (v === "jenny" || v.startsWith("jenny:")) return "lp";
   if (v.startsWith("watch-recording")) return "watch";
   return "webinar";
 };
