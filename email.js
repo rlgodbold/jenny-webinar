@@ -113,13 +113,27 @@ const btn = (href, label) =>
   `<p style="margin:0 0 16px"><a href="${href}" style="background:#16a34a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;display:inline-block;font-weight:600">${label}</a></p>`;
 
 // EMAIL A: the ad landing page. No date, no Zoom, nothing that expires.
+//
+// DEMO GATE (Lee, 2026-09-01): the self serve demo is no longer public. It sits behind
+// DEMO_PREVIEW_KEY so it can still be sent to a serious prospect by direct link, and
+// /demo redirects everyone else to the home page. So this email must NOT hand a cold
+// lead a Start the demo button, because that button now lands them nowhere. When the
+// demo is hidden we offer the thing that is actually true: fifteen minutes with Lee,
+// where she answers as their company. Flip DEMO_PUBLIC back and the old copy returns.
 async function sendDemoConfirmation({ name, email }) {
   const base = (process.env.PUBLIC_BASE_URL || "https://jennycallagent.com").replace(/\/$/, "");
-  const body = `
+  const demoPublic = process.env.DEMO_PUBLIC === "true";
+  const body = demoPublic
+    ? `
     <p style="margin:0 0 16px">You asked to hear what an AI sounds like answering a junk removal phone. Here is how it works.</p>
     <p style="margin:0 0 16px">You tell her your company name, your city and roughly what you charge. A couple of minutes later you call a number and she answers as your company, quoting your prices, in your towns.</p>
     <p style="margin:0 0 16px">Run the calls you actually get. The three bedroom cleanout, the couch on the curb, the price shopper. Then throw a couple of the odd ones at her.</p>
-    ${btn(base + "/demo", "Start the demo")}`;
+    ${btn(base + "/demo", "Start the demo")}`
+    : `
+    <p style="margin:0 0 16px">You asked to hear what an AI sounds like answering a junk removal phone.</p>
+    <p style="margin:0 0 16px">The best way to hear it is on your own business rather than a generic script. Give me fifteen minutes and she will answer as your company, with your prices, in your towns. Bring the calls you actually get, including the awkward ones.</p>
+    <p style="margin:0 0 16px">She is trained on junk removal specifically. Estate cleanouts, hot tub removal, freon on appliances, hoarding jobs. She books straight into your CRM, and if a caller asks whether she is a person, she tells them.</p>
+    ${btn("https://calendly.com/lee-godbold/new-meeting", "Book fifteen minutes")}`;
   return send({
     to: email,
     subject: "Hear her answer your phone",
