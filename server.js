@@ -629,6 +629,11 @@ app.get("/watch", (_req, res, next) => sendDemoAwareHtml(res, next, "watch.html"
 // alone, with no code change and no deploy on the day Lee flips it.
 app.get("/lp", (_req, res, next) => sendDemoAwareHtml(res, next, "lp.html"));
 
+// THE JENNY PAGE. The rebuilt site: coverage messaging, four labelled example calls, and no
+// demo entry point anywhere. Served through the same demo-aware sender so it picks up the
+// Meta pixel, and so it behaves correctly if DEMO_PUBLIC is ever flipped back on.
+app.get("/jenny", (_req, res, next) => sendDemoAwareHtml(res, next, "jenny.html"));
+
 // Through the same sender as everything else now, so the demo pages carry the pixel too.
 app.get("/demo", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo.html"));
 app.get("/demo/start", demoGate, (_req, res, next) => sendDemoAwareHtml(res, next, "demo-start.html"));

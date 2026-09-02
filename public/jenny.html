@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jenny answers your phone | For junk removal owners</title>
+<meta name="description" content="Your phone answered, every call, every hour, in your company's name and with your prices. Built by people who run a junk removal company." />
+<meta property="og:title" content="Jenny's got this" />
+<meta property="og:description" content="Have you ever had your evening interrupted by a customer call? Hear four real example calls." />
+<!--META_PIXEL-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+  :root{
+    --paper:#FBFAF6; --panel:#F4F2EC; --ink:#17191B; --slate:#5C6268;
+    --hair:#E2DED4; --green:#1E6B49; --green-dim:#B9CFC2; --deep:#145036;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141618; --panel:#1C1F22; --ink:#ECEAE4; --slate:#9AA1A8;
+      --hair:#2C3034; --green:#4FB483; --green-dim:#2E4A3E; --deep:#8FD9B4;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141618; --panel:#1C1F22; --ink:#ECEAE4; --slate:#9AA1A8;
+    --hair:#2C3034; --green:#4FB483; --green-dim:#2E4A3E; --deep:#8FD9B4;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink); margin:0;
+    font-family:"Source Serif 4",Georgia,serif; font-size:17px; line-height:1.6;
+    padding:0 20px 90px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:44rem;margin:0 auto}
+  .sans{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+  .eyebrow{font-family:Archivo,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--slate);margin:0}
+  h1{font-family:Archivo,sans-serif;font-weight:800;letter-spacing:-.025em;line-height:1.04;
+    font-size:clamp(34px,7vw,54px);margin:0 0 20px;text-wrap:balance}
+  h2{font-family:Archivo,sans-serif;font-weight:700;letter-spacing:-.015em;line-height:1.12;
+    font-size:clamp(23px,3.6vw,30px);margin:0 0 14px;text-wrap:balance}
+  p{margin:0 0 15px}
+  a{color:var(--deep)}
+  header{padding:52px 0 6px;border-bottom:2px solid var(--ink);margin-bottom:40px;
+    display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap}
+  section{padding:38px 0;border-top:1px solid var(--hair)}
+  section:first-of-type{border-top:none;padding-top:0}
+  .kicker{font-family:Archivo,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--green);margin:0 0 12px}
+  .scenes{margin:0 0 26px;padding:0;list-style:none;display:flex;flex-direction:column;gap:11px;
+    font-size:19px}
+  .scenes li{padding-left:22px;position:relative}
+  .scenes li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;
+    background:var(--green-dim)}
+  .turn-line{font-size:19px;margin:0 0 6px}
+  .big-line{font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(26px,5vw,38px);
+    letter-spacing:-.02em;margin:22px 0 8px}
+  ul.plain{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  ul.plain li{padding-left:20px;position:relative}
+  ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;
+    background:var(--green)}
+
+  /* ---- call player ---- */
+  .call{border:1px solid var(--hair);background:var(--panel);margin:22px 0 0}
+  .call-head{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;
+    border-bottom:1px solid var(--hair)}
+  .playbtn{flex:0 0 auto;width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--green);color:#fff;display:grid;place-items:center;font-size:15px;line-height:1}
+  .playbtn:focus-visible{outline:3px solid var(--deep);outline-offset:3px}
+  .call-title{font-family:Archivo,sans-serif;font-weight:700;font-size:17px;margin:2px 0 3px}
+  .call-blurb{font-size:14.5px;color:var(--slate);margin:0}
+  .aitag{font-family:Archivo,sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--slate);border:1px solid var(--hair);padding:3px 8px;display:inline-block;margin-top:9px}
+  .script{padding:8px 18px 16px;margin:0;display:flex;flex-direction:column;gap:2px}
+  .t{display:grid;grid-template-columns:76px 1fr;gap:12px;padding:7px 8px;border-radius:4px;
+    font-size:15.5px;transition:background .15s}
+  .t.on{background:var(--green-dim)}
+  .who{font-family:Archivo,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--slate);padding-top:4px}
+  .t.jenny .who{color:var(--deep)}
+  .t.tag{display:none}
+
+  .offer{border:1px solid var(--hair);background:var(--panel);padding:26px 28px;margin-top:8px}
+  .offer dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:11px 20px}
+  .offer dt{color:var(--slate)}
+  .offer dd{margin:0;text-align:right;font-family:Archivo,sans-serif;font-weight:700;
+    font-variant-numeric:tabular-nums}
+  .offer .big{color:var(--deep);font-size:20px}
+  .cta{display:inline-block;background:var(--green);color:#fff;text-decoration:none;
+    font-family:Archivo,sans-serif;font-weight:700;padding:15px 26px;margin-top:6px;font-size:17px}
+  .cta:focus-visible{outline:3px solid var(--deep);outline-offset:3px}
+  footer{border-top:1px solid var(--hair);margin-top:44px;padding-top:16px;
+    font-family:Archivo,sans-serif;font-size:12.5px;color:var(--slate)}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Jenny · by Junk Removal Authority</p>
+    <p class="eyebrow">Built by people who run a junk removal company</p>
+  </header>
+
+  <section>
+    <p class="kicker">For junk removal owners</p>
+    <h1>Have you ever had your evening interrupted by a customer call?</h1>
+    <ul class="scenes">
+      <li>It rings while you are sat down to dinner.</li>
+      <li>It rings at your kid's game, and you look at it, and you don't answer.</li>
+      <li>It rings on your anniversary, and you think, can they just call back after?</li>
+    </ul>
+    <p class="turn-line">You know the answer. They can't. They won't. They call the next company on the list.</p>
+    <p class="turn-line">And the thought of interviewing a stack of people, then taking weeks out of your schedule to train them, is its own kind of tired.</p>
+    <p class="big-line">Jenny's got this.</p>
+    <p>She answers your phone. Every call, every hour, in your company's name, with your prices. Here she is at nine at night.</p>
+    <div class="callbox" data-call="after-hours"><div class="chead"><button class="cplay" type="button" aria-label="Play this call">&#9654;</button><div><div class="ctitle">Nine at night, and she books it</div><div class="cblurb">The office closed four hours ago. This is the call that used to go to voicemail.</div><span class="caitag">Example call &middot; both voices are AI</span></div></div><div class="cscript"><div class="ct tagline"><span class="cw">tag</span><span>Example call. Both voices you are about to hear are AI.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Thanks for calling Junk Doctors, this is Dale. What can I get sorted for you?</span></div><div class="ct"><span class="cw">Caller</span><span>Yeah, hey. I know it&#x27;s late. I got a hot tub out back I need gone.</span></div><div class="ct agent"><span class="cw">Dale</span><span>No problem at all, we take those. Is it still hooked up to power, or has it been disconnected already?</span></div><div class="ct"><span class="cw">Caller</span><span>It&#x27;s still wired in. Been sitting there two years.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Okay, that&#x27;s common. We&#x27;ll need it disconnected before we haul it, and that&#x27;s an electrician rather than us. Once it&#x27;s cut loose we can take it same visit. Is it up on a deck or at ground level?</span></div><div class="ct"><span class="cw">Caller</span><span>Ground level, but it&#x27;s behind a gate.</span></div><div class="ct agent"><span class="cw">Dale</span><span>How wide is the gate, roughly?</span></div><div class="ct"><span class="cw">Caller</span><span>Maybe four feet?</span></div><div class="ct agent"><span class="cw">Dale</span><span>Then we&#x27;ll likely cut it down on site, which we do all the time. For a standard six person tub at ground level with gate access, you&#x27;re looking at four seventy five to six twenty five, and the crew confirms the number before they touch anything. Would Thursday morning work, between eight and ten?</span></div><div class="ct"><span class="cw">Caller</span><span>Thursday&#x27;s good.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Perfect. Can I get your name and the best number for the crew?</span></div></div></div>
+  </section>
+
+  <section>
+    <p class="kicker">01</p>
+    <h2>She sounds like a person. And she'll tell them she isn't.</h2>
+    <p>Callers talk to her the way they talk to anyone else, because she sounds like someone who works for you rather than a phone tree. And if a caller asks whether they are speaking to a person, she says no, straight away. We would not sell you something that lies to your customers.</p>
+    <p><strong>We can also clone your voice</strong>, or the voice of somebody from your area, so the phone sounds like your company rather than a stranger.</p>
+  </section>
+
+  <section>
+    <p class="kicker">02</p>
+    <h2>She is there. Always. And ten times at once.</h2>
+    <ul class="plain">
+      <li>Every call answered on the first ring, day or night.</li>
+      <li>Weekends, holidays, two in the morning, and the Tuesday when everyone is flat out.</li>
+      <li>Eleven calls landing at the same time, and every one of them picked up.</li>
+      <li>No notice period, no holiday request, no bad week.</li>
+    </ul>
+  </section>
+
+  <section>
+    <p class="kicker">03</p>
+    <h2>She knows the work.</h2>
+    <p>This is the part a general purpose answering service cannot do. She is trained on junk removal specifically. Estate cleanouts, hot tub removal, freon recovery on appliances, hoarding cleanouts, garage and shed clearances, construction debris, and the awkward ones in between.</p>
+    <p>She knows a hot tub has to be disconnected before it moves and a fridge carries a recovery fee, because the people who built her run a junk removal company.</p>
+  </section>
+
+  <section>
+    <p class="kicker">04</p>
+    <h2>She quotes, from your price list.</h2>
+    <p>Not a guess and not a generic range. She quotes from the price list we set up with you, and the crew confirms the number before anything is loaded. Here she is with the call every owner is certain a machine cannot handle.</p>
+    <div class="callbox" data-call="price-shopper"><div class="chead"><button class="cplay" type="button" aria-label="Play this call">&#9654;</button><div><div class="ctitle">He wants a number before he tells you anything</div><div class="cblurb">The call every owner is certain a machine cannot handle.</div><span class="caitag">Example call &middot; both voices are AI</span></div></div><div class="cscript"><div class="ct tagline"><span class="cw">tag</span><span>Example call. Both voices you are about to hear are AI.</span></div><div class="ct"><span class="cw">Caller</span><span>How much to haul off a garage full of stuff?</span></div><div class="ct agent"><span class="cw">Dale</span><span>Happy to get you a number, this is Dale by the way. We price by how much room it takes in the truck rather than by the item, so it helps if I know roughly how full. Is it wall to wall, or is there a path through it?</span></div><div class="ct"><span class="cw">Caller</span><span>I mean, just give me a ballpark. Everybody else can.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Fair enough. A single car garage packed to about waist height usually lands between three fifty and five twenty five. Wall to wall and shoulder high is closer to eight hundred. If you can tell me which of those it&#x27;s nearer, I&#x27;ll tighten it up.</span></div><div class="ct"><span class="cw">Caller</span><span>Probably waist high. Maybe a little more.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Then I&#x27;d plan on four hundred to five fifty, and the crew confirms before they start. Nothing gets loaded until you&#x27;ve agreed the price. Any appliances or paint in there?</span></div><div class="ct"><span class="cw">Caller</span><span>There&#x27;s an old fridge.</span></div><div class="ct agent"><span class="cw">Dale</span><span>That one has freon, so there&#x27;s a thirty five dollar recovery fee on it. It has to be recovered by a certified tech before disposal, which is why it carries a fee everywhere. Everything else in that garage is included in the number I gave you.</span></div></div></div>
+  </section>
+
+  <section>
+    <p class="kicker">05</p>
+    <h2>She is not perfect. Here is one that gets messy.</h2>
+    <p>Every owner's real worry is that she will be fine right up until she isn't. So rather than show you four calls that go smoothly, here is one that wanders, where the caller is upset and asks her outright whether she is a real person.</p>
+    <div class="callbox" data-call="awkward"><div class="chead"><button class="cplay" type="button" aria-label="Play this call">&#9654;</button><div><div class="ctitle">The one where it nearly goes wrong</div><div class="cblurb">She is not perfect. This is what happens when a call gets messy.</div><span class="caitag">Example call &middot; both voices are AI</span></div></div><div class="cscript"><div class="ct tagline"><span class="cw">tag</span><span>Example call. Both voices you are about to hear are AI.</span></div><div class="ct"><span class="cw">Caller</span><span>Hi, um. I&#x27;m not really sure what I need, honestly.</span></div><div class="ct agent"><span class="cw">Dale</span><span>That&#x27;s alright, plenty of people start there. What&#x27;s the situation?</span></div><div class="ct"><span class="cw">Caller</span><span>It&#x27;s my mother&#x27;s house. She passed in June and we&#x27;ve got to clear it before it sells. But I don&#x27;t know what&#x27;s staying and what&#x27;s going yet.</span></div><div class="ct agent"><span class="cw">Dale</span><span>I am sorry about your mother. Estate cleanouts are a good portion of what we do, and you do not need to have it sorted before we come. A lot of families walk the house with the crew and point as they go.</span></div><div class="ct"><span class="cw">Caller</span><span>Okay. Actually, hold on, is this a real person I&#x27;m talking to?</span></div><div class="ct agent"><span class="cw">Dale</span><span>No, I&#x27;m Dale. I&#x27;m an AI that answers the phone for Junk Doctors. If you&#x27;d rather have someone on the team call you back I can arrange that, or I can keep going, whichever you prefer.</span></div><div class="ct"><span class="cw">Caller</span><span>No, that&#x27;s fine. That&#x27;s actually a relief, I didn&#x27;t want to cry on somebody.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Take your time. Would it help to book a walkthrough rather than a haul, so somebody can look at the house with you first and give you a number for the whole thing?</span></div><div class="ct"><span class="cw">Caller</span><span>Yes. That&#x27;s exactly what I need.</span></div></div></div>
+  </section>
+
+  <section>
+    <p class="kicker">06</p>
+    <h2>And when she can't, she hands it over properly.</h2>
+    <p>She takes a name and a number, marks it urgent, and tells your manager while the caller is still on the line. Nobody gets stuck in a loop with a machine.</p>
+    <div class="callbox" data-call="handoff"><div class="chead"><button class="cplay" type="button" aria-label="Play this call">&#9654;</button><div><div class="ctitle">When she can&#x27;t, she hands it over properly</div><div class="cblurb">The escape hatch every owner asks about.</div><span class="caitag">Example call &middot; both voices are AI</span></div></div><div class="cscript"><div class="ct tagline"><span class="cw">tag</span><span>Example call. Both voices you are about to hear are AI.</span></div><div class="ct"><span class="cw">Caller</span><span>I need to talk to whoever runs the crew. There was a problem on Tuesday.</span></div><div class="ct agent"><span class="cw">Dale</span><span>I&#x27;m sorry to hear that. This is Dale. I&#x27;ll get you to a manager rather than try to sort it out myself. Can I take your name and the address the crew went to?</span></div><div class="ct"><span class="cw">Caller</span><span>Karen Whitfield. Eleven twenty Ashcroft.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Thank you. And the best number to reach you on?</span></div><div class="ct"><span class="cw">Caller</span><span>Same one I&#x27;m calling from.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Got it. I&#x27;m flagging this as urgent and sending it to the manager now, along with a note that it&#x27;s about Tuesday&#x27;s job at Ashcroft. Somebody will call you back today. If you&#x27;d rather not wait, I can give you the direct line.</span></div><div class="ct"><span class="cw">Caller</span><span>No, a call back&#x27;s fine.</span></div><div class="ct agent"><span class="cw">Dale</span><span>Understood. It&#x27;s gone through. Sorry again about Tuesday.</span></div></div></div>
+  </section>
+
+  <section>
+    <p class="kicker">07</p>
+    <h2>What it actually buys you.</h2>
+    <p>Running this business is a hundred things you cannot control. Whether you have enough guys. Whether they are trained well enough. Whether the truck makes it through Friday. Whether you blew a quote.</p>
+    <p><strong>Most of that you cannot fix, not easily and not this year.</strong> The phone you can.</p>
+    <p>You stop being the backstop. You stop answering on a job, at dinner, in bed. Whoever answers your phone today gets their evenings back. And the calls that used to arrive when nobody could pick up turn into jobs instead of into somebody else's jobs.</p>
+    <p class="big-line">That is the whole idea.</p>
+  </section>
+
+
+  <section id="capture">
+    <p class="kicker">Hear them</p>
+    <h2>Want these sent to you?</h2>
+    <p>Leave your name and email and I will send the calls over, so you can play them again when you are not in the middle of something.</p>
+    <form id="jForm" novalidate style="display:flex;flex-direction:column;gap:10px;max-width:26rem;margin-top:18px">
+      <input id="jName" type="text" placeholder="First and last name" autocomplete="name"
+        style="padding:14px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);font:inherit;border-radius:4px" />
+      <input id="jEmail" type="email" placeholder="Email address" autocomplete="email"
+        style="padding:14px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);font:inherit;border-radius:4px" />
+      <button class="cta" id="jBtn" type="submit" style="border:none;cursor:pointer">Send me the calls</button>
+      <p id="jErr" style="display:none;color:#b91c1c;font-size:15px;margin:0"></p>
+      <p id="jOk" style="display:none;margin:0"><strong>Sent.</strong> Check your email.</p>
+    </form>
+  </section>
+  <section>
+    <p class="kicker">08</p>
+    <h2>What it costs.</h2>
+    <div class="offer">
+      <dl>
+        <dt>Start by September 30, 2026, and pay through March 31, 2027</dt>
+        <dd class="big">$500 / month</dd>
+        <dt>From April 1, 2027</dt>
+        <dd>$750 / month</dd>
+        <dt>Setup fee, normally $350</dt>
+        <dd>Waived</dd>
+        <dt>Contract</dt>
+        <dd>Month to month</dd>
+      </dl>
+      <p style="margin:18px 0 0;padding-top:16px;border-top:1px solid var(--hair);color:var(--slate);font-size:15px">Cancel in the first 30 days for any reason and we refund the month.</p>
+    </div>
+    <p style="margin-top:24px">Fifteen minutes with Lee and you will hear her answer as your company, with your prices, in your towns. Then decide.</p>
+    <a class="cta" href="https://calendly.com/lee-godbold/new-meeting">Book fifteen minutes</a>
+  </section>
+
+  <footer>
+    <p>The calls on this page are examples, not recordings of real customers. Every voice you hear, the caller as well as Jenny, is AI generated.</p>
+    <p>Junk Removal Authority · 950 Windy Rd. Suite 200, Apex, NC 27502</p>
+  </footer>
+</div>
+
+<script>
+const CALLS = {"after-hours": ["/clips/calls/after-hours-00-tag.mp3", "/clips/calls/after-hours-01-agent.mp3", "/clips/calls/after-hours-02-caller.mp3", "/clips/calls/after-hours-03-agent.mp3", "/clips/calls/after-hours-04-caller.mp3", "/clips/calls/after-hours-05-agent.mp3", "/clips/calls/after-hours-06-caller.mp3", "/clips/calls/after-hours-07-agent.mp3", "/clips/calls/after-hours-08-caller.mp3", "/clips/calls/after-hours-09-agent.mp3", "/clips/calls/after-hours-10-caller.mp3", "/clips/calls/after-hours-11-agent.mp3"], "price-shopper": ["/clips/calls/price-shopper-00-tag.mp3", "/clips/calls/price-shopper-01-caller.mp3", "/clips/calls/price-shopper-02-agent.mp3", "/clips/calls/price-shopper-03-caller.mp3", "/clips/calls/price-shopper-04-agent.mp3", "/clips/calls/price-shopper-05-caller.mp3", "/clips/calls/price-shopper-06-agent.mp3", "/clips/calls/price-shopper-07-caller.mp3", "/clips/calls/price-shopper-08-agent.mp3"], "awkward": ["/clips/calls/awkward-00-tag.mp3", "/clips/calls/awkward-01-caller.mp3", "/clips/calls/awkward-02-agent.mp3", "/clips/calls/awkward-03-caller.mp3", "/clips/calls/awkward-04-agent.mp3", "/clips/calls/awkward-05-caller.mp3", "/clips/calls/awkward-06-agent.mp3", "/clips/calls/awkward-07-caller.mp3", "/clips/calls/awkward-08-agent.mp3", "/clips/calls/awkward-09-caller.mp3"], "handoff": ["/clips/calls/handoff-00-tag.mp3", "/clips/calls/handoff-01-caller.mp3", "/clips/calls/handoff-02-agent.mp3", "/clips/calls/handoff-03-caller.mp3", "/clips/calls/handoff-04-agent.mp3", "/clips/calls/handoff-05-caller.mp3", "/clips/calls/handoff-06-agent.mp3", "/clips/calls/handoff-07-caller.mp3", "/clips/calls/handoff-08-agent.mp3"]};
+document.querySelectorAll(".call").forEach(box => {
+  const id = box.dataset.call;
+  const data = CALLS[id];
+  const btn = box.querySelector(".playbtn");
+  const rows = [...box.querySelectorAll(".t")];
+  let audio = null, idx = 0, playing = false;
+
+  function clear(){ rows.forEach(r => r.classList.remove("on")); }
+  function stop(){
+    if(audio){ audio.pause(); audio = null; }
+    playing = false; idx = 0; clear(); btn.textContent = "▶";
+    btn.setAttribute("aria-label","Play this call");
+  }
+  function playFrom(i){
+    if(i >= data.length){ stop(); return; }
+    idx = i; clear();
+    rows[i] && rows[i].classList.add("on");
+    audio = new Audio(data[i]);
+    audio.play().catch(stop);
+    audio.onended = () => setTimeout(() => { if(playing) playFrom(i+1); }, 260);
+  }
+  btn.addEventListener("click", () => {
+    if(playing){ stop(); return; }
+    playing = true; btn.textContent = "■";
+    btn.setAttribute("aria-label","Stop this call");
+    playFrom(0);
+  });
+  rows.forEach((r,i) => {
+    r.style.cursor = "pointer";
+    r.addEventListener("click", () => {
+      if(audio){ audio.pause(); audio = null; }
+      playing = true; btn.textContent = "■"; playFrom(i);
+    });
+  });
+});
+</script>
+<script>
+(function(){
+  var f=document.getElementById("jForm"); if(!f) return;
+  var err=document.getElementById("jErr"), ok=document.getElementById("jOk"), btn=document.getElementById("jBtn");
+  function bad(m){err.textContent=m;err.style.display="block";}
+  f.addEventListener("submit", async function(e){
+    e.preventDefault(); err.style.display="none";
+    var name=document.getElementById("jName").value.trim(), email=document.getElementById("jEmail").value.trim();
+    if(!name) return bad("Please enter your name.");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad("Please enter a valid email.");
+    btn.disabled=true; var lbl=btn.textContent; btn.textContent="One second...";
+    try{
+      // Same attribution shape as /lp so both entry points stay distinguishable in the
+      // one source field the server already stores. Format: jenny:<source>/<campaign>/<content>
+      var p=new URLSearchParams(location.search);
+      var tag=function(k){return (p.get(k)||"").replace(/[^A-Za-z0-9._-]/g,"").slice(0,20);};
+      var utm=[tag("utm_source"),tag("utm_campaign"),tag("utm_content")].join("/").replace(/\/+$/,"");
+      var res=await fetch("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({name:name,email:email,source:"jenny"+(utm?":"+utm:"")})});
+      var data=await res.json();
+      if(!res.ok){btn.disabled=false;btn.textContent=lbl;return bad(data.error||"Something went wrong. Try again.");}
+      if(window.jpx) window.jpx("track","Lead");
+      f.querySelectorAll("input,button").forEach(function(el){el.style.display="none";});
+      ok.style.display="block";
+    }catch(x){ btn.disabled=false; btn.textContent=lbl; bad("Network error. Please try again."); }
+  });
+})();
+</script>
+</body></html>
