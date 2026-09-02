@@ -229,17 +229,19 @@ form.addEventListener('submit',async(e)=>{
 </script>
 
 <style>
-.callbox{border:1px solid rgba(128,128,128,.28);border-radius:8px;margin:14px 0 0;text-align:left;overflow:hidden}
-.chead{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;border-bottom:1px solid rgba(128,128,128,.22)}
+/* The success panel is a white card that inherits the page's white text, which was
+   invisible until it held text. Everything below sets its own colour explicitly. */
+.callbox{border:1px solid #e2e0da;border-radius:8px;margin:14px 0 0;text-align:left;overflow:hidden;background:#fff;color:#14171a}
+.chead{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;border-bottom:1px solid #e2e0da;background:#f7f6f2}
 .cplay{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:#16a34a;color:#fff;font-size:14px;line-height:1}
 .ctitle{font-weight:700;margin-bottom:2px}
-.cblurb{font-size:14px;opacity:.75}
-.caitag{display:inline-block;margin-top:8px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;opacity:.65;border:1px solid rgba(128,128,128,.35);padding:3px 7px;border-radius:4px}
-.cscript{padding:6px 15px 14px}
-.ct{display:grid;grid-template-columns:66px 1fr;gap:10px;padding:6px 7px;border-radius:4px;font-size:15px}
-.ct.on{background:rgba(22,163,74,.16)}
+.cblurb{font-size:14px;color:#5c6268}
+.caitag{display:inline-block;margin-top:8px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#5c6268;border:1px solid #d8d4c9;padding:3px 7px;border-radius:4px}
+.cscript{padding:6px 15px 14px;background:#fff}
+.ct{display:grid;grid-template-columns:66px 1fr;gap:10px;padding:6px 7px;border-radius:4px;font-size:15px;color:#14171a}
+.ct.on{background:#d6e8de}
 .ct.tagline{display:none}
-.cw{font-size:10px;letter-spacing:.09em;text-transform:uppercase;opacity:.6;padding-top:4px}
+.cw{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#6b7280;padding-top:4px}
 </style>
 <script>
 window.__CALLS__ = {"after-hours": ["/clips/calls/after-hours-00-tag.mp3", "/clips/calls/after-hours-01-jenny.mp3", "/clips/calls/after-hours-02-male.mp3", "/clips/calls/after-hours-03-jenny.mp3", "/clips/calls/after-hours-04-male.mp3", "/clips/calls/after-hours-05-jenny.mp3", "/clips/calls/after-hours-06-male.mp3", "/clips/calls/after-hours-07-jenny.mp3", "/clips/calls/after-hours-08-male.mp3", "/clips/calls/after-hours-09-jenny.mp3", "/clips/calls/after-hours-10-male.mp3", "/clips/calls/after-hours-11-jenny.mp3"], "price-shopper": ["/clips/calls/price-shopper-00-tag.mp3", "/clips/calls/price-shopper-01-male.mp3", "/clips/calls/price-shopper-02-jenny.mp3", "/clips/calls/price-shopper-03-male.mp3", "/clips/calls/price-shopper-04-jenny.mp3", "/clips/calls/price-shopper-05-male.mp3", "/clips/calls/price-shopper-06-jenny.mp3", "/clips/calls/price-shopper-07-male.mp3", "/clips/calls/price-shopper-08-jenny.mp3"], "awkward": ["/clips/calls/awkward-00-tag.mp3", "/clips/calls/awkward-01-female.mp3", "/clips/calls/awkward-02-jenny.mp3", "/clips/calls/awkward-03-female.mp3", "/clips/calls/awkward-04-jenny.mp3", "/clips/calls/awkward-05-female.mp3", "/clips/calls/awkward-06-jenny.mp3", "/clips/calls/awkward-07-female.mp3", "/clips/calls/awkward-08-jenny.mp3", "/clips/calls/awkward-09-female.mp3"], "handoff": ["/clips/calls/handoff-00-tag.mp3", "/clips/calls/handoff-01-male.mp3", "/clips/calls/handoff-02-jenny.mp3", "/clips/calls/handoff-03-male.mp3", "/clips/calls/handoff-04-jenny.mp3", "/clips/calls/handoff-05-male.mp3", "/clips/calls/handoff-06-jenny.mp3", "/clips/calls/handoff-07-male.mp3", "/clips/calls/handoff-08-jenny.mp3"]};
